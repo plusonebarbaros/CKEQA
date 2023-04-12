@@ -1,0 +1,17 @@
+ 
+   <div class="modal-header" >
+    <h4 class="modal-title">{{ title }}</h4> 
+    </div>
+    <div class="modal-body">
+      {{ message }}   
+      <br/>
+      <br/>
+      <mat-form-field appearance="outline" class="example-full-width" [hidden]="!CommentsShow" [style.width.%]="100">
+        <mat-label>Açıklama</mat-label> 
+        <textarea matInput placeholder="Açıklama Yazınız..." rows="5" maxlength="254" [(ngModel)]="Comments"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="decline()">{{ btnCancelText }}</button>
+      <button type="button" class="btn btn-primary" (click)="accept()">{{ btnOkText }}</button>
+    </div>     

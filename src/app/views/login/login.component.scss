@@ -1,0 +1,69 @@
+.login,
+.image {
+  min-height: 100vh;
+}
+
+.bg-image { 
+  background-size: cover;
+  background-position: center center;
+  background-color: #485461;
+background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
+}
+
+.mb-3, .my-3{
+  margin-bottom: 0.5rem!important;
+}
+
+.spinner-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logomenuimg{
+text-align: center;
+position: relative;
+margin-bottom: 20px;
+}
+
+
+
+@media only screen and (min-width: 1451px) {
+  .loginsolframe{
+    padding-left: 150px;
+    margin-right: 16px !important;
+    position: relative; 
+  }
+}
+
+@media only screen and (min-width: 1366px) and (max-width: 1450px) {
+  .loginsolframe{
+    padding-left: 40px;
+    margin-right: 16px !important;
+    position: relative; 
+  }
+}
+
+@media only screen and (min-width: 1025px) and (max-width: 1365px) {
+  .loginsolframe{
+    padding-left: 40px;
+    margin-right: 16px !important;
+    position: relative; 
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .loginsolframe{
+    padding-left: 80px;
+    margin-right: 16px !important;
+    position: relative; 
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .loginsolframe{ 
+    position: relative; 
+  }
+}
+
+
