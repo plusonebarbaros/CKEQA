@@ -368,6 +368,10 @@ GetData(p1:any,p2:any){
     return 0;
   }
 
+  if(p1!=4 && this.anlikdata.filter((x)=>x.Parametre==p1).length<=0){
+    return 0;
+  }
+
  if(p2=="UPSAYI") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Up, 0);
  else if(p2=="DEALSAYI") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Satis, 0);
  else if(p2=="TOPVOLUME") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Volume, 0);
