@@ -55,7 +55,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">Ekip İstatistikleri</div>
         <div class="panel-body">
-          <dx-data-grid class="devgrid30" #gridAracYakitData
+          <dx-data-grid  #gridAracYakitData
         [dataSource]="anlikdata"
         [showBorders]="true"
         [showColumnLines]="false"
@@ -92,8 +92,26 @@
         <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Banka" dataField="Banka" alignment="right"></dxi-column> 
         <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Toplam" dataField="Toplam" alignment="right"></dxi-column> 
         
-        <dxi-column [style.width.%]="10" caption="Vol.Mon Oran" dataField="VolMonOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
-        <dxi-column [style.width.%]="10" caption="Up Deal Oran" dataField="UpDealOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column>  
+ 
+        <dxi-column dataField="VolMonOran" caption="Vol.Money Oran" cellTemplate="cellVolMonOran" [style.width.%]="10" alignment="center"></dxi-column>
+        <div *dxTemplate="let cell of 'cellVolMonOran'">  
+          
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="cell.value" aria-valuemin="0" aria-valuemax="100" [style.width]="cell.value+'%'">
+              <span class="show">{{cell.value | number : '1.2-2'}}%</span>
+            </div>
+          </div>
+          
+        </div> 
+
+        <dxi-column dataField="UpDealOran" caption="Up Deal Oran" cellTemplate="cellUpDealOran" [style.width.%]="10" alignment="center"></dxi-column>
+        <div *dxTemplate="let cell of 'cellUpDealOran'"> 
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="cell.value" aria-valuemin="0" aria-valuemax="100" [style.width]="cell.value+'%'">
+              <span class="show">{{cell.value | number : '1.2-2'}}%</span>
+            </div>
+          </div>
+        </div> 
          
         <dxo-summary> 
           <dxi-total-item
@@ -154,7 +172,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">Ekip İstatistikleri [Konaklama] </div>
         <div class="panel-body">
-          <dx-data-grid class="devgrid30" #gridAracYakitData
+          <dx-data-grid  #gridAracYakitData
           [dataSource]="anlikdatakonaklama"
           [showBorders]="true"
           [showColumnLines]="false"
@@ -191,9 +209,25 @@
           <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Banka" dataField="Banka" alignment="right"></dxi-column> 
           <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Toplam" dataField="Toplam" alignment="right"></dxi-column> 
             
-          <dxi-column [style.width.%]="10" caption="Vol.Mon Oran" dataField="VolMonOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
-          <dxi-column [style.width.%]="10" caption="Up Deal Oran" dataField="UpDealOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column>  
-           
+
+          <dxi-column dataField="VolMonOran" caption="Vol.Money Oran" cellTemplate="cellVolMonOran" [style.width.%]="10" alignment="center"></dxi-column>
+        <div *dxTemplate="let cell of 'cellVolMonOran'"> 
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="cell.value" aria-valuemin="0" aria-valuemax="100" [style.width]="cell.value+'%'">
+              <span class="show">{{cell.value | number : '1.2-2'}}%</span>
+            </div>
+          </div>
+        </div> 
+
+        <dxi-column dataField="UpDealOran" caption="Up Deal Oran" cellTemplate="cellUpDealOran" [style.width.%]="10" alignment="center"></dxi-column>
+        <div *dxTemplate="let cell of 'cellUpDealOran'"> 
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="cell.value" aria-valuemin="0" aria-valuemax="100" [style.width]="cell.value+'%'">
+              <span class="show">{{cell.value | number : '1.2-2'}}%</span>
+            </div>
+          </div>
+        </div> 
+
           <dxo-summary> 
             <dxi-total-item
                 column="Up"
@@ -288,7 +322,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                        <i class="fas fa-chart-pie"></i>
+                        <i class="fas fa-chart-bar"></i>
                       </div>
                     </div>
                   </div>
@@ -310,7 +344,7 @@
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-chart-bar"></i>
                       </div>
                     </div>
                   </div>

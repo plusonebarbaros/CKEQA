@@ -1562,3 +1562,21 @@ main {
 .panel-heading{
   font-weight: 600!important;
 }
+
+
+.progress {
+  position: relative;
+  height: 25px;
+  border-radius: 3px;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+}
+
+.progress-bar { 
+  background-color: #ffd55c!important; 
+}

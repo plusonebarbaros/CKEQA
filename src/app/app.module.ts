@@ -51,6 +51,7 @@ import trMessages from "devextreme/localization/messages/tr.json";
 import { locale, loadMessages } from "devextreme/localization";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { NgxMaskModule } from "ngx-mask";
+import { DxProgressBarModule } from "devextreme-angular";
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -105,7 +106,8 @@ locale(navigator.language);
     MatGridListModule, 
     ClipboardModule,
     CommonModule,
-    DxCalendarModule
+    DxCalendarModule,
+    DxProgressBarModule
       ],
   providers: [
     { provide: LOCALE_ID, useValue: "tr-TR" },
