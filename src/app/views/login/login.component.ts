@@ -106,7 +106,7 @@ export class LoginComponent implements OnInit {
     }
     else { 
       this.isWaiting=true;
-      this.http.post<any>(this.semUrl+"/Login/LoginUserV1", this.user)
+      this.http.post<any>(this.semUrl+"/Login/LoginUserV3", this.user)
       .subscribe(async res => {
         this.isWaiting=false;
   
@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit {
     } 
     else {
       this.isWaiting=true;
-      this.http.post<any>(this.semUrl+"/Login/LoginUserV2", this.user)
+      this.http.post<any>(this.semUrl+"/Login/LoginUserV4", this.user)
       .subscribe(async res => {
         this.isWaiting=false;
   

@@ -9,7 +9,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />  
     <meta http-equiv="Pragma" content="no-cache" />  
     <meta http-equiv="Expires" content="0" />   
-    <title>{{title}}</title> 
+    <title>Dts Connect</title> 
      
   </head>
   <body class="hold-transition">   
@@ -47,7 +47,7 @@
     <div class="content-wrapper" style="padding: 15px;">  
       <nav class="menu-navigation-icons">
         <a href="#"  class="menu-silver" (click)="filterMod(filtremodal)"><i class="fas fa-filter"></i><span>Filtre</span></a>
-        <a href="#" class="menu-silver" (click)="GetAnlikData()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a href="#" class="menu-silver" (click)="DataLoad()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
     </nav>
     <div style="clear:both"></div>
 
@@ -86,13 +86,11 @@
         <dxi-column [style.width.%]="10" format="#,##0" caption="Up" dataField="Up" alignment="center"></dxi-column> 
         <dxi-column [style.width.%]="10" format="#,##0" caption="Kişi" dataField="Kisi" alignment="center"></dxi-column> 
         <dxi-column [style.width.%]="10" format="#,##0" caption="Satış" dataField="Satis" alignment="center"></dxi-column> 
-        <dxi-column [style.width.%]="10" format="#,##0" caption="Volume" dataField="Volume" alignment="center"></dxi-column> 
-        <dxi-column [style.width.%]="10" format="#,##0" caption="Nakit" dataField="Nakit" alignment="center"></dxi-column> 
-        <dxi-column [style.width.%]="10" format="#,##0" caption="Kredi Kart" dataField="KrediKarti" alignment="center"></dxi-column> 
-        <dxi-column [style.width.%]="10" format="#,##0" caption="Banka" dataField="Banka" alignment="center"></dxi-column> 
-        <dxi-column [style.width.%]="10" format="#,##0" caption="Toplam" dataField="Toplam" alignment="center"></dxi-column> 
-        <dxi-column [style.width.%]="10" format="#,##0" caption="Konaklama" dataField="Konaklama" alignment="center"></dxi-column> 
-        <dxi-column [style.width.%]="10" format="#,##0" caption="Parametre" dataField="Parametre" alignment="center"></dxi-column> 
+        <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Volume" dataField="Volume" alignment="right"></dxi-column> 
+        <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Nakit" dataField="Nakit" alignment="right"></dxi-column> 
+        <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Kredi Kart" dataField="KrediKarti" alignment="right"></dxi-column> 
+        <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Banka" dataField="Banka" alignment="right"></dxi-column> 
+        <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Toplam" dataField="Toplam" alignment="right"></dxi-column> 
         
         <dxi-column [style.width.%]="10" caption="Vol.Mon Oran" dataField="VolMonOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
         <dxi-column [style.width.%]="10" caption="Up Deal Oran" dataField="UpDealOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column>  
@@ -118,31 +116,31 @@
           </dxi-total-item>  
           <dxi-total-item
               column="Volume"
-              valueFormat="#,##0"  
+              valueFormat="#,##0.00 TL"  
               displayFormat="{0}"
               summaryType="sum">
           </dxi-total-item>  
           <dxi-total-item
               column="Nakit"
-              valueFormat="#,##0"  
+              valueFormat="#,##0.00 TL"  
               displayFormat="{0}"
               summaryType="sum">
           </dxi-total-item>  
           <dxi-total-item
               column="KrediKarti"
-              valueFormat="#,##0"  
+              valueFormat="#,##0.00 TL"  
               displayFormat="{0}"
               summaryType="sum">
           </dxi-total-item>  
           <dxi-total-item
               column="Banka"
-              valueFormat="#,##0"  
+              valueFormat="#,##0.00 TL"  
               displayFormat="{0}"
               summaryType="sum">
           </dxi-total-item>  
           <dxi-total-item
               column="Toplam"
-              valueFormat="#,##0"  
+              valueFormat="#,##0.00 TL"  
               displayFormat="{0}"
               summaryType="sum">
           </dxi-total-item>    
@@ -187,14 +185,12 @@
           <dxi-column [style.width.%]="10" format="#,##0" caption="Up" dataField="Up" alignment="center"></dxi-column> 
           <dxi-column [style.width.%]="10" format="#,##0" caption="Kişi" dataField="Kisi" alignment="center"></dxi-column> 
           <dxi-column [style.width.%]="10" format="#,##0" caption="Satış" dataField="Satis" alignment="center"></dxi-column> 
-          <dxi-column [style.width.%]="10" format="#,##0" caption="Volume" dataField="Volume" alignment="center"></dxi-column> 
-          <dxi-column [style.width.%]="10" format="#,##0" caption="Nakit" dataField="Nakit" alignment="center"></dxi-column> 
-          <dxi-column [style.width.%]="10" format="#,##0" caption="Kredi Kart" dataField="KrediKarti" alignment="center"></dxi-column> 
-          <dxi-column [style.width.%]="10" format="#,##0" caption="Banka" dataField="Banka" alignment="center"></dxi-column> 
-          <dxi-column [style.width.%]="10" format="#,##0" caption="Toplam" dataField="Toplam" alignment="center"></dxi-column> 
-          <dxi-column [style.width.%]="10" format="#,##0" caption="Konaklama" dataField="Konaklama" alignment="center"></dxi-column> 
-          <dxi-column [style.width.%]="10" format="#,##0" caption="Parametre" dataField="Parametre" alignment="center"></dxi-column> 
-          
+          <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Volume" dataField="Volume" alignment="right"></dxi-column> 
+          <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Nakit" dataField="Nakit" alignment="right"></dxi-column> 
+          <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Kredi Kart" dataField="KrediKarti" alignment="right"></dxi-column> 
+          <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Banka" dataField="Banka" alignment="right"></dxi-column> 
+          <dxi-column [style.width.%]="10" format="#,##0.00 TL" caption="Toplam" dataField="Toplam" alignment="right"></dxi-column> 
+            
           <dxi-column [style.width.%]="10" caption="Vol.Mon Oran" dataField="VolMonOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
           <dxi-column [style.width.%]="10" caption="Up Deal Oran" dataField="UpDealOran" alignment="right" dataType="number" format="#,##0.00"></dxi-column>  
            
@@ -218,35 +214,35 @@
                 summaryType="sum">
             </dxi-total-item>  
             <dxi-total-item
-                column="Volume"
-                valueFormat="#,##0"  
-                displayFormat="{0}"
-                summaryType="sum">
-            </dxi-total-item>  
-            <dxi-total-item
-                column="Nakit"
-                valueFormat="#,##0"  
-                displayFormat="{0}"
-                summaryType="sum">
-            </dxi-total-item>  
-            <dxi-total-item
-                column="KrediKarti"
-                valueFormat="#,##0"  
-                displayFormat="{0}"
-                summaryType="sum">
-            </dxi-total-item>  
-            <dxi-total-item
-                column="Banka"
-                valueFormat="#,##0"  
-                displayFormat="{0}"
-                summaryType="sum">
-            </dxi-total-item>  
-            <dxi-total-item
-                column="Toplam"
-                valueFormat="#,##0"  
-                displayFormat="{0}"
-                summaryType="sum">
-            </dxi-total-item>    
+              column="Volume"
+              valueFormat="#,##0.00 TL"  
+              displayFormat="{0}"
+              summaryType="sum">
+          </dxi-total-item>  
+          <dxi-total-item
+              column="Nakit"
+              valueFormat="#,##0.00 TL"  
+              displayFormat="{0}"
+              summaryType="sum">
+          </dxi-total-item>  
+          <dxi-total-item
+              column="KrediKarti"
+              valueFormat="#,##0.00 TL"  
+              displayFormat="{0}"
+              summaryType="sum">
+          </dxi-total-item>  
+          <dxi-total-item
+              column="Banka"
+              valueFormat="#,##0.00 TL"  
+              displayFormat="{0}"
+              summaryType="sum">
+          </dxi-total-item>  
+          <dxi-total-item
+              column="Toplam"
+              valueFormat="#,##0.00 TL"  
+              displayFormat="{0}"
+              summaryType="sum">
+          </dxi-total-item>  
   
             </dxo-summary>
            
@@ -266,7 +262,7 @@
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Up Başı Volume</h5>
                       <div style="clear: both;"></div>
-                      <span class="h3 font-weight-bold mb-0">{{1234 | number : '1.0-0'}}</span>
+                      <span class="h3 font-weight-bold mb-0">{{GetData(4,"OZUPBASIVOL") | number : '1.2-2'}}  TL</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
@@ -288,7 +284,7 @@
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Up Başı Money</h5>
                       <div style="clear: both;"></div>
-                      <span class="h3 font-weight-bold mb-0">{{1234 | number : '1.0-0'}}</span>
+                      <span class="h3 font-weight-bold mb-0">{{GetData(4,"OZUPBASIMON") | number : '1.2-2'}}  TL</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -310,7 +306,7 @@
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Deal Başı Volume</h5>
                       <div style="clear: both;"></div>
-                      <span class="h3 font-weight-bold mb-0">{{1234 | number : '1.0-0'}}</span>
+                      <span class="h3 font-weight-bold mb-0">{{GetData(4,"OZDEALBASVOL") | number : '1.2-2'}}  TL</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
@@ -334,7 +330,7 @@
                       <div class="col">
                         <h5 class="card-title text-uppercase text-muted mb-0">Deal Başı Money</h5>
                         <div style="clear: both;"></div>
-                        <span class="h3 font-weight-bold mb-0">{{1234 | number : '1.0-0'}}</span>
+                        <span class="h3 font-weight-bold mb-0">{{GetData(4,"OZDEALBASMON") | number : '1.2-2'}}  TL</span>
                       </div>
                       <div class="col-auto">
                         <div class="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -355,6 +351,316 @@
       </div>
 
    
+      <div class="panel panel-default"> 
+        <div class="panel-body">
+          <div class="row" style="padding: 5px;">
+            <div class="col-xl-4 col-lg-4">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Line Ekipleri</div>
+                    <div class="panel-body">
+                    
+                      <div class="list-group" style="overflow-y: auto;">
+                        <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Toplam Up Sayısı :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"UPSAYI")}}  Up</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Toplam Deal Sayısı :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"DEALSAYI")}} Deal</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Toplam Volume :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"TOPVOLUME") | number : '1.2-2'}} TL</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Toplam Nakit :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"TOPNAKIT") | number : '1.2-2'}} TL</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Toplam CC :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"TOPCC") | number : '1.2-2'}} TL</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Toplam Banka :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"TOPBANKA") | number : '1.2-2'}} TL</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Toplam Peşinat :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"TOPPESINAT") | number : '1.2-2'}} TL</span>
+                            </div> 
+                          </a>
+                      </div> 
+
+                      <hr>
+
+                      <div class="list-group" style="overflow-y: auto;">
+                        <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Up Başı Volume :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"UPBASIVOL") | number : '1.2-2'}}  TL</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Up Başı Money In :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"UPBASIMONEYIN") | number : '1.2-2'}}  TL</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Deal Başı Volume :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"DEALBASIVOL") | number : '1.2-2'}} TL</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;">Deal Başı Money In :</h5> 
+                              <span class="badge pill-medium" style="height: 18px;">{{GetData(0,"DEALBASIMONEYIN") | number : '1.2-2'}} TL</span>
+                            </div> 
+                          </a>
+                      </div> 
+
+
+                      <hr>
+
+                      <div class="list-group" style="overflow-y: auto;">
+                        <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;color: red;">Up-Deal Kapaması :	</h5> 
+                              <span class="badge pill-medium" style="height: 18px;color: red;">{{GetData(0,"DEALKAPAMA")*100 | number : '1.2-2'}} %</span>
+                            </div> 
+                          </a>
+                          <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h5 class="mb-1" style="font-size:14px!important;color: red;">Volume-Money Kapaması :	</h5> 
+                              <span class="badge pill-medium" style="height: 18px;color: red;">{{GetData(0,"VOLMONKAPAMA")*100 | number : '1.2-2'}} %</span>
+                            </div> 
+                          </a> 
+                      </div> 
+
+
+                    </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">İnhouse Ekipleri</div>
+                <div class="panel-body">
+                  
+                  <div class="list-group" style="overflow-y: auto;">
+                    <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Up Sayısı :</h5> 
+                      <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"UPSAYI")}}  Up</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Deal Sayısı :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"DEALSAYI")}} Deal</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Volume :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"TOPVOLUME") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Nakit :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"TOPNAKIT") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam CC :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"TOPCC") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Banka :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"TOPBANKA") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Peşinat :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"TOPPESINAT") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                  </div> 
+
+                  <hr>
+
+                  <div class="list-group" style="overflow-y: auto;">
+                    <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Up Başı Volume :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"UPBASIVOL") | number : '1.2-2'}}  TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Up Başı Money In :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"UPBASIMONEYIN") | number : '1.2-2'}}  TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Deal Başı Volume :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"DEALBASIVOL") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Deal Başı Money In :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(1,"DEALBASIMONEYIN") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                  </div> 
+
+
+                  <hr>
+
+                  <div class="list-group" style="overflow-y: auto;">
+                    <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;color: red;">Up-Deal Kapaması :	</h5> 
+                          <span class="badge pill-medium" style="height: 18px;color: red;">{{GetData(1,"DEALKAPAMA")*100 | number : '1.2-2'}} %</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;color: red;">Volume-Money Kapaması :	</h5> 
+                          <span class="badge pill-medium" style="height: 18px;color: red;">{{GetData(1,"VOLMONKAPAMA")*100 | number : '1.2-2'}} %</span>
+                        </div> 
+                      </a> 
+                  </div> 
+
+
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">Tapu Ekipleri</div>
+                <div class="panel-body">
+                  <div class="list-group" style="overflow-y: auto;">
+                    <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Up Sayısı :</h5> 
+                      <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"UPSAYI")}}  Up</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Deal Sayısı :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"DEALSAYI")}} Deal</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Volume :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"TOPVOLUME") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Nakit :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"TOPNAKIT") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam CC :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"TOPCC") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Banka :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"TOPBANKA") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Toplam Peşinat :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"TOPPESINAT") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                  </div> 
+
+                  <hr>
+
+                  <div class="list-group" style="overflow-y: auto;">
+                    <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Up Başı Volume :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"UPBASIVOL") | number : '1.2-2'}}  TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Up Başı Money In :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"UPBASIMONEYIN") | number : '1.2-2'}}  TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Deal Başı Volume :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"DEALBASIVOL") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;">Deal Başı Money In :</h5> 
+                          <span class="badge pill-medium" style="height: 18px;">{{GetData(2,"DEALBASIMONEYIN") | number : '1.2-2'}} TL</span>
+                        </div> 
+                      </a>
+                  </div> 
+
+
+                  <hr>
+
+                  <div class="list-group" style="overflow-y: auto;">
+                    <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;color: red;">Up-Deal Kapaması :	</h5> 
+                          <span class="badge pill-medium" style="height: 18px;color: red;">{{GetData(2,"DEALKAPAMA")*100 | number : '1.2-2'}} %</span>
+                        </div> 
+                      </a>
+                      <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start listmar">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1" style="font-size:14px!important;color: red;">Volume-Money Kapaması :	</h5> 
+                          <span class="badge pill-medium" style="height: 18px;color: red;">{{GetData(2,"VOLMONKAPAMA")*100 | number : '1.2-2'}} %</span>
+                        </div> 
+                      </a> 
+                  </div> 
+                   
+                </div>
+          </div>
+          </div>
+          </div> 
+
+        </div>
+      </div>
+
+
     </div>
        
     </div>   
@@ -395,6 +701,6 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
-    <button type="button" class="btn btn-success" (click)="GetAnlikData()">Data Yükle</button>
+    <button type="button" class="btn btn-success" (click)="DataLoad()">Data Yükle</button>
   </div>
 </ng-template>

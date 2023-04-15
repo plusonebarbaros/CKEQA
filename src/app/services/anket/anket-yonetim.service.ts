@@ -5021,6 +5021,12 @@ async GetSozlesmeTopluDurum(id:number,eslesmedurumid:number,durumid:number)
           return await this.http.get<Result<AnlikDataModel>>(url).pipe( map((res:any)=> res));
  }
 
+ async GetAnlikDataKonaklama(baslangic:Date,bitis:Date)
+    {
+        let url=this.semUrl+"/Anket/GetAnlikDataKonaklama?Baslangic="+moment(baslangic).format("yyyy-MM-DD")+"&Bitis="+moment(bitis).format("yyyy-MM-DD")+"&Token="+ this.kullsrc.token;
+          return await this.http.get<Result<AnlikDataModel>>(url).pipe( map((res:any)=> res));
+ }
+
 }
 
 export class AnlikDataModel{
