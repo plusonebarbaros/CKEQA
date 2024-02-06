@@ -107,12 +107,13 @@ locale(navigator.language);
     ClipboardModule,
     CommonModule,
     DxCalendarModule,
-    DxProgressBarModule
+    DxProgressBarModule,
+    DxChartModule
       ],
   providers: [
     { provide: LOCALE_ID, useValue: "tr-TR" },
     { provide: MAT_DATE_LOCALE, useValue: 'tr-TR' },
-    {provide:'semUrl',useValue:'https://localhost:44323/api'},
+    {provide:'semUrl',useValue:'http://localhost:3525/api'},
     TabService,
     MatDatepickerModule,     
   ],

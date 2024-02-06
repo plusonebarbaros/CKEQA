@@ -1,43 +1,46 @@
 <div class="container-fluid">
     <div class="row no-gutter">      
-        
-        <div class="col-md-12 bg-light">
-            <div class="login d-flex align-items-center">  
+
+        <div class="col-md-6 bg-light">
+            <a href="https://sentiasoft.com/" target="_blank"><img src="https://sentiasoft.com/wp-content/uploads/2022/05/sentia-logo.svg" class="login-logo-icon" alt="sentia" style="bottom:0px;left:20px;width:99px;position: absolute;"></a>
+
+
+            <div class="login d-flex align-items-center py-5">  
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-5 col-xl-5 col-md-8 col-sm-12 col-xs-12 mx-auto" style="text-align:center;">
+                        <div class="col-lg-10 col-xl-7 mx-auto loginsolframe" style="text-align:center ;">
                             <div  style="display: inline-table;">
-                                <a style="font-size: 39px;font-weight:bold;color: #485461;display: flex;margin-bottom: 6px;">Dts Anlık</a>
+                                <div class="login-logo-header">
+                                    <a href="http://harmantr.com/" target="_blank"><img src="../assets/logo/ef-logo.png" class="login-logo-icon" alt="logo icon"></a>
+                                </div>
                             </div>
                             <br/>   
-                            <div class="input-group mb-3">                               
-                                <div *ngIf="dogrulandi" class="input-group-prepend" style="cursor: pointer;">
-                                    <span (click)="reLog()" class="input-group-text" style="font-weight: bold;color: rebeccapurple;" title="Farklı Tckn İle Giriş Yap" aria-placeholder="Farklı Tckn İle Giriş Yap">X</span>
-                                </div>
-                                <input #logtckn (keydown.enter)="GetQCode()" [readonly] = "dogrulandi" [(ngModel)]="user.Tckn" class="form-control form-control-lg" type="text" placeholder="Tc Kimlik No" required maxlength="11" minlength="11">
-                                
+                            <div class="input-group mb-3">   
+                                <input #inputusername [(ngModel)]="user.Kullanici" class="form-control form-control-lg" type="text" placeholder="Kullanıcı Adı" required maxlength="100">
                             </div>
-                            <div class="form-group mb-3" *ngIf="dogrulandi">
-                                <input #logkod (keydown.enter)="DtsLogin()" [(ngModel)]="user.DogulamaKod" class="form-control form-control-lg" type="text" placeholder="Doğrulama Kodu" minlength="6" maxlength="6">
+                            <div class="form-group mb-3" >
+                                <input #inputsifre (keydown.enter)="B2BLogin()" [(ngModel)]="user.Sifre" class="form-control form-control-lg" type="password" placeholder="Şifreniz" required>
                             </div>                          
-
-                            <button *ngIf="!dogrulandi" (click)="GetQCode()" class="btn btn-primary btn-lg btn-block text-uppercase btnloginstyle">
-                                Giriş Kodu Al
+ 
+                            <button  (click)="B2BLogin()" class="btn btn-primary btn-lg btn-block text-uppercase btnloginstyle">
+                                Giriş Yap
                                 <i style="margin-left: 6px;" class="fa fa-spinner fa-spin"  *ngIf="isWaiting"></i>
-                            </button> 
-                            
-                            <button *ngIf="dogrulandi" (click)="DtsLogin()" class="btn btn-primary btn-lg btn-block text-uppercase btnloginstyle">
-                                Onay Kodunu Doğrula
-                                <i style="margin-left: 6px;" class="fa fa-spinner fa-spin"  *ngIf="isWaiting"></i>
-                            </button> 
+                            </button>
                         </div>
                     </div>
                 </div> 
 
             </div>
+            
         </div>  
- 
 
+        <div class="col-md-6 d-none d-md-flex bg-image">
+            <div style="margin: 0;position: absolute;top: 50%;  left: 50%;transform: translate(-50%, -50%);">
+                <span style="color:whitesmoke"><h2>Harman-tr B2B Sistemine </h2></span>
+                <span style="color:whitesmoke"><h2>Hoş Geldiniz</h2></span>
+                 <span style="color:#b7b4b4;font-size: 14px;">Sisteme Giriş Yapabilmek İçin Oturum Bilgilerinizi Eksiksiz Doldurunuz</span>
+            </div>
+        </div> 
 
     </div>
 </div>

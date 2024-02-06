@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { Result, ReturnValues, ReturnValuesList } from './Genel/genelsrv';
-import { KullaniciSrcService } from './kullanici/kullanici-src.service';
-import { IslemTipi } from './Onay/onay-surev-src.service';
+import { IslemTipi, Result, ReturnValues } from './GenelSrc';
+import { KullaniciSrcService } from './KullaniciSrc';
 
 @Injectable({
   providedIn: 'root'

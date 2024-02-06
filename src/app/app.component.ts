@@ -22,11 +22,8 @@ import { Title } from '@angular/platform-browser';
 import { CofirmsrcService } from './utils/confirm-dialog/cofirmsrc.service';
 import moment from 'moment';
 import { LoadingComponent } from './loading/loading.component';
-import { AcenteModel, EkranMesaj, GenelApi, IlceModel, KullaniciBildirimDetayModel, KullaniciBildirimModel, SehirModel, SorumluBirim, UlkeModel } from './services/Genel/genelsrv';
-import { KullaniciYetki, SirketYetki, NtxSantralKuyrukModel, KullaniciModel, KullaniciSrcService, MolaTipModel, FilterMod } from './services/kullanici/kullanici-src.service';
-import { SabitservService } from './services/sabitsrc/sabitserv.service';
-import { AnketYonetimService, AnlikDataModel } from './services/anket/anket-yonetim.service';
-
+import { GenelApi, EkranMesaj, DashModel, DashRaporModel, DashRaporOzetModel } from './services/GenelSrc';
+import { KullaniciModel, KullaniciSrcService, FilterMod } from './services/KullaniciSrc';
 
 export const MY_FORMATS = {
   parse: {
@@ -64,21 +61,22 @@ export class AppComponent implements OnInit,AfterViewInit {
   @ViewChild('kilitmod') kilitmodSrc: any;
   @ViewChild('loginpagemod') loginpagemod: any;
 
-  adsoyad = '';
   public userLogin: boolean = false;
   tarih=new Date(); 
   secilimenu:string=""; 
   activeLink:number=0;
-  kulluserid:number=0;
   kulltoken:string="";    
   interval: any;  
   allMode: string="";
   checkBoxesMode: string="";
-  secilenuser:KullaniciModel;
-
+  loguser:KullaniciModel; 
   isWaiting: boolean = false; 
   dogrulandi:boolean = false; 
   Reuser: User = new User("","","","","",0,"");
+  Data: DashRaporOzetModel;
+  Rapor: DashRaporModel[]=[];
+  AylikSatis:SatisGrafikDataModel[]=[];
+  AylikIade:SatisGrafikDataModel[]=[];
   public sessionStorage = sessionStorage;
  
 
@@ -93,15 +91,14 @@ export class AppComponent implements OnInit,AfterViewInit {
     private confirmationDialogService: CofirmsrcService,
     private genelsrv:GenelApi, 
     private titleService:Title,
-    private sabitsrc:SabitservService, 
-    private anketsrc:AnketYonetimService, 
     ) { 
       config({ defaultCurrency: 'TRY' });
       loadMessages(trMessage);
       locale(navigator.language);
       this.allMode = 'allPages';
       this.checkBoxesMode = 'always';  
-      this.secilenuser=new KullaniciModel();
+      this.loguser=new KullaniciModel();
+      this.Data=new DashRaporOzetModel();
     }  
 
   ngAfterViewInit(): void {
@@ -117,42 +114,67 @@ export class AppComponent implements OnInit,AfterViewInit {
      },60000 * 1);
    } 
 
-  filter!:FilterMod; 
-  anlikdata:AnlikDataModel[]=[]; 
-  async GetAnlikData() { 
-    this.anlikdata=[];
-
+   filter!:FilterMod; 
+  async GetDashRapor() { 
     this.blockUI.start(EkranMesaj.Listele);
-    (await this.anketsrc.GetAnlikData(this.filter.Baslangic,this.filter.Bitis)).subscribe(
+    (await this.genelsrv.GetDashRapor()).subscribe(
       data =>{
         this.blockUI.stop();  
         if(!data.Success){
           this.alertify.warning(data.Message);
           return;
         } 
-        this.anlikdata=data.List as AnlikDataModel[]; 
+        var datares = data.Model as DashModel; 
+        if(datares!=null){
+          this.Data = datares.Data;
+
+          if(datares.AylikSatis!=null){
+            this.AylikSatis.push(new SatisGrafikDataModel("Ocak",datares.AylikSatis.A1_OCAK));
+            this.AylikSatis.push(new SatisGrafikDataModel("Şubat",datares.AylikSatis.A2_SUBAT));
+            this.AylikSatis.push(new SatisGrafikDataModel("Mart",datares.AylikSatis.A3_MART));
+            this.AylikSatis.push(new SatisGrafikDataModel("Nisan",datares.AylikSatis.A4_NISAN));
+            this.AylikSatis.push(new SatisGrafikDataModel("Mayıs",datares.AylikSatis.A5_MAYIS));
+            this.AylikSatis.push(new SatisGrafikDataModel("Haziran",datares.AylikSatis.A6_HAZIRAN));
+            this.AylikSatis.push(new SatisGrafikDataModel("Temmuz",datares.AylikSatis.A7_TEMMUZ));
+            this.AylikSatis.push(new SatisGrafikDataModel("Ağustos",datares.AylikSatis.A8_AGUSTOS));
+            this.AylikSatis.push(new SatisGrafikDataModel("Eylül",datares.AylikSatis.A9_EYLUL));
+            this.AylikSatis.push(new SatisGrafikDataModel("Ekim",datares.AylikSatis.A10_EKIM));
+            this.AylikSatis.push(new SatisGrafikDataModel("Kasım",datares.AylikSatis.A11_KASIM));
+            this.AylikSatis.push(new SatisGrafikDataModel("Aralık",datares.AylikSatis.A12_ARALIK));
+          }
+
+          if(datares.AylikIAde!=null){
+            this.AylikIade.push(new SatisGrafikDataModel("Ocak",datares.AylikIAde.A1_OCAK));
+            this.AylikIade.push(new SatisGrafikDataModel("Şubat",datares.AylikIAde.A2_SUBAT));
+            this.AylikIade.push(new SatisGrafikDataModel("Mart",datares.AylikIAde.A3_MART));
+            this.AylikIade.push(new SatisGrafikDataModel("Nisan",datares.AylikIAde.A4_NISAN));
+            this.AylikIade.push(new SatisGrafikDataModel("Mayıs",datares.AylikIAde.A5_MAYIS));
+            this.AylikIade.push(new SatisGrafikDataModel("Haziran",datares.AylikIAde.A6_HAZIRAN));
+            this.AylikIade.push(new SatisGrafikDataModel("Temmuz",datares.AylikIAde.A7_TEMMUZ));
+            this.AylikIade.push(new SatisGrafikDataModel("Ağustos",datares.AylikIAde.A8_AGUSTOS));
+            this.AylikIade.push(new SatisGrafikDataModel("Eylül",datares.AylikIAde.A9_EYLUL));
+            this.AylikIade.push(new SatisGrafikDataModel("Ekim",datares.AylikIAde.A10_EKIM));
+            this.AylikIade.push(new SatisGrafikDataModel("Kasım",datares.AylikIAde.A11_KASIM));
+            this.AylikIade.push(new SatisGrafikDataModel("Aralık",datares.AylikIAde.A12_ARALIK));
+          }
+
+        }
         this.modalService.dismissAll();
      }
    ) 
-  }
+  } 
 
-  anlikdatakonaklama:AnlikDataModel[]=[]; 
-  async GetAnlikDataKonaklama() { 
-    this.anlikdatakonaklama=[];
+  customizeTooltip = (info: any) => ({
+    html: `<div><div class='tooltip-header'>${
+      info.argumentText}</div>`
+                + '<div class=\'tooltip-body\'><div class=\'series-name\'>'
+                + `<span class='top-series-name'>${info.points[0].seriesName}</span>`
+                + ': </div><div class=\'value-text\'>'
+                + `<span class='top-series-value'>${parseInt(info.points[0].valueText)} TL </span>` 
+                + '% </div></div></div>',
+  });
 
-    this.blockUI.start(EkranMesaj.Listele);
-    (await this.anketsrc.GetAnlikDataKonaklama(this.filter.Baslangic,this.filter.Bitis)).subscribe(
-      data =>{
-        this.blockUI.stop();  
-        if(!data.Success){
-          this.alertify.warning(data.Message);
-          return;
-        } 
-        this.anlikdatakonaklama=data.List as AnlikDataModel[];  
-        this.modalService.dismissAll();
-     }
-   ) 
-  }
+    customizeLabelText = (info: any) => `${info.valueText}%`; 
  
    delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -160,44 +182,30 @@ export class AppComponent implements OnInit,AfterViewInit {
 
   Dahili:String="";
   SantralAdi:String=""; 
-  async ngOnInit() {   
+  async ngOnInit() { 
+ 
     this.kulltoken = sessionStorage?.getItem("Token")??"";
     if(this.kulltoken=="" || this.kulltoken==null){ 
       this.userLogin=false;
     }
-    else this.userLogin=true; 
+    else this.userLogin=true;  
 
     let date=new Date;  
     this.filter = new FilterMod(date,date); 
+    this.loguser = JSON.parse(sessionStorage.getItem('data')??"") as KullaniciModel;
 
-    this.kullsrc.SistemKilitSure = parseInt(sessionStorage.getItem("SistemKilitSure")??"0");  
-    this.adsoyad = (sessionStorage.getItem("Ad")?.toString()) ??"";
- 
-    this.kulluserid =  parseInt(sessionStorage.getItem("EmpId")+"");
-    this.kulltoken = sessionStorage.getItem("Token")+"";
-
-    if(this.kulluserid>0) { 
+    if(this.loguser!=null && this.loguser.Id>0) { 
       this.DataLoad();
       this.ekranYenile();
-    }
-
- 
+    } 
     window.addEventListener("keyup", this.disableF5); 
     window.addEventListener("keydown", this.disableF5);   
-   }
- 
-   
+   } 
 
-  satirSec(e:any){ 
-   
- } 
+  satirSec(e:any){} 
 
   async DataLoad() { 
-      await this.GetAnlikData();
-      await this.GetAnlikDataKonaklama();
- 
-      this.kullsrc.kullToken = this.kulltoken;
-      this.kullsrc.kullUserId = this.kulluserid;
+    await this.GetDashRapor(); 
   }
 
    disableF5(e:any) { 
@@ -326,7 +334,6 @@ DtsLogin(){
         sessionStorage.setItem("BackLogo",res.Model.BackLogo);
         sessionStorage.setItem("DarkMod",res.Model.DarkMod);
 
-        this.adsoyad = res.Model.KullanilanAd;
         this.kullsrc.token = res.Token;
         this.isWaiting=false;
         this.dogrulandi=false;   
@@ -360,44 +367,17 @@ BitTarihChg(e:any){
 filterMod(content:any){
   this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss30', backdrop: 'static' }); 
 }
-
-
-//p1 0=line 1=inhouse 2=tapu
-GetData(p1:any,p2:any){
-  if(this.anlikdata==null || this.anlikdata.length<=0){
-    return 0;
-  }
-
-  if(p1!=4 && this.anlikdata.filter((x)=>x.Parametre==p1).length<=0){
-    return 0;
-  }
-
- if(p2=="UPSAYI") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Up, 0);
- else if(p2=="DEALSAYI") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Satis, 0);
- else if(p2=="TOPVOLUME") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Volume, 0);
- else if(p2=="TOPNAKIT") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Nakit, 0);
- else if(p2=="TOPCC") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.KrediKarti, 0);
- else if(p2=="TOPBANKA") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Banka, 0);
- else if(p2=="TOPPESINAT") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Toplam, 0);
-
- else if(p2=="UPBASIVOL") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Volume, 0) / this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Up, 0);
- else if(p2=="UPBASIMONEYIN") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Toplam, 0) / this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Up, 0);
- else if(p2=="DEALBASIVOL") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Volume, 0) / this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Satis, 0);
- else if(p2=="DEALBASIMONEYIN") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Toplam, 0) / this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Satis, 0);
-
- else if(p2=="DEALKAPAMA") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Satis, 0) / this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Up, 0);
- else if(p2=="VOLMONKAPAMA") return this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Toplam, 0) / this.anlikdata.filter((x)=>x.Parametre==p1).reduce((acc, val) => acc += val.Volume, 0);
-
- else if(p2=="OZUPBASIVOL") return this.anlikdata.reduce((acc, val) => acc += val.Volume, 0) / this.anlikdata.reduce((acc, val) => acc += val.Up, 0);
- else if(p2=="OZUPBASIMON") return this.anlikdata.reduce((acc, val) => acc += val.Toplam, 0) / this.anlikdata.reduce((acc, val) => acc += val.Up, 0);
- else if(p2=="OZDEALBASVOL") return this.anlikdata.reduce((acc, val) => acc += val.Volume, 0) / this.anlikdata.reduce((acc, val) => acc += val.Satis, 0);
- else if(p2=="OZDEALBASMON") return this.anlikdata.reduce((acc, val) => acc += val.Toplam, 0) / this.anlikdata.reduce((acc, val) => acc += val.Satis, 0);
-
-
- else return 0;
-}
  
 } 
+
+export class SatisGrafikDataModel {
+  constructor(_Ay:string,_Tutar:number) {
+    this.Ay=_Ay;
+    this.Tutar=_Tutar;
+  }
+  Ay: string;
+  Tutar: number=0;
+}
 
 export  class MenuExapand { 
   constructor(sira:number,exp:boolean) {
