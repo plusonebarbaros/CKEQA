@@ -77,6 +77,9 @@ export class AppComponent implements OnInit,AfterViewInit {
   Rapor: DashRaporModel[]=[];
   AylikSatis:SatisGrafikDataModel[]=[];
   AylikIade:SatisGrafikDataModel[]=[];
+  GuncelSifre:string="";
+  YeniSifre:string="";
+  YeniSifreTekrar:string="";
   public sessionStorage = sessionStorage;
  
 
@@ -88,7 +91,7 @@ export class AppComponent implements OnInit,AfterViewInit {
     private _eref: ElementRef,
     private kullsrc:KullaniciSrcService,
     private modalService: NgbModal,
-    private confirmationDialogService: CofirmsrcService,
+    private confirm: CofirmsrcService,
     private genelsrv:GenelApi, 
     private titleService:Title,
     ) { 
@@ -110,16 +113,16 @@ export class AppComponent implements OnInit,AfterViewInit {
 
   async ekranYenile(){ 
     this.interval =  setInterval(async ()=>{ 
-      await this.DataLoad();
+      await this.DataLoad(false);
      },60000 * 1);
    } 
 
    filter!:FilterMod; 
-  async GetDashRapor() { 
-    this.blockUI.start(EkranMesaj.Listele);
+  async GetDashRapor(ilk:boolean) { 
+    if(ilk)  this.blockUI.start(EkranMesaj.Listele);
     (await this.genelsrv.GetDashRapor()).subscribe(
       data =>{
-        this.blockUI.stop();  
+        if(ilk)this.blockUI.stop();  
         if(!data.Success){
           this.alertify.warning(data.Message);
           return;
@@ -182,30 +185,30 @@ export class AppComponent implements OnInit,AfterViewInit {
 
   Dahili:String="";
   SantralAdi:String=""; 
-  async ngOnInit() { 
- 
+  async ngOnInit() {  
     this.kulltoken = sessionStorage?.getItem("Token")??"";
     if(this.kulltoken=="" || this.kulltoken==null){ 
       this.userLogin=false;
     }
-    else this.userLogin=true;  
-
-    let date=new Date;  
-    this.filter = new FilterMod(date,date); 
-    this.loguser = JSON.parse(sessionStorage.getItem('data')??"") as KullaniciModel;
-
-    if(this.loguser!=null && this.loguser.Id>0) { 
-      this.DataLoad();
-      this.ekranYenile();
-    } 
-    window.addEventListener("keyup", this.disableF5); 
-    window.addEventListener("keydown", this.disableF5);   
-   } 
+    else {
+      this.userLogin=true;  
+      let date=new Date;  
+      this.filter = new FilterMod(date,date); 
+      this.loguser = JSON.parse(sessionStorage.getItem('data')??"") as KullaniciModel;
+  
+      if(this.loguser!=null && this.loguser.Id>0) { 
+        this.DataLoad(true);
+        this.ekranYenile();
+      } 
+      window.addEventListener("keyup", this.disableF5); 
+      window.addEventListener("keydown", this.disableF5);  
+    }
+  } 
 
   satirSec(e:any){} 
 
-  async DataLoad() { 
-    await this.GetDashRapor(); 
+  async DataLoad(ilk:boolean) { 
+    await this.GetDashRapor(ilk); 
   }
 
    disableF5(e:any) { 
@@ -367,6 +370,63 @@ BitTarihChg(e:any){
 filterMod(content:any){
   this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss30', backdrop: 'static' }); 
 }
+
+sifreDegistirModal(content:any){
+  this.GuncelSifre="";
+  this.YeniSifre="";
+  this.YeniSifreTekrar="";
+  this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' });
+}
+
+sifreDegistir(){
+  if(this.GuncelSifre=="" || this.GuncelSifre==undefined){
+    this.alertify.warning("Güncel Şifre Bilgisi Zorunludur...");
+    return;
+  }
+  if(this.YeniSifre=="" || this.YeniSifre==undefined){
+    this.alertify.warning("Yeni Şifre Bilgisi Zorunludur...");
+    return;
+  }
+  if(this.YeniSifreTekrar=="" || this.YeniSifreTekrar==undefined){
+    this.alertify.warning("Yeni Şifre Tekrar Bilgisi Zorunludur...");
+    return;
+  }
+  if(this.YeniSifre.length < 6){
+    this.alertify.warning("Şifreniz En Az 6 Hane Olmalıdır, Harf ve Rakam Kullanınız...");
+    return;
+  }
+
+  if(this.YeniSifre!=this.YeniSifreTekrar){
+    this.alertify.warning("Yeni Şifre ve Yeni Şifre Tekrar Eşleşmiyor, Kontrol Ediniz...");
+    return;
+  }
+
+  if(this.YeniSifre==this.GuncelSifre){
+    this.alertify.warning("Yeni Şifre Güncel Şifrenizle Aynı Olamaz, Kontrol Ediniz...");
+    return;
+  }
+
+  this.confirm.confirm('Şifre Güncelle',"B2B Şifreniz Güncellenecek, Devam Edilsin mi?")
+  .then(async (confirmed:any) => 
+  {
+    if(confirmed.sonuc==true){   
+      
+      
+      this.blockUI.start(EkranMesaj.Kaydet);
+      var sonuc = await this.kullsrc.KullaniciSifreGuncelle(btoa(this.GuncelSifre),btoa(this.YeniSifre),btoa(this.YeniSifreTekrar));
+      if(sonuc.Success){
+        this.alertify.success("Şifreniz Başarıyla Güncellendi"); 
+        this.modalService.dismissAll();
+      } 
+      else this.alertify.warning(sonuc.Message);
+      this.blockUI.stop();  
+      }
+      else this.modalService.dismissAll();
+    })
+    .catch(() => { 
+    });  
+}
+  
  
 } 
 
