@@ -114,7 +114,7 @@ export class AppComponent implements OnInit,AfterViewInit {
   async ekranYenile(){ 
     this.interval =  setInterval(async ()=>{ 
       await this.DataLoad(false);
-     },60000 * 1);
+     },60000 * 15);
    } 
 
    filter!:FilterMod; 
