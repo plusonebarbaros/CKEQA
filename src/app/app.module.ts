@@ -52,6 +52,9 @@ import { locale, loadMessages } from "devextreme/localization";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { NgxMaskModule } from "ngx-mask";
 import { DxProgressBarModule } from "devextreme-angular";
+import { StokAramaComponent } from './views/Stok/stok-arama/stok-arama.component';
+import { RafBulmaComponent } from './views/Stok/raf-bulma/raf-bulma.component';
+import { SiparisAktarmaComponent } from './views/Siparis/siparis-aktarma/siparis-aktarma.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -65,6 +68,9 @@ locale(navigator.language);
     LoginComponent,
     FilterPipe,
     ConfirmDialogComponent,
+    StokAramaComponent,
+    RafBulmaComponent,
+    SiparisAktarmaComponent,
       
       ],
   imports: [
@@ -114,6 +120,7 @@ locale(navigator.language);
     { provide: LOCALE_ID, useValue: "tr-TR" },
     { provide: MAT_DATE_LOCALE, useValue: 'tr-TR' },
     {provide:'semUrl',useValue:'http://localhost:3525/api'},
+    //{provide:'semUrl',useValue:'http://ciroapi.harmantr.com/api'},
     TabService,
     MatDatepickerModule,     
   ],

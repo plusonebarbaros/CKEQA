@@ -1,0 +1,270 @@
+
+
+ <div class="content">
+     <nav class="menu-navigation-icons">
+         <a href="#" class="menu-silver" (click)="GetStokList()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+ 
+         <a href="#" *ngIf="stokhatayetki.Goruntule" (click)="stokHatalar(modStokHatalar)" style="float: right!important;" class="menu-blue" ><i class="fas fa-file-excel"></i><span>Hatalar</span></a> 
+         <a href="#" *ngIf="yetki.Export" (click)="this.gridStokList.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+ 
+     </nav>
+     <div style="clear:both"></div>        
+
+     <div class="input-group">       
+       <mat-form-field appearance="outline" [style.width.%]="100" style="padding-right: 10px;">
+         <input matInput #arakeyw type="search" autocomplete="off" placeholder="Aramak İstediğiniz Stok Bilgisini Kısaca Yazın... Örn: 12345" [(ngModel)]="kalemkeyword" (keyup)="kalemAra($event)">
+       
+        <button mat-button matSuffix mat-icon-button (click)="aramaTemizle()">
+            <mat-icon aria-placeholder="Arama Temizle" title="Arama Temizle" style="color: red;font-weight: bold">cancel</mat-icon>
+        </button>
+       </mat-form-field> 
+       </div>
+       
+       <div style="clear:both;"></div>
+       <dx-data-grid class="devgrid72" #gridStokList
+          [dataSource]="datalist"  
+          [showBorders]="true"
+          [showColumnLines]="false"
+          [showRowLines]="true" 
+          [rowAlternationEnabled]="true"
+          [focusedRowEnabled]="true"
+          [columnAutoWidth]="true"
+          [allowColumnResizing]="true" 
+          [allowColumnReordering]="true"
+          keyExpr="STOK_KODU" 
+          columnResizingMode = "widget"   
+          (onRowClick)="dataChg($event)" 
+          > 
+          <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+          <dxo-scrolling 
+            mode="virtual"
+            showScrollbar="'always'"
+            useNative="false"
+            scrollByThumb="true" >
+         </dxo-scrolling> 
+          <dxo-load-panel [enabled]="true"></dxo-load-panel>
+          <dxo-paging [pageSize]="30"> </dxo-paging>
+          <dxo-pager
+              [visible]="true" 
+              displayMode="'compact'"
+              [showPageSizeSelector]="false"
+              [showInfo]="true"
+              [showNavigationButtons]="true">
+          </dxo-pager> 
+          <dxo-header-filter [allowSearch]="true"></dxo-header-filter> 
+        
+          <dxi-column dataField="STOK_KODU" caption="Stok Kodu" [width]="125" [allowEditing]="false"></dxi-column>
+          <dxi-column dataField="STOK_ADI" caption="Stok Adı" [width]="275" [allowEditing]="false"></dxi-column>
+          <dxi-column dataField="INGILIZCE_ADI" caption="Eng.Stok Adı" [width]="275" [allowEditing]="false"></dxi-column>
+          <dxi-column dataField="BARKOD1" caption="Barkod 1" [style.width.%]="10" [allowEditing]="false"></dxi-column>
+          <dxi-column dataField="BARKOD2" caption="Barkod 2" [style.width.%]="10" [allowEditing]="false"></dxi-column>
+          <dxi-column dataField="BARKOD3" caption="Barkod 3" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="URETICI_KODU" caption="Üretici Kodu" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="KOD_1" caption="Kod 1" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="KOD_2" caption="Kod 2" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="KOD_3" caption="Kod 3" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="KOD_4" caption="Kod 4" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="KOD_5" caption="Kod 5" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="MENSEI" caption="Menşei" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+          <dxi-column dataField="RAF" caption="Raf" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+            
+          <dxi-column dataField="FIYAT1" caption="Fiyat 1" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+          <dxi-column dataField="DEPOSTOK_1" caption="Depo Stok 1" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+          <dxi-column dataField="DEPOSTOK_5" caption="Depo Stok 5" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+          <dxi-column dataField="DEPOSTOK_51" caption="Depo Stok 51" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+
+          <dxi-column caption="İşlemler" cellTemplate="cellTemplate" [width]="125" alignment="center" [fixed]="true" fixedPosition="right"></dxi-column>
+          <div *dxTemplate="let cell of 'cellTemplate'">
+              <button *ngIf="stokharyetki.Goruntule" (click)="stokDetay(modStokDuzenle,cell.data)" class="btn btn-xs btn-info">Düzenle</button>
+              <button *ngIf="stokduzenlemeyetki.Goruntule" (click)="stokHareket(modStokHareket,cell.data)" class="btn btn-xs btn-warning">Hareket</button>
+          </div>             
+          
+     </dx-data-grid>  
+ </div>
+
+ <ng-template #modStokDuzenle let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Stok Kart Düzenleme</h4> 
+    </div>
+    <div class="modal-body"> 
+        
+        <mat-form-field appearance="outline" [style.width.%]="100">
+            <mat-label>Stok Adı</mat-label>
+            <input matInput placeholder="Stok Adı" [(ngModel)]="secilidata.STOK_ADI">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="100">
+            <mat-label>Eng.Stok Adı</mat-label>
+            <input matInput placeholder="Eng.Stok Adı" [(ngModel)]="secilidata.INGILIZCE_ADI">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="50">
+            <mat-label>Barkod 1</mat-label>
+            <input matInput placeholder="Barkod 1" [(ngModel)]="secilidata.BARKOD1" autocomplete="off" maxlength="60">
+        </mat-form-field> 
+        
+        <mat-form-field appearance="outline" [style.width.%]="50">
+            <mat-label>Barkod 2</mat-label>
+            <input matInput placeholder="Barkod 2" [(ngModel)]="secilidata.BARKOD2" autocomplete="off" maxlength="60">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="50">
+            <mat-label>Barkod 3</mat-label>
+            <input matInput placeholder="Barkod 3" [(ngModel)]="secilidata.BARKOD3" autocomplete="off" maxlength="60">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="50">
+            <mat-label>Üretici Kodu</mat-label>
+            <input matInput placeholder="Üretici Kodu" [(ngModel)]="secilidata.URETICI_KODU" autocomplete="off" maxlength="60">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="20">
+            <mat-label>Kod 1</mat-label>
+            <input matInput placeholder="Kod 1" [(ngModel)]="secilidata.KOD_1" autocomplete="off" maxlength="60">
+        </mat-form-field> 
+        
+        <mat-form-field appearance="outline" [style.width.%]="20">
+            <mat-label>Kod 2</mat-label>
+            <input matInput placeholder="Kod 2" [(ngModel)]="secilidata.KOD_2" autocomplete="off" maxlength="60">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="20">
+            <mat-label>Kod 3</mat-label>
+            <input matInput placeholder="Kod 3" [(ngModel)]="secilidata.KOD_3" autocomplete="off" maxlength="60">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="20">
+            <mat-label>Kod 4</mat-label>
+            <input matInput placeholder="Kod 4" [(ngModel)]="secilidata.KOD_4" autocomplete="off" maxlength="60">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [style.width.%]="20">
+            <mat-label>Kod 5</mat-label>
+            <input matInput placeholder="Kod 5" [(ngModel)]="secilidata.KOD_5" autocomplete="off" maxlength="60">
+        </mat-form-field>
+
+    </div>
+    <div class="modal-footer"> 
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+      <button type="button" class="btn btn-success" (click)="stokGuncelle()">Kaydet</button>
+    </div>
+ </ng-template>
+
+<ng-template #modStokHareket let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Stok Hareket</h4> 
+    </div>
+    <div class="modal-body"> 
+        <dx-data-grid class="devgrid52" #gridStokHareket
+        [dataSource]="hareketlist"  
+        [showBorders]="true"
+        [showColumnLines]="false"
+        [showRowLines]="true" 
+        [rowAlternationEnabled]="true"
+        [focusedRowEnabled]="true"
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true" 
+        [allowColumnReordering]="true"
+        keyExpr="semkey" 
+        columnResizingMode = "widget"   
+        (onRowClick)="dataChg($event)" 
+        > 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+        <dxo-scrolling 
+          mode="virtual"
+          showScrollbar="'always'"
+          useNative="false"
+          scrollByThumb="true" >
+       </dxo-scrolling> 
+        <dxo-load-panel [enabled]="true"></dxo-load-panel>
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager
+            [visible]="true" 
+            displayMode="'compact'"
+            [showPageSizeSelector]="false"
+            [showInfo]="true"
+            [showNavigationButtons]="true">
+        </dxo-pager> 
+        <dxo-header-filter [allowSearch]="true"></dxo-header-filter> 
+      
+        <dxi-column [style.width.%]="10" caption="Tarih" dataField="STHAR_TARIH" alignment="center" dataType="date" format="dd.MM.yyyy"></dxi-column>
+
+        <dxi-column dataField="FISNO" caption="Fişno" [width]="150" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="CARKOD" caption="Cari Kod" [width]="100" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="CARI_ISIM" caption="Cari Adı" [width]="275" [allowEditing]="false"></dxi-column>
+          
+        <dxi-column dataField="STHAR_GCKOD" caption="Giriş/Çıkış" cellTemplate="cellSTHAR_GCKOD"[style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellSTHAR_GCKOD'"> 
+            <span *ngIf="cell.data.STHAR_GCKOD=='G'" class="badge pill-medium bg-success">Giriş</span>
+            <span *ngIf="cell.data.STHAR_GCKOD=='C'" class="badge pill-medium bg-danger">Çıkış</span>
+        </div>
+
+        <dxi-column dataField="MIKTAR" caption="Miktar" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+        <dxi-column dataField="FIYAT" caption="Fiyat" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+        <dxi-column dataField="TUTAR" caption="Toplam" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>           
+        <dxi-column dataField="STHAR_DOVFIAT" caption="Döviz Fiyat" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>           
+        
+   </dx-data-grid>  
+      
+    </div>
+    <div class="modal-footer"> 
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+    </div>
+ </ng-template>
+
+ <ng-template #modStokHatalar let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Stok Hatalar</h4> 
+    </div>
+    <div class="modal-body"> 
+        <dx-data-grid class="devgrid52" #gridStokHatalar
+        [dataSource]="hatalist"  
+        [showBorders]="true"
+        [showColumnLines]="false"
+        [showRowLines]="true" 
+        [rowAlternationEnabled]="true"
+        [focusedRowEnabled]="true"
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true" 
+        [allowColumnReordering]="true"
+        keyExpr="semkey" 
+        columnResizingMode = "widget"   
+        > 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+        <dxo-scrolling 
+          mode="virtual"
+          showScrollbar="'always'"
+          useNative="false"
+          scrollByThumb="true" >
+       </dxo-scrolling> 
+        <dxo-load-panel [enabled]="true"></dxo-load-panel>
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager
+            [visible]="true" 
+            displayMode="'compact'"
+            [showPageSizeSelector]="false"
+            [showInfo]="true"
+            [showNavigationButtons]="true">
+        </dxo-pager> 
+        <dxo-header-filter [allowSearch]="true"></dxo-header-filter> 
+      
+        <dxi-column dataField="STOK_KODU" caption="Stok Kodu" [width]="150" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="STOK_ADI" caption="Stok Adı" [width]="375" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="URETICI_KODU" caption="Üretici Kodu" [style.width.%]="10" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="BARKOD1" caption="Barkod 1" [style.width.%]="10" [allowEditing]="false"></dxi-column>    
+        <dxi-column dataField="BARKOD2" caption="Barkod 2" [style.width.%]="10" [allowEditing]="false"></dxi-column>    
+        <dxi-column dataField="BARKOD3" caption="Barkod 3" [style.width.%]="10" [allowEditing]="false"></dxi-column>    
+        
+   </dx-data-grid>  
+      
+    </div>
+    <div class="modal-footer"> 
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+    </div>
+ </ng-template>

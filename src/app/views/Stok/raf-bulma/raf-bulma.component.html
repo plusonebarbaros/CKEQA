@@ -1,0 +1,74 @@
+<div class="content">
+
+    <nav class="menu-navigation-icons">
+        <a href="#" *ngIf="yetki.Ekle" class="menu-green" (click)="topluyukle(datamultipleup)"><i class="fas fa-plus-circle"></i><span>Excel Yükle</span></a>
+
+        <a href="#" href="../../../../assets/sablon/RAF-BILGI-SABLON.xlsx" style="float: right!important;" class="menu-blue" title="Raf Sorgulama Şablon İndir"><i class="fas fa-file-excel"></i><span>Şablon</span></a> 
+        <a href="#" *ngIf="yetki.Export" (click)="this.gridDataList.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+    
+    </nav>
+    <div style="clear:both"></div>
+    
+        <dx-data-grid class="devgrid74"
+        id="gridSabit1" #gridDataList
+        [dataSource]="datalist"
+        [showBorders]="true" 
+        [showRowLines]="true" 
+        [rowAlternationEnabled]="true"
+        [focusedRowEnabled]="true"
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true"
+        keyExpr="semkey" 
+        [showBorders]="true"
+        [showRowLines]="true" 
+        [showColumnLines]="false"  
+        columnResizingMode = "widget" 
+        [allowColumnReordering]="true"
+        > 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter> 
+        <dxo-scrolling 
+            mode="virtual"
+            showScrollbar="'always'"
+            useNative="false"
+            scrollByThumb="true" >
+        </dxo-scrolling> 
+        <dxo-load-panel [enabled]="true"></dxo-load-panel>
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager
+            [visible]="true" 
+            displayMode="'compact'"
+            [showPageSizeSelector]="false"
+            [showInfo]="true"
+            [showNavigationButtons]="true">
+        </dxo-pager>    
+        
+        <dxi-column dataField="STOK_KODU" caption="Stok Kodu" [width]="125" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="STOK_ADI" caption="Stok Adı" [width]="275" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="RAF" caption="Raf" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+        <dxi-column dataField="MIKTAR" caption="Miktar" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+        <dxi-column dataField="BAKIYE" caption="Bakiye" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+        <dxi-column dataField="FIYAT" caption="Fiyat" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+  
+        </dx-data-grid> 
+    </div> 
+
+      <ng-template #datamultipleup let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" >Stok Raf Sorgulama</h4> 
+        </div>
+        <div class="modal-body">
+          <div style="clear:both;margin-bottom:15px!important"></div>
+    
+           <div class="row">
+          <input  name="Dosya Seçiniz" title="Dosya Seçiniz" type="file" id="anketbelgeupp" accept=".xls,.xlsx" class="form-control" (change)="uploadFile($event)"/>
+          </div>
+          <div style="clear:both;margin-bottom:15px!important"></div>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
+          <button type="button" class="btn btn-success" (click)="kontrolBaslat()">Kontrol Başlat</button>
+        </div>
+      </ng-template>
+     

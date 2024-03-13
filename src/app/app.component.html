@@ -9,271 +9,140 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />  
     <meta http-equiv="Pragma" content="no-cache" />  
     <meta http-equiv="Expires" content="0" />   
-    <title>Harman B2B DashBoard</title> 
+    <title>Harman B2B</title> 
      
   </head>
-  <body class="hold-transition">   
+  <body class="hold-transition sidebar-mini layout-fixed">   
     <div class="wrapper" *ngIf="userLogin"> 
-      <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background-image: linear-gradient(354deg, #485461 0%, #28313b 74%);">
+      <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <div class="dts-head">
-          <label style="color: whitesmoke!important;">Harman B2B DashBoard</label>
-        </div> 
-       
+          <label>Harman B2B</label>
+          <div style="margin-top: -16px;">
+            <i class="nav-icon fas fa-circle text-success" style="margin-top: 5px;margin-right: 5px;font-size: 11px!important;"></i>
+            <span class="text" style="font-size: 14px!important;">{{loguser.AktifSirket}} Şirketinde Çalışıyorsunuz </span>  
+          </div>
+        </div>        
         <ul class="navbar-nav ml-auto">  
+          <div class="nav-item dropdown search-dropdown">
+          </div>
           <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
               <img src="../../../assets/user-logo.jpg" class="user-image img-circle elevation-2" alt="User Image">
 
-              <span class="d-none d-md-inline" style="display:block ;text-align: center;color: whitesmoke!important;">
+              <span class="d-none d-md-inline" style="display:block ;text-align: center;">
                 {{loguser.AdSoyad}}
-              </span>
-              
+              </span>              
             </a>
-            <ul class="dropdown-menu dropdown-menu-right logindrop">
-               
+            <ul class="dropdown-menu dropdown-menu-right logindrop">               
               <li class="user-footer"> 
-                <a href="javascript:;" (click)="sifreDegistirModal(kulsifredegistirmod)" class="btn btn-info btn-block">Şifre Değiştir</a>
+                <a href="#" (click)="subeDegistirMod(subemodal)" class="btn btn-info btn-block">Şirket Değiştir</a>
+                <a href="#" (click)="sifreDegistirModal(kulsifredegistirmod)" class="btn btn-info btn-block">Şifre Değiştir</a>
                 <a href="#" (click)="cikisyap()" class="btn btn-danger btn-block">Çıkış</a>
               </li>
             </ul>
-          </li>
+          </li>          
         </ul>
-      </nav>  
-
-    <div class="content-wrapper" style="padding: 15px;">  
-      <nav class="menu-navigation-icons">
-        <!-- <a href="#"  class="menu-silver" (click)="filterMod(filtremodal)"><i class="fas fa-filter"></i><span>Filtre</span></a> -->
-        <a href="#" class="menu-silver" (click)="DataLoad(true)" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
-    </nav>
-    <div style="clear:both"></div>
-
-    <div class="panel-group">
-      <div class="panel panel-default"> 
-        <div class="panel-body">
-          <div class="row" style="padding: 5px;">
-            <div class="col-xl-3 col-lg-3">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0 stats-box-font">YEDEK PARÇA GÜNLÜK SATIŞ</h5>
-                      <div style="clear: both;"></div>
-                      <span class="h3 font-weight-bold mb-0">{{Data.GUNLUKSATIS| number : '1.2-2'}}  TL</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                        <i class="fas fa-chart-bar"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-              <div class="col-xl-3 col-lg-3">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0 stats-box-font">YEDEK PARÇA HAFTALIK SATIŞ</h5>
-                      <div style="clear: both;"></div>
-                      <span class="h3 font-weight-bold mb-0">{{Data.HAFTALIKSATIS | number : '1.2-2'}}  TL</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                        <i class="fas fa-chart-bar"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-              <div class="col-xl-3 col-lg-3">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0 stats-box-font">YEDEK PARÇA AYLIK SATIŞ</h5>
-                      <div style="clear: both;"></div>
-                      <span class="h3 font-weight-bold mb-0">{{Data.AYLIKSATIS | number : '1.2-2'}}  TL</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                        <i class="fas fa-chart-bar"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-              <div class="col-xl-3 col-lg-3">
-                <div class="card card-stats mb-4 mb-xl-0">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col">
-                        <h5 class="card-title text-uppercase text-muted mb-0 stats-box-font">YEDEK PARÇA YILLIK SATIŞ</h5>
-                        <div style="clear: both;"></div>
-                        <span class="h3 font-weight-bold mb-0">{{Data.YILLIKSATIS | number : '1.2-2'}}  TL</span>
-                      </div>
-                      <div class="col-auto">
-                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i class="fas fa-chart-bar"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>  
-          </div> 
-          <div class="row" style="padding: 5px;">
-            <div class="col-xl-3 col-lg-3">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0 stats-box-font">TOPLAM SATIŞ</h5>
-                      <div style="clear: both;"></div>
-                      <span class="h3 font-weight-bold mb-0">{{Data.NETSATIS| number : '1.2-2'}}  TL</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                        <i class="fas fa-chart-bar"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-             
-              
-              
-          </div> 
-
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading">Aylık Satış Dağılımı</div>
-        <div class="panel-body">
-         
-          <dx-chart
-        id="chart"
-        [dataSource]="AylikSatis"
-        name="Aylık Satış Dağılımı"
-        palette="Harmony Light"
-      >
-  <dxi-value-axis name="frequency" position="left" [tickInterval]="300">
-  </dxi-value-axis>
-  <dxi-value-axis
-    name="percentage"
-    position="right"
-    [showZero]="true"
-    [tickInterval]="20"
-    [valueMarginsEnabled]="false"
-  >
-    <dxo-label [customizeText]="customizeLabelText"></dxo-label>
-    <dxi-constant-line
-      [value]="80"
-      color="#fc3535"
-      dashStyle="dash"
-      [width]="2"
-    >
-      <dxo-label [visible]="false"></dxo-label>
-    </dxi-constant-line>
-  </dxi-value-axis>
-  <dxo-argument-axis>
-    <dxo-label overlappingBehavior="stagger"></dxo-label>
-  </dxo-argument-axis>
-  <dxo-tooltip
-    [enabled]="true"
-    [shared]="true"
-    [customizeTooltip]="customizeTooltip"
-  >
-  </dxo-tooltip>
-  <dxo-common-series-settings argumentField="Ay">
-  </dxo-common-series-settings>
-  <dxi-series
-    type="bar"
-    valueField="Tutar"
-    axis="frequency"
-    name="Tutar"
-    color="#fac29a"
-  >
-  </dxi-series>
-  <dxi-series
-    type="spline"
-    valueField="Tutar"
-    axis="percentage"
-    name="Değişim"
-    color="#6b71c3"
-  >
-  </dxi-series>
-  <dxo-legend verticalAlignment="top" horizontalAlignment="center">
-  </dxo-legend>
-</dx-chart>
-
-          
-
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading">Aylık İade Dağılımı </div>
-        <div class="panel-body">
-          <dx-chart id="chart" [dataSource]="AylikIade">
-            <dxi-series
-              argumentField="Ay"
-              valueField="Tutar"
-              name="Aylık Satış Dağılımı"
-              type="bar"
-              color="#ffaa66" >
-            </dxi-series>
-          </dx-chart>
-
-        </div>
-      </div> 
-      
-
-    </div>
+      </nav>
+   
+    <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4" style="overflow-y: auto!important;" *ngIf="userLogin">         
+        <div class="mainsem-logo">
+          <img class="logocss" src="../assets/logo/ef-logo.png" width="70" height="50">
+         </div>
        
-    </div>   
+        <div class="clearfix" style="margin-bottom: 15px;"></div>
+      
+         <div class="mainsem" (click)="menugoster('1')" *ngIf="mainMenuShow('Sistem')">
+          <div style="display: block;"><i class="fas fa-cogs fafont"></i></div>
+          <span>Yönetim</span>
+        </div>
+        <div class="mainsem" (click)="menugoster('2')"  *ngIf="mainMenuShow('Stok Yönetim')">
+          <div style="display: block;"><i class="fas fa-city fafont"></i></div>
+          <span>Stok</span>
+        </div>
+        <div class="mainsem" (click)="menugoster('3')"  *ngIf="mainMenuShow('Sipariş Yönetim')">
+          <div style="display: block;"><i class="fas fa-city fafont"></i></div>
+          <span>Sipariş</span>
+        </div>       
+        <div class="mainsem" (click)="menugoster('4')" *ngIf="mainMenuShow('Rapor Yönetim')">
+          <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
+          <span>Rapor</span>
+        </div> 
+        <div class="mainsem" style="height:80px !important;" (click)="addNewTab(25)" >
+          <div style="display: block;"><i class="fas fa-exclamation-circle fafont"></i></div>
+          <span>Sistem Destek</span>
+        </div>
+    </aside> 
+
+    <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='1'">
+      <ul class="mainright-ul">  
+      
+        <li [ngClass]="getCSSClasses(114)" (click)="addNewTab(114)"  *ngIf="submainMenuShow('Sistem Parametre')">
+          <a href="#"><i class="fas fa-cogs"></i> Sistem Parametreleri</a>
+      </li>
+        <li class="mainrightsem submenutop baslikmenu" *ngIf="submainMenuShow('Kullanıcı Yönetimi')">
+            <a href="#" class="mastermenu" (click)="menuEx[0].Exapnd = !menuEx[0].Exapnd" [attr.aria-expanded]="!menuEx[0].Exapnd" aria-controls="navbarContent">
+              <i class="fas fa-users"></i> Kullanıcı Yönetimi</a>
+            <ul class="nav collapse submenusem" [ngbCollapse]="!menuEx[0].Exapnd">
+              <li (click)="addNewTab(3)" [ngClass]="getCSSClassesSub(3)" *ngIf="childMenuShow('YT0006')"><a href="#">● Kullanıcılar</a></li> 
+              <li (click)="addNewTab(4)" [ngClass]="getCSSClassesSub(4)" *ngIf="childMenuShow('YT0009')"><a href="#">● Grup Yetkileri</a></li>  
+              <li (click)="addNewTab(18)" [ngClass]="getCSSClassesSub(18)" *ngIf="childMenuShow('YT0026')"><a href="#">● Departman Tanım</a></li> 
+              <li (click)="addNewTab(19)" [ngClass]="getCSSClassesSub(19)" *ngIf="childMenuShow('YT0027')"><a href="#">● Pozisyon Tanım</a></li>  
+            </ul> 
+        </li>  
+    </ul>
+    </aside>    
+
+    <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='2'">
+      <ul class="mainright-ul"> 
+        <li [ngClass]="getCSSClasses(1)" (click)="addNewTab(1)" *ngIf="childMenuShow('YT0001')"><a href="#"><i class="fas fa-newspaper"></i> Stok Arama</a></li>  
+        <li [ngClass]="getCSSClasses(2)" (click)="addNewTab(2)" *ngIf="childMenuShow('YT0002')"><a href="#"><i class="fas fa-newspaper"></i> Raf Bulma</a></li>  
+        </ul>
+    </aside>
+
+    <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='3'">
+      <ul class="mainright-ul"> 
+        <li [ngClass]="getCSSClasses(24)" (click)="addNewTab(24)" *ngIf="childMenuShow('YT0012')"><a href="#"><i class="fas fa-newspaper"></i> Çeki Listesi</a></li>  
+        <li [ngClass]="getCSSClasses(3)" (click)="addNewTab(3)" *ngIf="childMenuShow('YT0006')"><a href="#"><i class="fas fa-newspaper"></i> Sipariş Girişi</a></li>  
+        
+        </ul>
+    </aside>
+  
+    <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='4'">
+      <ul class="mainright-ul"> 
+        <li [ngClass]="getCSSClasses(21)" (click)="addNewTab(21)" *ngIf="childMenuShow('YT0013')"><a href="#"><i class="fas fa-newspaper"></i> Rapor Araçları</a></li> 
+        <li [ngClass]="getCSSClasses(22)" (click)="addNewTab(22)" *ngIf="childMenuShow('YT0014')"><a href="#"><i class="fas fa-newspaper"></i> Raporlarım</a></li> 
+        </ul>
+    </aside>
+    
+
+    <div class="content-wrapper" >  
+      <mat-tab-group animationDuration="0ms"
+        class="main-tab-group"
+        [selectedIndex]="selectedTab"  
+        > 
+        <mat-tab *ngFor="let tab of tabs; let tabIndex = index" [tabIndex]="tab.id">
+          <ng-template mat-tab-label><span (click)="tabChanged(tab.tabid)">{{ tab.title }} &nbsp;&nbsp;</span>            
+            <i class="far fa-times-circle tabicon" (click)="removeTab(tabIndex)"></i>
+          </ng-template>
+       
+            <div class="maintabvh" style="background-color: #f4f6f9!important;"> 
+              <app-tab-content [tab]="tab" ></app-tab-content>
+            </div> 
+         
+        </mat-tab>
+      </mat-tab-group>
+  
+    </div>  
+    <aside class="control-sidebar control-sidebar-dark">
+      
+    </aside> 
   
   </div>  
 
   <div *ngIf="!userLogin">
     <app-login></app-login>
   </div>
-  
-  </body> 
-  </html>
-</block-ui> 
 
-
-<ng-template #filtremodal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" >Filtre</h4> 
-  </div>
-  <div class="modal-body">
-
-    <mat-form-field appearance="outline" [style.width.%]="100">
-      <mat-label>Başlangıç</mat-label> 
-      <input matInput [matDatepicker]="dp" placeholder="Başlangıç Tarih"  [(ngModel)]="filter.Baslangic" (ngModelChange)="BasTarihChg($event)">
-       <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-      <mat-datepicker #dp></mat-datepicker>
-    </mat-form-field>
-
-  <mat-form-field appearance="outline" [style.width.%]="100">
-    <mat-label>Bitiş</mat-label> 
-    <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"  [(ngModel)]="filter.Bitis" (ngModelChange)="BitTarihChg($event)">
-     <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
-    <mat-datepicker #dp1></mat-datepicker>
-  </mat-form-field> 
-  
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
-    <button type="button" class="btn btn-success" (click)="DataLoad(true)">Data Yükle</button>
-  </div>
-</ng-template>
 
 <ng-template #kulsifredegistirmod let-modal>
   <div class="modal-header">
@@ -304,3 +173,58 @@
     <button type="button" class="btn btn-success" (click)="sifreDegistir()">Güncelle</button>
   </div>
 </ng-template>
+
+<ng-template #subemodal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" >Şirket Değiştir - {{loguser.AktifSirket}} Şirketinde Çalışmaktasınız</h4> 
+  </div>
+  <div class="modal-body"> 
+    <dx-data-grid
+    id="gridMainSubeSec"  #gridMainSubeSec
+    [dataSource]="sirketyetkilist"
+    [showBorders]="true"
+    [showRowLines]="true" 
+    [showColumnLines]="false"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true"
+    [columnAutoWidth]="true"
+    [allowColumnResizing]="true"
+    keyExpr="dbName" 
+    columnResizingMode = "widget" 
+    [allowColumnReordering]="true" 
+    (onRowDblClick)="subeDegistir()"  
+    (onSelectionChanged)="subeDegistirChg($event)"
+    > 
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-paging [enabled]="false"></dxo-paging>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+    <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-selection mode="single"></dxo-selection>   
+    <dxo-scrolling 
+        mode="virtual"
+        showScrollbar="'always'"
+        useNative="false"
+        scrollByThumb="true" >
+    </dxo-scrolling> 
+    
+    <dxi-column dataField="dbName" caption="Şirket" [style.width.%]="10" ></dxi-column>       
+    <dxi-column dataField="cmpName" caption="Şirket Adı" [style.width.%]="10" ></dxi-column>       
+
+
+    </dx-data-grid>  
+     
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="finhspkapat" class="btn btn-danger" (click)="modal.dismiss('Cross click')"  #closeBtn>Vazgeç</button>
+    <button type="button" class="btn btn-success" (click)="subeDegistir()">Seçim Yap</button>
+  </div>
+</ng-template>  
+
+   
+  </body> 
+  </html>
+</block-ui> 

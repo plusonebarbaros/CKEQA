@@ -982,28 +982,6 @@ export  class MenuExapand {
     Exapnd:boolean=false;
   }
   
-  export  class User {
-    Email: string="";
-    Kullanici: string=""; 
-    Sifre: string=""; 
-    AndroidId: string=""; 
-    Board: string=""; 
-    CihazId: string=""; 
-    Device: number = 0; 
-    UserKey:string=""; 
-    CepTel:string="";
-  
-    constructor(_Kullanici:string,_pass:string,_andr:string,_board:string,_cihazid:string,_devize:number,_userkey:string) {
-     this.Kullanici =_Kullanici;
-     this.Sifre=_pass;
-     this.Device=_devize;
-     this.AndroidId=_andr;
-     this.Board=_board;
-     this.CihazId=_cihazid;
-     this.UserKey=_userkey;
-    }
-} 
-  
    export class DatepickerFormatsExample {
   
     flightSchedule = {

@@ -22,8 +22,11 @@ import { Title } from '@angular/platform-browser';
 import { CofirmsrcService } from './utils/confirm-dialog/cofirmsrc.service';
 import moment from 'moment';
 import { LoadingComponent } from './loading/loading.component';
-import { GenelApi, EkranMesaj, DashModel, DashRaporModel, DashRaporOzetModel } from './services/GenelSrc';
-import { KullaniciModel, KullaniciSrcService, FilterMod } from './services/KullaniciSrc';
+import { GenelApi, EkranMesaj, DashModel, DashRaporModel, DashRaporOzetModel, MenuExapand } from './services/GenelSrc';
+import { KullaniciModel, KullaniciSrcService, FilterMod, KullaniciYetki, KulSirketYetki, User } from './services/KullaniciSrc';
+import { StokAramaComponent } from './views/Stok/stok-arama/stok-arama.component';
+import { RafBulmaComponent } from './views/Stok/raf-bulma/raf-bulma.component';
+import { SiparisAktarmaComponent } from './views/Siparis/siparis-aktarma/siparis-aktarma.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -44,12 +47,33 @@ export const MY_FORMATS = {
   providers:[
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS}  
-  ],  
+  ], 
+  host: {
+    '(document:click)': 'onClick($event)',
+  }, 
 })
 
 
 export class AppComponent implements OnInit,AfterViewInit {
   @HostListener("window:onbeforeunload",["$event"])  
+
+  @HostListener('mouseenter', ['$event']) onEnter( e: MouseEvent ) {
+    this.IdleRefresh(e);
+  }
+
+  @HostListener('mouseleave', ['$event']) onLeave ( e: MouseEvent ) {
+    this.IdleRefresh(e);
+  } 
+
+  @HostListener('mouseover')
+  mouseover() {
+    this.IdleRefresh(1);
+  }
+
+  @HostListener('mouseout')
+  mouseout() {
+    this.IdleRefresh(1);
+  } 
 
   clearsessionStorage(event:any){
       sessionStorage.clear();
@@ -75,14 +99,20 @@ export class AppComponent implements OnInit,AfterViewInit {
   Reuser: User = new User("","","","","",0,"");
   Data: DashRaporOzetModel;
   Rapor: DashRaporModel[]=[];
-  AylikSatis:SatisGrafikDataModel[]=[];
-  AylikIade:SatisGrafikDataModel[]=[];
   GuncelSifre:string="";
   YeniSifre:string="";
   YeniSifreTekrar:string="";
+  perm:KullaniciYetki[]=[]; 
+  menuEx:MenuExapand[]=[];
+  secilisube:KulSirketYetki;
+  mainsirket:string="";
+  kilitAktif:boolean=false;
+  kilitsure:number = 0;
+
+  public tabs : Array<Tab> = [];
+  public selectedTab: number=1; 
   public sessionStorage = sessionStorage;
  
-
   constructor(
     @Inject('semUrl') private semUrl:string,
     private http:HttpClient,
@@ -102,6 +132,11 @@ export class AppComponent implements OnInit,AfterViewInit {
       this.checkBoxesMode = 'always';  
       this.loguser=new KullaniciModel();
       this.Data=new DashRaporOzetModel();
+      this.secilisube=new KulSirketYetki();
+
+      for(var i = 1; i <= 50; i++){
+        this.menuEx.push({Sira:i,Exapnd:false});
+      } 
     }  
 
   ngAfterViewInit(): void {
@@ -111,80 +146,65 @@ export class AppComponent implements OnInit,AfterViewInit {
     clearInterval(this.interval); 
   } 
 
-  async ekranYenile(){ 
-    this.interval =  setInterval(async ()=>{ 
-      await this.DataLoad(false);
-     },60000 * 15);
-   } 
+  async IdleRefresh(e:any){  
+    if(!this.userLogin){
+      return;
+    }
+    if(this.kilitAktif){
+      return;
+    } 
+    this.kilitsure=0;
+   }
 
-   filter!:FilterMod; 
-  async GetDashRapor(ilk:boolean) { 
-    if(ilk)  this.blockUI.start(EkranMesaj.Listele);
-    (await this.genelsrv.GetDashRapor()).subscribe(
-      data =>{
-        if(ilk)this.blockUI.stop();  
-        if(!data.Success){
-          this.alertify.warning(data.Message);
-          return;
-        } 
-        var datares = data.Model as DashModel; 
-        if(datares!=null){
-          this.Data = datares.Data;
+  tabChanged(event:any) {    
+    sessionStorage.setItem("AktifTab",event+"");
+    $(window).resize(); 
+  }  
 
-          if(datares.AylikSatis!=null){
-            this.AylikSatis.push(new SatisGrafikDataModel("Ocak",datares.AylikSatis.A1_OCAK));
-            this.AylikSatis.push(new SatisGrafikDataModel("Şubat",datares.AylikSatis.A2_SUBAT));
-            this.AylikSatis.push(new SatisGrafikDataModel("Mart",datares.AylikSatis.A3_MART));
-            this.AylikSatis.push(new SatisGrafikDataModel("Nisan",datares.AylikSatis.A4_NISAN));
-            this.AylikSatis.push(new SatisGrafikDataModel("Mayıs",datares.AylikSatis.A5_MAYIS));
-            this.AylikSatis.push(new SatisGrafikDataModel("Haziran",datares.AylikSatis.A6_HAZIRAN));
-            this.AylikSatis.push(new SatisGrafikDataModel("Temmuz",datares.AylikSatis.A7_TEMMUZ));
-            this.AylikSatis.push(new SatisGrafikDataModel("Ağustos",datares.AylikSatis.A8_AGUSTOS));
-            this.AylikSatis.push(new SatisGrafikDataModel("Eylül",datares.AylikSatis.A9_EYLUL));
-            this.AylikSatis.push(new SatisGrafikDataModel("Ekim",datares.AylikSatis.A10_EKIM));
-            this.AylikSatis.push(new SatisGrafikDataModel("Kasım",datares.AylikSatis.A11_KASIM));
-            this.AylikSatis.push(new SatisGrafikDataModel("Aralık",datares.AylikSatis.A12_ARALIK));
-          }
+  addNewTab(tabid:number=0) {    
+    this.activeLink=tabid;
 
-          if(datares.AylikIAde!=null){
-            this.AylikIade.push(new SatisGrafikDataModel("Ocak",datares.AylikIAde.A1_OCAK));
-            this.AylikIade.push(new SatisGrafikDataModel("Şubat",datares.AylikIAde.A2_SUBAT));
-            this.AylikIade.push(new SatisGrafikDataModel("Mart",datares.AylikIAde.A3_MART));
-            this.AylikIade.push(new SatisGrafikDataModel("Nisan",datares.AylikIAde.A4_NISAN));
-            this.AylikIade.push(new SatisGrafikDataModel("Mayıs",datares.AylikIAde.A5_MAYIS));
-            this.AylikIade.push(new SatisGrafikDataModel("Haziran",datares.AylikIAde.A6_HAZIRAN));
-            this.AylikIade.push(new SatisGrafikDataModel("Temmuz",datares.AylikIAde.A7_TEMMUZ));
-            this.AylikIade.push(new SatisGrafikDataModel("Ağustos",datares.AylikIAde.A8_AGUSTOS));
-            this.AylikIade.push(new SatisGrafikDataModel("Eylül",datares.AylikIAde.A9_EYLUL));
-            this.AylikIade.push(new SatisGrafikDataModel("Ekim",datares.AylikIAde.A10_EKIM));
-            this.AylikIade.push(new SatisGrafikDataModel("Kasım",datares.AylikIAde.A11_KASIM));
-            this.AylikIade.push(new SatisGrafikDataModel("Aralık",datares.AylikIAde.A12_ARALIK));
-          }
+    if(tabid>0){
+    let tabacikmi = this.tabService.tabs.filter((item)=> item.tabid==tabid)[0];
+      if(tabacikmi!=null && tabacikmi.tabid>0){
+        this.tabService.selectTab(tabacikmi);
+        return;
+      }
+    } 
+    if(tabid==1)this.tabService.addTab(new Tab(StokAramaComponent, "Stok Arama", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0001")[0]},tabid));
+    else if(tabid==2)this.tabService.addTab(new Tab(RafBulmaComponent, "Raf Bulma", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0002")[0]},tabid));
+    else if(tabid==3)this.tabService.addTab(new Tab(SiparisAktarmaComponent, "Sipariş Aktarma", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0006")[0]},tabid));
 
-        }
-        this.modalService.dismissAll();
-     }
-   ) 
-  } 
-
-  customizeTooltip = (info: any) => ({
-    html: `<div><div class='tooltip-header'>${
-      info.argumentText}</div>`
-                + '<div class=\'tooltip-body\'><div class=\'series-name\'>'
-                + `<span class='top-series-name'>${info.points[0].seriesName}</span>`
-                + ': </div><div class=\'value-text\'>'
-                + `<span class='top-series-value'>${parseInt(info.points[0].valueText)} TL </span>` 
-                + '% </div></div></div>',
-  });
-
-    customizeLabelText = (info: any) => `${info.valueText}%`; 
- 
-   delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    sessionStorage.setItem("AktifTab",tabid+"");
   }
 
-  Dahili:String="";
-  SantralAdi:String=""; 
+  removeTab(index: number): void {
+    this.tabService.removeTab(index);
+  }  
+
+  mainMenuShow(mm:string){
+    if(this.perm.filter(item => item.Goruntule==true && item.Modul==mm).length>0){ 
+      return true;
+    }
+    else return false;
+  }
+
+  submainMenuShow(mm:string){ 
+    if(this.perm.filter(item => item.Goruntule==true && item.Bolum==mm).length>0){
+      return true;
+    }
+    else return false;
+  }
+
+  childMenuShow(mm:string){
+    if(this.perm.filter(item => item.Goruntule==true && item.YetkiKodu==mm).length>0){
+      return true;
+    }
+    else return false;
+  } 
+
+   filter!:FilterMod; 
+
   async ngOnInit() {  
     this.kulltoken = sessionStorage?.getItem("Token")??"";
     if(this.kulltoken=="" || this.kulltoken==null){ 
@@ -195,21 +215,45 @@ export class AppComponent implements OnInit,AfterViewInit {
       let date=new Date;  
       this.filter = new FilterMod(date,date); 
       this.loguser = JSON.parse(sessionStorage.getItem('data')??"") as KullaniciModel;
+
+      if(this.loguser.Id>0) {
+        this.DataLoad();
+      }  
+
+      this.tabService.tabSub.subscribe(tabs => {
+        this.tabs = tabs;
+        this.selectedTab = tabs.findIndex(tab => tab.active);
+      });
   
-      if(this.loguser!=null && this.loguser.Id>0) { 
-        this.DataLoad(true);
-        this.ekranYenile();
-      } 
       window.addEventListener("keyup", this.disableF5); 
       window.addEventListener("keydown", this.disableF5);  
     }
-  } 
+  }
+
+  async DataLoad() {
+    await this.GetKullaniciYetki(this.loguser.Id);
+
+    this.kullsrc.kullToken = this.kulltoken;
+    this.kullsrc.kullUserId = this.loguser.Id;
+
+    sessionStorage.setItem("AktifTab","0");
+  }
+
+  async GetKullaniciYetki(id:number) {
+    this.blockUI.start("Yetki Okunuyor...");
+    (await this.kullsrc.GetKullaniciYetki(id,0,"","H")).subscribe((data)=>{   
+      this.blockUI.stop(); 
+      if(!data.Success){
+        this.alertify.warning(data.Message);
+        return;
+      }
+      this.kullsrc.userperm=data.List;   
+      this.perm =data.List; 
+      sessionStorage.setItem("AktifTab","0");
+  })  
+  }
 
   satirSec(e:any){} 
-
-  async DataLoad(ilk:boolean) { 
-    await this.GetDashRapor(ilk); 
-  }
 
    disableF5(e:any) { 
     if ((e.which || e.keyCode) == 116) e.preventDefault();   
@@ -228,6 +272,12 @@ export class AppComponent implements OnInit,AfterViewInit {
   menugoster(menu:string){   
     if(menu==this.secilimenu)this.secilimenu="";
     else this.secilimenu=menu;
+  }
+  
+  onClick(event:any) { 
+    if (event.clientX>350) // or some similar check
+    this.secilimenu="";
+    this.kilitsure=0;
   }
     
   getCSSClasses(link:number) {
@@ -426,56 +476,57 @@ sifreDegistir(){
     .catch(() => { 
     });  
 }
+
+sirketyetkilist:KulSirketYetki[]=[];
+  async subeDegistirMod(content:any){    
+    this.blockUI.start("Şirket Yetkisi Okunuyor...");
+    (await this.kullsrc.GetSirketYetki()).subscribe((data)=>{   
+      this.blockUI.stop(); 
+      if(data.Success){
+        this.sirketyetkilist = data.List;
+        this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' }); 
+      }
+      else{
+        this.alertify.warning(data.Message);
+      }  
+    })  
+  }
+
+  async subeDegistir(){
+    if(this.secilisube!=null && this.secilisube.dbName!=""){
+      this.mainsirket = this.secilisube.dbName; 
+
+      this.confirm.confirm('Şirket Değiştir',"Seçili Şirkete Geçiş Yapılacak, Devam Edilsin mi?")
+      .then(async (confirmed:any) => 
+      {
+        if(confirmed.sonuc==true){ 
+          var proc = await this.kullsrc.KullaniciGirisBilgiGuncelle(this.secilisube.dbName);
+          if(proc.Success==true){  
+            sessionStorage.setItem("AktifSirket",this.secilisube.dbName);  
+            this.modalService.dismissAll();
+
+            this.loguser.AktifSirket=this.secilisube.dbName;
+            sessionStorage.setItem("data",JSON.stringify(this.loguser));
+            location.reload();
+           }
+          else{
+            this.alertify.warning(proc.Message);
+          }
+        }        
+      })
+      .catch(() => { 
+      }); 
+    }
+  }
+
+  subeDegistirChg(e:any){
+    let secim = e?.selectedRowsData[0] ?? null;
+    if(secim!=null){
+      this.secilisube = secim;
+    } 
+  }
   
  
-} 
-
-export class SatisGrafikDataModel {
-  constructor(_Ay:string,_Tutar:number) {
-    this.Ay=_Ay;
-    this.Tutar=_Tutar;
-  }
-  Ay: string;
-  Tutar: number=0;
-}
-
-export  class MenuExapand { 
-  constructor(sira:number,exp:boolean) {
-    this.Sira=sira;
-    this.Exapnd=exp;
-  }
-  Sira:number=0;
-  Exapnd:boolean=false;
-}
-
-export  class User {
-  Email: string="";
-  Tckn: string="";
-  DogulamaKod: string="";
-  Password: string=""; 
-  AndroidId: string=""; 
-  Board: string=""; 
-  CihazId: string=""; 
-  Device: number = 0; 
-  UserKey:string=""; 
-  CepTel:string="";
-
-  constructor(_email:string,_pass:string,_andr:string,_board:string,_cihazid:string,_devize:number,_userkey:string) {
-   this.Email =_email;
-   this.Password=_pass;
-   this.Device=_devize;
-   this.AndroidId=_andr;
-   this.Board=_board;
-   this.CihazId=_cihazid;
-   this.UserKey=_userkey;
-  }
- } 
-
- export class DatepickerFormatsExample {
-
-  flightSchedule = {
-    date: new Date()
-  }
-}
+}  
 
 

@@ -86,12 +86,13 @@ export class KullaniciSrcService {
    let url=this.semUrl+"/Login/GetDepoYetki?EmpId="+empid+"&SubeId="+subeid+"&Yetki="+yetki+"&Token="+ this.token
     return this.http.get<Result<DepoYetki[]>>(url).pipe(map((res: any) => res));
   }
-  async GetKullaniciYetki(empid:number,grupid:number,yetkikodu:string="",birimkisit:string,token:string)
+
+  async GetKullaniciYetki(empid:number,grupid:number,yetkikodu:string="",birimkisit:string)
   { 
-    if(token=="") token=this.token?.toString()??"";
-   let url=this.semUrl+"/Login/GetKullaniciYetki?EmpId="+empid+"&GrupId="+ grupid+"&YetkiKodu="+ yetkikodu+"&Token="+ token+"&BirimKisit="+ birimkisit;
+   let url=this.semUrl+"/Login/GetKullaniciYetki?EmpId="+empid+"&GrupId="+ grupid+"&YetkiKodu="+ yetkikodu+"&Token="+ this.token+"&BirimKisit="+ birimkisit;
     return this.http.get<Result<KullaniciYetki[]>>(url).pipe(map((res: any) => res));
   }
+
   async YetkiGrupEkle(post:YetkiGrup,tip:IslemTipi):Promise<ReturnValues>  {
     const headers = new HttpHeaders(
       {
@@ -478,17 +479,20 @@ export class KullaniciSrcService {
 }
 
 export  class User {
-    Email: string="";
-    Kullanici: string=""; 
-    Sifre: string=""; 
-    AndroidId: string=""; 
-    Board: string=""; 
-    CihazId: string=""; 
-    Device: number = 0; 
-    UserKey:string=""; 
-    CepTel:string="";
-  
-    constructor(_Kullanici:string,_pass:string,_andr:string,_board:string,_cihazid:string,_devize:number,_userkey:string) {
+  Email: string="";
+  Tckn: string="";
+  DogulamaKod: string="";
+  Password: string=""; 
+  AndroidId: string=""; 
+  Board: string=""; 
+  CihazId: string=""; 
+  Device: number = 0; 
+  UserKey:string=""; 
+  CepTel:string="";
+  Kullanici: string=""; 
+  Sifre: string=""; 
+
+  constructor(_Kullanici:string,_pass:string,_andr:string,_board:string,_cihazid:string,_devize:number,_userkey:string) {
      this.Kullanici =_Kullanici;
      this.Sifre=_pass;
      this.Device=_devize;
@@ -496,7 +500,7 @@ export  class User {
      this.Board=_board;
      this.CihazId=_cihazid;
      this.UserKey=_userkey;
-    }
+  }
 } 
  
 export class KullaniciRef {
