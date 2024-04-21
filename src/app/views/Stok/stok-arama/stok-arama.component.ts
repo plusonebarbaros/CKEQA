@@ -10,7 +10,7 @@ import { Subject, ReplaySubject } from 'rxjs';
 import { EkranMesaj } from 'src/app/services/GenelSrc';
 import { FilterMod, KullaniciYetki, KullaniciModel, KullaniciSrcService } from 'src/app/services/KullaniciSrc';
 import { NotifyService } from 'src/app/services/notify';
-import { StokHareketModel, StokHataModel, StokModel, StokService } from 'src/app/services/StokSrc';
+import { HucreBakiyeModel, StokHareketModel, StokHataModel, StokModel, StokService } from 'src/app/services/StokSrc';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
 
 @Component({
@@ -27,6 +27,7 @@ export class StokAramaComponent implements OnInit {
   @ViewChild('gridStokList', { static: false }) grid!: DxDataGridComponent;
   @ViewChild('gridStokHareket', { static: false }) gridStokHareket!: DxDataGridComponent;
   @ViewChild('gridStokHatalar', { static: false }) gridStokHatalar!: DxDataGridComponent;
+  @ViewChild('gridHucreBakiye', { static: false }) gridHucreBakiye!: DxDataGridComponent;
   @ViewChild("arakeyw") arakeyw: ElementRef | undefined;
   @BlockUI() blockUI!: NgBlockUI;
   datalist: StokModel[]=[]; 
@@ -45,6 +46,8 @@ export class StokAramaComponent implements OnInit {
   stokharyetki:KullaniciYetki; 
   stokduzenlemeyetki:KullaniciYetki; 
   stokhatayetki:KullaniciYetki; 
+  hucrebakiyeyetki:KullaniciYetki; 
+  hucreharlist:HucreBakiyeModel[]=[];
 
   protected _onDestroy = new Subject<void>();
 
@@ -70,6 +73,7 @@ export class StokAramaComponent implements OnInit {
     this.stokharyetki = this.kullsrc.userperm.filter((x)=>x.YetkiKodu=="YT0003")[0];   
     this.stokduzenlemeyetki = this.kullsrc.userperm.filter((x)=>x.YetkiKodu=="YT0004")[0];   
     this.stokhatayetki = this.kullsrc.userperm.filter((x)=>x.YetkiKodu=="YT0005")[0];   
+    this.hucrebakiyeyetki = this.kullsrc.userperm.filter((x)=>x.YetkiKodu=="YT0013")[0];   
   }
   
   ngOnDestroy(): void {
@@ -212,5 +216,30 @@ export class StokAramaComponent implements OnInit {
     }   
   }
   
+  async hucreBakiye(content:any,data:StokModel){
+    this.hucreharlist=[];
+    if(this.data==null || this.data.STOK_KODU==""){
+      this.alertify.warning("Seçim Yapılmadı!") 
+      return;
+    }
+    this.secilidata = data;
+    this.blockUI.start(EkranMesaj.Listele);
+    var sonuc = await this.stoksrc.GetHucreBakiye(data.STOK_KODU); 
+    this.blockUI.stop();  
+    if(sonuc.Success){
+      this.hucreharlist=sonuc.List;  
+      if(this.hucreharlist==null || this.hucreharlist.length<=0){
+        this.alertify.warning("Hücre Bakiye Bilgisi Bulunamadı!");
+        return;
+      }
+      else{
+        this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss65', backdrop: 'static' , keyboard:false}); 
+      }
+    }else{
+      this.alertify.warning(sonuc.Message);
+      return;
+    }   
+  }
+
 
 }

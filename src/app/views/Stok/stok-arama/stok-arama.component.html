@@ -75,10 +75,11 @@
           <dxi-column dataField="DEPOSTOK_5" caption="Depo Stok 5" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
           <dxi-column dataField="DEPOSTOK_51" caption="Depo Stok 51" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
 
-          <dxi-column caption="İşlemler" cellTemplate="cellTemplate" [width]="125" alignment="center" [fixed]="true" fixedPosition="right"></dxi-column>
+          <dxi-column caption="İşlemler" cellTemplate="cellTemplate" [width]="175" alignment="center" [fixed]="true" fixedPosition="right"></dxi-column>
           <div *dxTemplate="let cell of 'cellTemplate'">
               <button *ngIf="stokharyetki.Goruntule" (click)="stokDetay(modStokDuzenle,cell.data)" class="btn btn-xs btn-info">Düzenle</button>
               <button *ngIf="stokduzenlemeyetki.Goruntule" (click)="stokHareket(modStokHareket,cell.data)" class="btn btn-xs btn-warning">Hareket</button>
+              <button *ngIf="hucrebakiyeyetki.Goruntule" (click)="hucreBakiye(modHucreBakiye,cell.data)" class="btn btn-xs btn-primary">Hücre</button>
           </div>             
           
      </dx-data-grid>  
@@ -260,6 +261,60 @@
         <dxi-column dataField="BARKOD1" caption="Barkod 1" [style.width.%]="10" [allowEditing]="false"></dxi-column>    
         <dxi-column dataField="BARKOD2" caption="Barkod 2" [style.width.%]="10" [allowEditing]="false"></dxi-column>    
         <dxi-column dataField="BARKOD3" caption="Barkod 3" [style.width.%]="10" [allowEditing]="false"></dxi-column>    
+        
+   </dx-data-grid>  
+      
+    </div>
+    <div class="modal-footer"> 
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+    </div>
+ </ng-template>
+
+ <ng-template #modHucreBakiye let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Hücre Bakiye</h4> 
+    </div>
+    <div class="modal-body"> 
+        <dx-data-grid class="devgrid52" #gridHucreBakiye
+        [dataSource]="hucreharlist"  
+        [showBorders]="true"
+        [showColumnLines]="false"
+        [showRowLines]="true" 
+        [rowAlternationEnabled]="true"
+        [focusedRowEnabled]="true"
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true" 
+        [allowColumnReordering]="true"
+        keyExpr="semkey" 
+        columnResizingMode = "widget"   
+        > 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+        <dxo-scrolling 
+          mode="virtual"
+          showScrollbar="'always'"
+          useNative="false"
+          scrollByThumb="true" >
+       </dxo-scrolling> 
+        <dxo-load-panel [enabled]="true"></dxo-load-panel>
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager
+            [visible]="true" 
+            displayMode="'compact'"
+            [showPageSizeSelector]="false"
+            [showInfo]="true"
+            [showNavigationButtons]="true">
+        </dxo-pager> 
+        <dxo-header-filter [allowSearch]="true"></dxo-header-filter> 
+      
+        <dxi-column dataField="DEPO_KODU" caption="Depo Kodu" [width]="125" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="DEPO_ISMI" caption="Depo Adı" [width]="200" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="STOK_KODU" caption="Stok Kodu" [width]="125" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="STOK_ADI" caption="Stok Adı" [width]="200" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="HUCREKODU" caption="Raf" [width]="150" [allowEditing]="false"></dxi-column>          
+ 
+        <dxi-column dataField="BAKIYE" caption="Bakiye" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
         
    </dx-data-grid>  
       

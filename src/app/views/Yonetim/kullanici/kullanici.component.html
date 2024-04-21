@@ -1,0 +1,124 @@
+<mat-drawer-container class="mat-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+        <div class="modal-header" style="text-align: center;">
+             <h5 class="modal-title" id="myModalLabel2">Filtre</h5>
+        </div>
+        <div class="body">
+             <div style="clear:both;margin-bottom: 15px!important"></div>    
+              <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Durum</mat-label>
+                <mat-select name="btur" [(ngModel)]="WebDurum">  
+                  <mat-option [value]="1">Web Giriş Aktif</mat-option>
+                  <mat-option [value]="2">Web Giriş Pasif</mat-option>
+                  <mat-option [value]="3">Tümü</mat-option> 
+                </mat-select>
+             </mat-form-field>   
+    
+            <div style="clear:both;margin-bottom: 5px!important"></div> 
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default" (click)="drawer.toggle()" value="Kapat" />
+            <input type="button" class="btn btn-info" (click)="KullaniciList(0,this.WebDurum)" value="Listele" />
+        </div>
+    </mat-drawer>
+   
+    <mat-drawer-content> 
+<div class="content">
+    <nav class="menu-navigation-icons"> 
+        <a href="#" class="menu-silver" (click)="KullaniciList(0,this.WebDurum)"><i class="fas fa-sync-alt"></i><span>Yenile</span></a> 
+        <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="yeniEkle()"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a>  
+        <a href="#" *ngIf="yetki.Sil && seciliuser.Id>0" class="menu-red" (click)="persSil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a>  
+        <a href="#" (click)="drawer.toggle()" class="menu-silver" ><i class="fas fa-filter"></i><span>Filtre</span></a>
+
+        <a href="#" *ngIf="yetki.Export" (click)="this.dataGridRef2.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+
+    </nav>
+
+
+
+    <div style="clear:both"></div> 
+
+
+    <div class="input-group">       
+      <mat-form-field appearance="outline" [style.width.%]="100" style="padding-right: 10px;">
+        <input matInput #arakeyw type="search" autocomplete="off" placeholder="Aramak İstediğiniz Kullanııc Bilgisini Kısaca Yazın... Örn: Ahmet Mehmet" [(ngModel)]="kalemkeyword" (keyup)="kalemAra($event)">
+      
+       <button mat-button matSuffix mat-icon-button (click)="aramaTemizle()">
+           <mat-icon aria-placeholder="Arama Temizle" title="Arama Temizle" style="color: red;font-weight: bold">cancel</mat-icon>
+       </button>
+      </mat-form-field> 
+      </div>
+      
+      <div style="clear:both;"></div>
+        <dx-data-grid class="devgrid72"  #dataGridRef2
+        [dataSource]="kullanicilist"
+        [showBorders]="true"
+        [showRowLines]="true" 
+        [showColumnLines]="false" 
+        [rowAlternationEnabled]="true"
+        [focusedRowEnabled]="true"
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true"    
+        columnResizingMode = "widget" 
+        [remoteOperations]="false"
+        [allowColumnReordering]="true"
+        keyExpr="Id"   
+        useNative="true"
+        (onSelectionChanged)="onSelectionChanged($event)"  
+        >  
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+        <dxo-scrolling 
+          mode="virtual"
+          showScrollbar="'always'"
+          useNative="false"
+          scrollByThumb="true" >
+        </dxo-scrolling> 
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager
+            [visible]="true"
+            displayMode="'compact'"
+            [showPageSizeSelector]="false"
+            [showInfo]="true"
+            [showNavigationButtons]="true">
+        </dxo-pager>
+
+        <dxi-column dataField="Id" caption="Id" cellTemplate="cellTemplate" [width]="70" alignment="center"></dxi-column>
+        <div *dxTemplate="let cell of 'cellTemplate'">
+            <div class="dxgrididfield" (dblclick)="kullaniciDetay(cell.data)">{{cell.value}}</div>
+        </div>     
+ 
+        <dxi-column dataField="KullaniciAdi" caption="Kullanıcı Adı" [style.width.%]="10" ></dxi-column>   
+        <dxi-column dataField="AdSoyad" caption="Ad Soyad" [style.width.%]="10" ></dxi-column>   
+        <dxi-column dataField="Email" caption="Email" [style.width.%]="10" ></dxi-column>   
+        <dxi-column dataField="Telefon" caption="Telefon" [style.width.%]="10" ></dxi-column>  
+        
+        <dxi-column dataField="Departman" caption="Departman" [style.width.%]="10" ></dxi-column>   
+        <dxi-column dataField="Pozisyon" caption="Pozisyon" [style.width.%]="10" ></dxi-column>   
+
+        <dxi-column dataField="Yonetici" caption="Yönetici" [style.width.%]="10"></dxi-column>
+ 
+        <dxi-column dataField="KullaniciIzinli" caption="İzinli" cellTemplate="cellKullaniciIzinli" [style.width.%]="10" alignment="center"></dxi-column>
+        <div *dxTemplate="let cell of 'cellKullaniciIzinli'">
+            <span *ngIf="cell.value===0 || cell.value===null" class="badge pill-medium badge-success">Hayır</span>
+            <span *ngIf="cell.value===1" class="badge pill-medium badge-danger">Evet</span>
+        </div> 
+
+        <dxi-column dataField="VekilKullanici" caption="Vekil" [style.width.%]="10"></dxi-column>
+
+        <dxi-column [style.width.%]="10" caption="İzin Bit.Tarih" dataField="IzinBitisTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column>       
+
+        <dxi-column dataField="Admin" caption="Admin" [style.width.%]="10" ></dxi-column>   
+        <dxi-column dataField="Aktif" caption="Aktif" [style.width.%]="10" ></dxi-column>   
+        
+        </dx-data-grid>   
+    
+</div>
+  
+
+
+</mat-drawer-content> 
+</mat-drawer-container> 

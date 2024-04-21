@@ -1,0 +1,282 @@
+<nav class="menu-navigation-icons">
+    <a href="#" *ngIf="seciliuser.Id<=0 && yetki.Ekle" class="menu-green" (click)="kaydet()"><i class="fas fa-save"></i><span>Kaydet</span></a>  
+    <a href="#" *ngIf="seciliuser.Id>0 && yetki.Guncelle" class="menu-green" (click)="kaydet()"><i class="fas fa-save"></i><span>Güncelle</span></a>  
+  
+  
+  
+  
+    <a href="#"  (click)="DataLoad()" style="float: right!important;" class="menu-blue" ><i class="fas fa-sync-alt"></i><span>Data Yenile</span></a> 
+  
+  </nav>
+  <div style="clear:both"></div>
+    
+    
+    <mat-tab-group mat-align-tabs="start" (selectedTabChange)="tabDegisti($event)" animationDuration="0ms">
+      <mat-tab label="Kullanıcı Bilgileri"> 
+        <div class="card">
+          <div class="card-body">
+            <div class="row" style="margin-left: 5px!important"> 
+           
+              <section class="switchfont" style="float:left">
+                  <mat-slide-toggle [(ngModel)]="seciliuser.Admin" [checked]="seciliuser.Admin">
+                  Admin mi
+                  </mat-slide-toggle>
+              </section>
+              <section class="switchfont" style="float:left">
+                <mat-slide-toggle [(ngModel)]="seciliuser.Aktif" [checked]="seciliuser.Aktif">
+                Aktif
+                </mat-slide-toggle>
+            </section> 
+  
+            </div>
+            <div style="margin-bottom: 20px!important;"></div>
+             
+              <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                  <mat-label>Ad Soyad</mat-label>
+                  <input matInput placeholder="Ad Soyad" [(ngModel)]="seciliuser.AdSoyad" type="text">
+              </mat-form-field>   
+  
+              <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                <mat-label>Kullanıcı Adı</mat-label>
+                <input matInput placeholder="Kullanıcı Adı" [(ngModel)]="seciliuser.KullaniciAdi" type="text" [disabled]="seciliuser.Id>0">
+            </mat-form-field>   
+  
+            <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+              <mat-label>Şifre</mat-label>
+              <input matInput placeholder="Şifre" [(ngModel)]="seciliuser.Sifre" type="password">
+          </mat-form-field>  
+         
+              
+              <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                <mat-label>Cep Tel</mat-label>
+                <input matInput placeholder="Cep Tel" [(ngModel)]="seciliuser.Telefon" type="text" mask="(000) 000 00 00">
+            </mat-form-field>  
+        
+            <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+              <mat-label>Mail</mat-label>
+              <input matInput placeholder="Mail" [(ngModel)]="seciliuser.Email" type="text">
+          </mat-form-field>     
+  
+  
+         <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                <mat-label>Şirket Yetki</mat-label>
+                  <mat-select  #multiSelect  [(ngModel)]="seciliuser.Sirket" [multiple]="true">
+                    <mat-option>
+                      <ngx-mat-select-search [formControl]="autoSirket"  
+                       placeholderLabel="Ara..."
+                       noEntriesFoundLabel="Kayıt Bulunamadı...">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let tss of filterSirket | async" [value]="tss.dbName" >
+                      {{tss.dbName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+      
+            <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+              <mat-label>Grup Yetki</mat-label>
+                <mat-select  #singleSelect [(ngModel)]="seciliuser.GrupYetkiId">
+                  <mat-option>
+                    <ngx-mat-select-search [formControl]="autoGrupYetki"  
+                     placeholderLabel="Ara..."
+                     noEntriesFoundLabel="Kayıt Bulunamadı...">
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let gr of filterGrupYetki | async" [value]="gr.Id" >
+                    {{gr.GrupAdi}}
+                  </mat-option>
+                </mat-select>
+                <button mat-button matSuffix *ngIf="seciliuser.GrupYetkiId>0" mat-icon-button (click)="defGrup($event)">
+                   <mat-icon>close</mat-icon>
+               </button>
+              </mat-form-field>  
+  
+              <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                <mat-label>Departman</mat-label>
+                  <mat-select  #singleSelect [(ngModel)]="seciliuser.DepartmanId">
+                    <mat-option>
+                      <ngx-mat-select-search [formControl]="autoDepartman"  
+                       placeholderLabel="Ara..."
+                       noEntriesFoundLabel="Kayıt Bulunamadı...">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let gr of filterDepartman | async" [value]="gr.Id" >
+                      {{gr.Name}}
+                    </mat-option>
+                  </mat-select>
+                  <button mat-button matSuffix *ngIf="seciliuser.DepartmanId>0" mat-icon-button (click)="defDepartman($event)">
+                     <mat-icon>close</mat-icon>
+                 </button>
+                </mat-form-field>  
+  
+                <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                  <mat-label>Pozisyon</mat-label>
+                    <mat-select  #singleSelect [(ngModel)]="seciliuser.PozisyonId">
+                      <mat-option>
+                        <ngx-mat-select-search [formControl]="autoPozisyon"  
+                         placeholderLabel="Ara..."
+                         noEntriesFoundLabel="Kayıt Bulunamadı...">
+                        </ngx-mat-select-search>
+                      </mat-option>
+                      <mat-option *ngFor="let gr of filterPozisyon | async" [value]="gr.Id" >
+                        {{gr.Name}}
+                      </mat-option>
+                    </mat-select>
+                    <button mat-button matSuffix *ngIf="seciliuser.PozisyonId>0" mat-icon-button (click)="defPozisyon($event)">
+                       <mat-icon>close</mat-icon>
+                   </button>
+                  </mat-form-field>  
+  
+                  <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                    <mat-label>Yönetici</mat-label>
+                    <input matInput type="search" [(ngModel)]="seciliuser.Yonetici" readonly> 
+        
+                    <button mat-button matSuffix mat-icon-button (click)="kullhesapSecModal(kullsecMod)">
+                      <mat-icon style="color: #007bff;font-weight: bold;">search</mat-icon>
+                    </button>
+        
+                    <button *ngIf="seciliuser.Yonetici!=''" mat-button matSuffix mat-icon-button (click)="kullSecimTemizle()" >
+                      <mat-icon style="color: red;font-weight: bold">cancel</mat-icon>
+                    </button>
+                 </mat-form-field>
+  
+          </div> 
+        </div>  
+        </mat-tab>
+  
+      <mat-tab label="Kullanıcı Yetki">
+        <dx-data-grid class="devgrid74" #secyetki
+          [dataSource]="yetkilist"
+          [showColumnLines]="false"
+          [showRowLines]="true" 
+          [rowAlternationEnabled]="true"
+          [focusedRowEnabled]="true"
+          [columnAutoWidth]="true"
+          [allowColumnResizing]="true"
+          columnResizingMode = "widget"  
+          keyExpr="Id"    
+          [allowColumnReordering]="true"    
+          [remoteOperations]="true"  
+          > 
+          <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+          <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+          <dxo-scrolling 
+            mode="virtual"
+            showScrollbar="'always'"
+            useNative="false"
+            scrollByThumb="true" >
+          </dxo-scrolling> 
+          <dxo-paging [pageSize]="30"> </dxo-paging>
+          <dxo-pager
+              [visible]="true"
+              displayMode="'compact'"
+              [showPageSizeSelector]="false"
+              [showInfo]="true"
+              [showNavigationButtons]="true">
+          </dxo-pager>
+          <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>    
+                   
+          <!-- <dxi-column [width]="20+'%'" caption="Bölüm" dataField="Bolum" [allowEditing]="false"></dxi-column>    -->
+          <dxi-column [width]="20+'%'" caption="Modül" dataField="Modul" [allowEditing]="false"></dxi-column>   
+          <dxi-column [width]="20+'%'" caption="Yetki" dataField="Yetki" [allowEditing]="false"></dxi-column>  
+          <dxi-column [width]="15+'%'" caption="Görüntüle" dataField="Goruntule" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpGoruntuleTemp"></dxi-column> 
+          <div *dxTemplate="let info of 'grpGoruntuleTemp'">
+              <div (dblclick)="tumunuSec(1)">{{info.column.caption}}</div>
+          </div> 
+          <dxi-column [width]="15+'%'" caption="Ekle" dataField="Ekle" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpekleTemp"></dxi-column>  
+          <div *dxTemplate="let info of 'grpekleTemp'">
+              <div (dblclick)="tumunuSec(2)">{{info.column.caption}}</div>
+          </div> 
+          <dxi-column [width]="15+'%'" caption="Güncelle" dataField="Guncelle" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpGuncelleTemp"></dxi-column>   
+          <div *dxTemplate="let info of 'grpGuncelleTemp'">
+              <div (dblclick)="tumunuSec(3)">{{info.column.caption}}</div>
+          </div>         
+          <dxi-column [width]="15+'%'" caption="Sil" dataField="Sil" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpSilTemp"></dxi-column>     
+          <div *dxTemplate="let info of 'grpSilTemp'">
+              <div (dblclick)="tumunuSec(4)">{{info.column.caption}}</div>
+          </div>   
+          <dxi-column [width]="15+'%'" caption="Export" dataField="Export" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpExportTemp"></dxi-column>     
+          <div *dxTemplate="let info of 'grpExportTemp'">
+              <div (dblclick)="tumunuSec(5)">{{info.column.caption}}</div>
+          </div>   
+  
+          <dxo-group-panel [visible]="false"></dxo-group-panel>
+          <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+        
+          </dx-data-grid>   
+      </mat-tab>  
+  
+    </mat-tab-group>  
+        
+  <ng-template #kullsecMod let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Kullanıcı Seç</h4> 
+    </div>
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="input-group">
+              <input type="text" class="form-control" autocomplete="off" placeholder="Aramak İstediğiniz Hesabı Kısaca Yazın..." [(ngModel)]="kalemkeyword" (keyup)="kullkalemAra($event)">
+              <span class="input-group-btn">
+                <button class="btn btn-info btn-mini" title="Arama Temizle" (click)="kullaramaTemizle()">
+                    <span class="fas fa-sync-alt"></span>
+                </button>
+            </span>
+          </div>
+          </div>
+          <div style="clear:both"></div>
+          <hr/>
+          <dx-data-grid class="devgrid30" #gridAvansKullaniciList
+          [dataSource]="kullanicilist"
+          [showBorders]="true"
+          [showRowLines]="true" 
+          [showColumnLines]="false"
+          [showRowLines]="true" 
+          [rowAlternationEnabled]="true"
+          [focusedRowEnabled]="true"
+          [columnAutoWidth]="true"
+          [allowColumnResizing]="true"
+          keyExpr="Id" 
+          columnResizingMode = "widget" 
+          [allowColumnReordering]="true"  
+          (onSelectionChanged)="kullonHesapChg($event)"
+          (onRowDblClick)="kullhesapSec()"
+          > 
+          <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+          <dxo-filter-row [visible]="false"></dxo-filter-row>
+          <dxo-header-filter [visible]="false"></dxo-header-filter>
+          <dxo-paging [enabled]="false"></dxo-paging>
+                    <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+          <dxo-header-filter [allowSearch]="false"></dxo-header-filter>
+          <dxo-selection mode="single"></dxo-selection>   
+          
+          <dxi-column dataField="Id" caption="Id" [style.width.%]="10" alignment="center"> </dxi-column> 
+  
+          <dxi-column dataField="AdSoyad" caption="Ad Soyad" [style.width.%]="10"></dxi-column>
+        
+          <dxi-column dataField="Departman" caption="Departman" [style.width.%]="10"></dxi-column>
+        
+          <dxi-column dataField="Pozisyon" caption="Pozisyon" [style.width.%]="10"></dxi-column>
+        
+          <dxi-column dataField="Yonetici" caption="Yönetici" [style.width.%]="10"></dxi-column>
+         
+          <dxi-column dataField="KullaniciIzinli" caption="İzinli" cellTemplate="cellKullaniciIzinli" [style.width.%]="10" alignment="center"></dxi-column>
+          <div *dxTemplate="let cell of 'cellKullaniciIzinli'">
+              <span *ngIf="cell.value===0 || cell.value===null" class="badge pill-medium badge-success">Hayır</span>
+              <span *ngIf="cell.value===1" class="badge pill-medium badge-danger">Evet</span>
+          </div> 
+        
+          <dxi-column [style.width.%]="10" caption="İzin Bit.Tarih" dataField="IzinBitisTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column>       
+          
+          </dx-data-grid>  
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="finhspkapat" class="btn btn-danger" (click)="modal.dismiss('Cross click')"  #closeBtn>Vazgeç</button>
+      <button type="button" class="btn btn-success" (click)="kullhesapSec()">Seçim Yap</button>
+    </div>
+  </ng-template>  
+  
+ 
+  

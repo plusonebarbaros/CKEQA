@@ -55,6 +55,14 @@ import { DxProgressBarModule } from "devextreme-angular";
 import { StokAramaComponent } from './views/Stok/stok-arama/stok-arama.component';
 import { RafBulmaComponent } from './views/Stok/raf-bulma/raf-bulma.component';
 import { SiparisAktarmaComponent } from './views/Siparis/siparis-aktarma/siparis-aktarma.component';
+import { MesajGosterComponent } from './views/Genel/mesaj-goster/mesaj-goster.component';
+import { KullaniciComponent } from './views/Yonetim/kullanici/kullanici.component';
+import { KullaniciDetayComponent } from './views/Yonetim/kullanici-detay/kullanici-detay.component';
+import { GrupYetkiComponent } from './views/Yonetim/grup-yetki/grup-yetki.component';
+import { GrupYetkiDetayComponent } from './views/Yonetim/grup-yetki-detay/grup-yetki-detay.component';
+import { KullaniciDepartmanComponent } from './views/Yonetim/kullanici-departman/kullanici-departman.component';
+import { KullaniciPozisyonComponent } from './views/Yonetim/kullanici-pozisyon/kullanici-pozisyon.component';
+import { IrsaliyeAktarmaComponent } from './views/Siparis/irsaliye-aktarma/irsaliye-aktarma.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -71,6 +79,14 @@ locale(navigator.language);
     StokAramaComponent,
     RafBulmaComponent,
     SiparisAktarmaComponent,
+    MesajGosterComponent,
+    KullaniciComponent,
+    KullaniciDetayComponent,
+    GrupYetkiComponent,
+    GrupYetkiDetayComponent,
+    KullaniciDepartmanComponent,
+    KullaniciPozisyonComponent,
+    IrsaliyeAktarmaComponent,
       
       ],
   imports: [

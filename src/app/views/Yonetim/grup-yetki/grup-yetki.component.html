@@ -1,0 +1,88 @@
+ 
+    <nav class="menu-navigation-icons">
+        <a href="#" class="menu-silver" (click)="DataListele()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="yeniEkle(grupmodal)"><i class="fas fa-plus-circle"></i><span>Grup Ekle</span></a> 
+        <a href="#" class="menu-red" *ngIf="this.silgoster && yetki.Sil" (click)="kayitsil()"><i class="fas fa-minus-circle"></i><span>Grup Sil</span></a> 
+    </nav>
+    <div style="clear:both"></div>
+     
+    <dx-data-grid class="devgrid74" #secgrup
+    [dataSource]="datalist"
+    [showBorders]="true"
+    [showColumnLines]="false"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true" 
+    [allowColumnResizing]="true"
+    keyExpr="Id" 
+    [columnAutoWidth]="true"
+    columnResizingMode = "widget" 
+    [allowColumnReordering]="true"   
+    > 
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+    <dxo-scrolling 
+      mode="virtual"
+      showScrollbar="'always'"
+      useNative="false"
+      scrollByThumb="true" >
+    </dxo-scrolling> 
+    <dxo-paging [pageSize]="30"> </dxo-paging>
+    <dxo-pager
+        [visible]="true"
+        displayMode="'compact'"
+        [showPageSizeSelector]="false"
+        [showInfo]="true"
+        [showNavigationButtons]="true">
+    </dxo-pager> 
+      
+    <dxi-column dataField="Id" caption="Id" cellTemplate="cellTemplate" [width]="80" alignment="center"></dxi-column>
+    <div *dxTemplate="let cell of 'cellTemplate'" (dblclick)="kayitdetay(grupmodal,cell.data)">
+        <div class="dxgrididfield" >{{cell.text}}</div>
+    </div>   
+
+    <dxi-column caption="#" cellTemplate="cellYetkiDetay" [width]="80" alignment="center" [allowEditing]="false"></dxi-column>
+    <div *dxTemplate="let cell of 'cellYetkiDetay'">
+        <span class="badge pill-medium bg-info" style="cursor:pointer" title="Yetki Detay Bilgileri" (click)="yetkidetay(cell.data)">Detay</span>
+    </div> 
+ 
+    <dxi-column [style.width.%]="10" caption="Grup Adı" dataField="GrupAdi" ></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Kayıt" dataField="Kayit" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Guncelleyen" dataField="Guncelleyen" ></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Güncelleme" dataField="Guncelleme" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column>
+      
+    </dx-data-grid>  
+ 
+   
+    <ng-template #grupmodal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" >Yetki Grup Tanım - {{secilidata.Id}}</h4> 
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <section class="switchfont" style="float:left">
+                    <mat-slide-toggle [(ngModel)]="secilidata.Aktif" [checked]="secilidata.Aktif">
+                    Aktif
+                    </mat-slide-toggle>
+                </section>
+            </div>
+            <div style="clear:both;margin-bottom:15px!important"></div> 
+ 
+            <div class="row">
+                <mat-form-field appearance="outline" [style.width.%]="100">
+                    <mat-label>Grup Adı</mat-label>
+                    <input matInput placeholder="Grup Adı" [(ngModel)]="secilidata.GrupAdi" type="text" >
+                </mat-form-field>  
+              </div> 
+           
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
+          <button type="button" class="btn btn-success" (click)="kaydet()">Kaydet</button>
+        </div>
+      </ng-template>
+    

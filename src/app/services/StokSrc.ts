@@ -99,9 +99,40 @@ export class StokService {
   return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
 } 
 
+async GetHucreBakiye(STOK_KODU:string):Promise<ReturnValuesList<HucreBakiyeModel>>  {
+  const headers = new HttpHeaders(
+    {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Headers': 'Content-Type' }); 
+
+   let options = { headers: headers }; 
+   const body =  JSON.stringify({ 
+     "STOK_KODU":STOK_KODU, 
+     "Token":this.kullsrc.token, 
+   });
+
+ var result = await this.http.post<any>(this.semUrl+"/Stok/GetHucreBakiye", body, options).toPromise(); 
+ var sonuc = JSON.parse(JSON.stringify(result));  
+ return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
+}
+
 
 
 }
+
+
+export  class HucreBakiyeModel {
+  DEPO_KODU: number=0;
+  DEPO_ISMI: string="";  
+  STOK_KODU: string="";  
+  STOK_ADI: string="";  
+  HUCREKODU: string="";  
+  BAKIYE: number=0;
+  SERI_TAKIBI: string="";  
+  semkey: string="";  
+} 
+
 
 export  class StokRafModel {
   STOK_KODU: string="";  

@@ -1,0 +1,71 @@
+ 
+    <nav class="menu-navigation-icons">
+        <a href="#" class="menu-silver" (click)="DataListele()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="yeniEkle(anketmodal)"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a> 
+        <a href="#" class="menu-red" *ngIf="this.silgoster && yetki.Sil" (click)="kayitsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a> 
+    </nav>
+    <div style="clear:both"></div>
+    
+    <div class="row" >
+        <dx-data-grid class="devgrid74" #gridPozisyonList
+    [dataSource]="datalist"
+    [showBorders]="true"
+    [showColumnLines]="false"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true" 
+    [allowColumnResizing]="true"
+    keyExpr="Id" 
+    [columnAutoWidth]="true"
+    columnResizingMode = "widget" 
+    [allowColumnReordering]="true"
+    (onSelectionChanged)="silgosterChanged($event)"
+    > 
+     <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-paging [enabled]="false"></dxo-paging>
+                    <dxo-load-panel [enabled]="true"></dxo-load-panel>      
+    <dxo-selection mode="single"></dxo-selection> 
+      
+    <dxi-column dataField="Id" caption="Id" cellTemplate="cellTemplate" [width]="75" alignment="center"></dxi-column>
+    <div *dxTemplate="let cell of 'cellTemplate'" (dblclick)="kayitdetay(anketmodal,cell.data)">
+        <div class="dxgrididfield" >{{cell.text}}</div>
+    </div>    
+
+    <dxi-column  [style.width.%]="15" caption="Tanım" dataField="Tanim" ></dxi-column>   
+    
+    <dxi-column  [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
+    <dxi-column  [style.width.%]="10" caption="Kayıt" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+    <dxi-column  [style.width.%]="10" caption="Guncelleyen" dataField="Guncelleyen" ></dxi-column> 
+    <dxi-column  [style.width.%]="10" caption="Güncelleme" dataField="GuncelTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column>
+    <dxi-column  [style.width.%]="10" caption="Aktif" dataField="Aktif"></dxi-column>
+  
+    </dx-data-grid> 
+    </div>
+      
+    <ng-template #anketmodal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" >Pozisyon Tanım - {{secilidata.Id}}</h4> 
+        </div>
+        <div class="modal-body">
+            <section class="switchfont" style="margin-left: 8px;">
+                <mat-slide-toggle [(ngModel)]="secilidata.Aktif" [checked]="secilidata.Aktif">
+                Aktif
+                </mat-slide-toggle>
+            </section>
+            <div style="clear:both;margin-bottom:20px!important"></div> 
+             
+            <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Tanım</mat-label>
+                <input matInput placeholder="Tanım" [(ngModel)]="secilidata.Tanim" type="text" autocomplete="off" maxlength="254">
+            </mat-form-field>    
+           
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
+          <button type="button" class="btn btn-success" (click)="kaydet()">Kaydet</button>
+        </div>
+      </ng-template>
+    
+ 

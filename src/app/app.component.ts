@@ -27,6 +27,11 @@ import { KullaniciModel, KullaniciSrcService, FilterMod, KullaniciYetki, KulSirk
 import { StokAramaComponent } from './views/Stok/stok-arama/stok-arama.component';
 import { RafBulmaComponent } from './views/Stok/raf-bulma/raf-bulma.component';
 import { SiparisAktarmaComponent } from './views/Siparis/siparis-aktarma/siparis-aktarma.component';
+import { KullaniciComponent } from './views/Yonetim/kullanici/kullanici.component';
+import { GrupYetkiComponent } from './views/Yonetim/grup-yetki/grup-yetki.component';
+import { KullaniciPozisyonComponent } from './views/Yonetim/kullanici-pozisyon/kullanici-pozisyon.component';
+import { KullaniciDepartmanComponent } from './views/Yonetim/kullanici-departman/kullanici-departman.component';
+import { IrsaliyeAktarmaComponent } from './views/Siparis/irsaliye-aktarma/irsaliye-aktarma.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -173,7 +178,12 @@ export class AppComponent implements OnInit,AfterViewInit {
     } 
     if(tabid==1)this.tabService.addTab(new Tab(StokAramaComponent, "Stok Arama", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0001")[0]},tabid));
     else if(tabid==2)this.tabService.addTab(new Tab(RafBulmaComponent, "Raf Bulma", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0002")[0]},tabid));
-    else if(tabid==3)this.tabService.addTab(new Tab(SiparisAktarmaComponent, "Sipariş Aktarma", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0006")[0]},tabid));
+    else if(tabid==3)this.tabService.addTab(new Tab(SiparisAktarmaComponent, "Sipariş Girişi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0006")[0]},tabid));
+    else if(tabid==4)this.tabService.addTab(new Tab(KullaniciComponent, "Kullanıcı Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0007")[0]},tabid));
+    else if(tabid==5)this.tabService.addTab(new Tab(GrupYetkiComponent, "Grup Yetki Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0008")[0]},tabid));
+    else if(tabid==6)this.tabService.addTab(new Tab(KullaniciPozisyonComponent, "Pozisyon Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0011")[0]},tabid));
+    else if(tabid==7)this.tabService.addTab(new Tab(KullaniciDepartmanComponent, "Departman Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0010")[0]},tabid));
+    else if(tabid==8)this.tabService.addTab(new Tab(IrsaliyeAktarmaComponent, "Fatura Kontrol", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0012")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }

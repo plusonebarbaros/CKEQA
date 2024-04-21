@@ -1,0 +1,75 @@
+<nav class="menu-navigation-icons">
+    <a href="#" *ngIf="yetki.Guncelle" class="menu-green" (click)="yetkikaydet()"><i class="fas fa-save"></i><span>Güncelle</span></a>  
+    <a href="#"  (click)="GetKullaniciYetki()" style="float: right!important;" class="menu-blue" ><i class="fas fa-sync-alt"></i><span>Data Yenile</span></a> 
+  
+  </nav>
+  <div style="clear:both"></div> 
+    
+  <mat-tab-group mat-align-tabs="start" (selectedTabChange)="tabDegisti($event)" animationDuration="0ms">        
+    <mat-tab label="Grup Yetki">
+        <dx-data-grid class="devgrid74" #secyetki
+        [dataSource]="yetkilist"
+        [showColumnLines]="false"
+        [showRowLines]="true" 
+        [rowAlternationEnabled]="true"
+        [focusedRowEnabled]="true"
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true"
+        columnResizingMode = "widget"  
+        keyExpr="Id"    
+        [allowColumnReordering]="true"    
+        [remoteOperations]="true"  
+        > 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+        <dxo-scrolling 
+          mode="virtual"
+          showScrollbar="'always'"
+          useNative="false"
+          scrollByThumb="true" >
+        </dxo-scrolling> 
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager
+            [visible]="true"
+            displayMode="'compact'"
+            [showPageSizeSelector]="false"
+            [showInfo]="true"
+            [showNavigationButtons]="true">
+        </dxo-pager>
+        <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>    
+                 
+        <!-- <dxi-column [width]="20+'%'" caption="Bölüm" dataField="Bolum" [allowEditing]="false"></dxi-column>    -->
+        <dxi-column [width]="20+'%'" caption="Modül" dataField="Modul" [allowEditing]="false"></dxi-column>   
+        <dxi-column [width]="20+'%'" caption="Yetki" dataField="Yetki" [allowEditing]="false"></dxi-column>  
+        <dxi-column [width]="15+'%'" caption="Görüntüle" dataField="Goruntule" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpGoruntuleTemp"></dxi-column> 
+        <div *dxTemplate="let info of 'grpGoruntuleTemp'">
+            <div (dblclick)="tumunuSec(1)">{{info.column.caption}}</div>
+        </div> 
+        <dxi-column [width]="15+'%'" caption="Ekle" dataField="Ekle" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpekleTemp"></dxi-column>  
+        <div *dxTemplate="let info of 'grpekleTemp'">
+            <div (dblclick)="tumunuSec(2)">{{info.column.caption}}</div>
+        </div> 
+        <dxi-column [width]="15+'%'" caption="Güncelle" dataField="Guncelle" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpGuncelleTemp"></dxi-column>   
+        <div *dxTemplate="let info of 'grpGuncelleTemp'">
+            <div (dblclick)="tumunuSec(3)">{{info.column.caption}}</div>
+        </div>         
+        <dxi-column [width]="15+'%'" caption="Sil" dataField="Sil" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpSilTemp"></dxi-column>     
+        <div *dxTemplate="let info of 'grpSilTemp'">
+            <div (dblclick)="tumunuSec(4)">{{info.column.caption}}</div>
+        </div>   
+        <dxi-column [width]="15+'%'" caption="Export" dataField="Export" [allowFiltering]="false" [allowSorting]="false" headerCellTemplate="grpExportTemp"></dxi-column>     
+        <div *dxTemplate="let info of 'grpExportTemp'">
+            <div (dblclick)="tumunuSec(5)">{{info.column.caption}}</div>
+        </div>   
+
+        <dxo-group-panel [visible]="false"></dxo-group-panel>
+        <dxo-grouping #expand [autoExpandAll]="false"></dxo-grouping>
+      
+        </dx-data-grid>   
+    </mat-tab>  
+  </mat-tab-group>
+        
+  

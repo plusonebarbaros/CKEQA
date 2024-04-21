@@ -7,39 +7,38 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import moment from 'moment';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { EkranMesaj, GenelApi } from 'src/app/services/GenelSrc';
+import { GenelApi, EkranMesaj } from 'src/app/services/GenelSrc';
 import { KullaniciYetki } from 'src/app/services/KullaniciSrc';
 import { MesajversrcService } from 'src/app/services/mesajversrc.service';
 import { NotifyService } from 'src/app/services/notify';
-import { Customer, IhracatTasimaTip, NtsDepoModel, PlasiyerModel, SiparisAktarimModel, SiparisService } from 'src/app/services/SiparisSrc';
+import { SiparisService, SaticiSipKontrolModel, Customer, IhracatTasimaTip, NtsDepoModel, PlasiyerModel } from 'src/app/services/SiparisSrc';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
 
 @Component({
-  selector: 'app-siparis-aktarma',
-  templateUrl: './siparis-aktarma.component.html',
-  styleUrls: ['./siparis-aktarma.component.scss'],
+  selector: 'app-irsaliye-aktarma',
+  templateUrl: './irsaliye-aktarma.component.html',
+  styleUrls: ['./irsaliye-aktarma.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers:[
     {provide:DatePipe},
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } } 
   ]
 })
-export class SiparisAktarmaComponent implements OnInit {
+export class IrsaliyeAktarmaComponent implements OnInit {
   @BlockUI() blockUI!: NgBlockUI;
   @ViewChild('gridDataList', { static: false }) grid!: DxDataGridComponent;
   @Input() data:any;     
   yetki:KullaniciYetki;
-  datalist: SiparisAktarimModel[]=[];    
-  plalist: PlasiyerModel[]=[];    
-  depolist: NtsDepoModel[]=[];    
-  ihrtasimatip: IhracatTasimaTip[]=[];    
-  silgoster:boolean=false;  
-  secilidata:SiparisAktarimModel; 
+  datalist: SaticiSipKontrolModel[]=[];    
+  secilidata:SaticiSipKontrolModel; 
   isReadOnly: boolean=false;  
   fileList!:FileList;
   firmalist:Customer[]=[];
   secilifirma:Customer;
   kalemkeyword:string=""; 
+  plalist: PlasiyerModel[]=[];    
+  depolist: NtsDepoModel[]=[];    
+  ihrtasimatip: IhracatTasimaTip[]=[];    
 
   SipTipId:number=0;
   SipTurId:number=0;
@@ -60,7 +59,6 @@ export class SiparisAktarmaComponent implements OnInit {
   public formIhr: FormControl = new FormControl();
   public filterIhr: ReplaySubject<IhracatTasimaTip[]> = new ReplaySubject<IhracatTasimaTip[]>(1); 
 
-
   protected _onDestroy = new Subject<void>();
 
   constructor( 
@@ -72,7 +70,7 @@ export class SiparisAktarmaComponent implements OnInit {
     private mesajver:MesajversrcService,
     ) 
     {  
-      this.secilidata=new  SiparisAktarimModel();
+      this.secilidata=new  SaticiSipKontrolModel();
       this.yetki=new  KullaniciYetki();
     } 
 
@@ -140,11 +138,43 @@ export class SiparisAktarmaComponent implements OnInit {
     );
   }
 
+  async GetDepoList()  {
+    this.blockUI.start(EkranMesaj.Listele);
+    var sonuc = await this.siparissrc.GetDepoList(); 
+    this.blockUI.stop();  
+    if(sonuc.Success){
+      this.depolist=sonuc.List;
+      this.filterDepo.next(this.depolist.slice());
+    }else{
+      this.alertify.warning(sonuc.Message);
+      return;
+    }    
+  } 
 
-  yeniEkle(content:any){  
-    this.isReadOnly=false; 
-    this.secilidata=new  SiparisAktarimModel(); 
-    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' }); 
+  async GetIhracatTeslimTipList()  {
+    this.blockUI.start(EkranMesaj.Listele);
+    var sonuc = await this.siparissrc.GetIhracatTeslimTipList(); 
+    this.blockUI.stop();  
+    if(sonuc.Success){
+      this.ihrtasimatip=sonuc.List;
+      this.filterIhr.next(this.ihrtasimatip.slice());
+    }else{
+      this.alertify.warning(sonuc.Message);
+      return;
+    }    
+  } 
+
+  async GetPlasiyerList()  {
+    this.blockUI.start(EkranMesaj.Listele);
+    var sonuc = await this.siparissrc.GetPlasiyerList(); 
+    this.blockUI.stop();  
+    if(sonuc.Success){
+      this.plalist=sonuc.List;
+      this.filterPla.next(this.plalist.slice());
+    }else{
+      this.alertify.warning(sonuc.Message);
+      return;
+    }    
   } 
 
   uploadFile(files:any) { 
@@ -166,14 +196,14 @@ export class SiparisAktarmaComponent implements OnInit {
     formData.append('files', file ); 
     formData.append('userid', "0"); 
 
-    this.confirmationDialogService.confirm('Sipariş Aktarım', 'Sipariş Kalem Sorgulaması Yapılacak, Devam Edilsin mi?')
+    this.confirmationDialogService.confirm('Fatura Kontrol', 'Sipariş Fatura Kontrol İşlemi Yapılacak, Devam Edilsin mi?')
     .then(async (confirmed:any) => 
     {
       if(confirmed.sonuc==true){
         this.blockUI.start("Kayıt Başladı...");
-        var sonuc = await this.siparissrc.SiparisStokKontrol(formData);
+        var sonuc = await this.siparissrc.SaticiSipKontrol(formData);
         if(sonuc.Success==true){
-          this.alertify.success("Aktarım Tamamlandı!");
+          this.alertify.success("İşlem Tamamlandı!");
           this.modalService.dismissAll();    
           this.datalist = sonuc.List; 
           } else{
@@ -185,154 +215,6 @@ export class SiparisAktarmaComponent implements OnInit {
     .catch(() => { 
     }); 
   } 
-
-  siparisMod(content:any){ 
-    if(this.datalist==null || this.datalist.length<=0){
-      this.alertify.warning("Şablon Yükledikten Sonra Sipariş Aktarım Süreci Başlatılabilir!");
-      return;
-    }  
-    this.SiparisTarih =moment(new Date()).format("yyyy-MM-DD");
-    this.SipTipId=0;
-    this.SipTurId=0;
-    this.SiparisNo="";
-    this.PlasiyerKod="";
-    this.FirmaKodu="";
-    this.FirmaAdi="";
-    this.DepoKodu=1;
-    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' }); 
-  }
-
-  async siparisOlustur(){    
-    if(this.datalist==null || this.datalist.length<=0){
-      this.alertify.warning("Sipariş Şablonunu Yükledikten Sonra İşlem Yapabilirsiniz!") 
-      return;
-    } 
-
-    if(this.FirmaKodu==null || this.FirmaKodu=="" || this.FirmaKodu==undefined){
-      this.alertify.warning("Firma Seçiniz!") 
-      return;
-    } 
-    if(this.SiparisTarih==null || this.SiparisTarih==undefined){
-      this.alertify.warning("Sipariş Tarih Seçiniz!") 
-      return;
-    } 
-    if(this.SipTipId<=0){
-      this.alertify.warning("Sipariş Tipi Seçiniz!") 
-      return;
-    } 
-    if(this.SiparisNo==null || this.SiparisNo=="" || this.SiparisNo==undefined){
-      this.alertify.warning("Sipariş No Boş Olamaz!") 
-      return;
-    } 
-    if(this.SiparisNo.length != 15){
-      this.alertify.warning("Sipariş No Alanı 15 Karakter Olmalıdır!") 
-      return;
-    } 
-    if(this.PlasiyerKod==null || this.PlasiyerKod=="" || this.PlasiyerKod==undefined){
-      this.alertify.warning("Plasiyer Seçiniz!") 
-      return;
-    } 
-    if(this.SipTurId<=0){
-      this.alertify.warning("Sipariş Türü Seçiniz!") 
-      return;
-    } 
-    if(this.DepoKodu<=0){
-      this.alertify.warning("Depo Seçiniz!") 
-      return;
-    } 
-
-    this.confirmationDialogService.confirm('Sipariş', 'Listedeki Kalemler İçin Sipariş Oluşturulacak, Devam Edilsin mi?')
-    .then(async (confirmed:any) => 
-    {
-      if(confirmed.sonuc==true)  {
-        this.blockUI.start(EkranMesaj.Kaydet);
-        var sonuc = await this.siparissrc.SiparisOlustur(this.datalist,this.FirmaKodu,this.SipTipId,this.SipTurId,this.SiparisTarih,this.SiparisNo,this.PlasiyerKod,this.DepoKodu,this.IthalatTip);
-        if(sonuc.Success==true){
-            this.blockUI.stop();  
-            this.alertify.success(EkranMesaj.KayitTamamlandi) 
-            this.modalService.dismissAll();
-            this.mesajver.confirm('Bilgilendirme',sonuc.Message);
-        } else{
-            this.blockUI.stop(); 
-            this.mesajver.confirm('Bilgilendirme',sonuc.Message);
-        } 
-      }
-    })
-    .catch(() => {
-    });
-  } 
-
-  async GetPlasiyerList()  {
-    this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.siparissrc.GetPlasiyerList(); 
-    this.blockUI.stop();  
-    if(sonuc.Success){
-      this.plalist=sonuc.List;
-      this.filterPla.next(this.plalist.slice());
-    }else{
-      this.alertify.warning(sonuc.Message);
-      return;
-    }    
-  } 
-
-  defPla(event: any) {
-    this.PlasiyerKod = "";
-    event.stopPropagation();
-  }
-
-  async GetSonBelgeNo(SiparisTip:number)  {
-    this.blockUI.start("Son Belge Numarası Getiriliyor");
-      (await this.siparissrc.GetSonBelgeNo(SiparisTip)).subscribe(
-        data=>{
-          this.blockUI.stop();   
-          if(!data.Success){
-            this.blockUI.stop(); 
-            this.alertify.warning(data.Message);
-            return;
-          }
-          this.SiparisNo=data.Model;
-        }
-      )     
-  }
-
-  sipTipChg(e:any){
-   this.GetSonBelgeNo(e);
-  }
-
-  async GetDepoList()  {
-    this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.siparissrc.GetDepoList(); 
-    this.blockUI.stop();  
-    if(sonuc.Success){
-      this.depolist=sonuc.List;
-      this.filterDepo.next(this.depolist.slice());
-    }else{
-      this.alertify.warning(sonuc.Message);
-      return;
-    }    
-  } 
-
-  SiparisTarihChg(e:any){
-    this.SiparisTarih =moment(e._d).format("yyyy-MM-DD");
-  } 
-
-  async GetIhracatTeslimTipList()  {
-    this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.siparissrc.GetIhracatTeslimTipList(); 
-    this.blockUI.stop();  
-    if(sonuc.Success){
-      this.ihrtasimatip=sonuc.List;
-      this.filterIhr.next(this.ihrtasimatip.slice());
-    }else{
-      this.alertify.warning(sonuc.Message);
-      return;
-    }    
-  } 
-
-  defIhr(event: any) {
-    this.IthalatTip = "";
-    event.stopPropagation();
-  }
 
   firmaSec(content:any){
     this.firmalist=[];
@@ -386,5 +268,89 @@ export class SiparisAktarmaComponent implements OnInit {
     this.firmalist=[];
   }
 
+  async irsaliyeOlustur(){    
+    if(this.datalist==null || this.datalist.length<=0){
+      this.alertify.warning("Sipariş Şablonunu Yükledikten Sonra İşlem Yapabilirsiniz!") 
+      return;
+    } 
 
+    if(this.FirmaKodu==null || this.FirmaKodu=="" || this.FirmaKodu==undefined){
+      this.alertify.warning("Firma Seçiniz!") 
+      return;
+    } 
+    if(this.SiparisTarih==null || this.SiparisTarih==undefined){
+      this.alertify.warning("Sipariş Tarih Seçiniz!") 
+      return;
+    } 
+    if(this.SiparisNo==null || this.SiparisNo=="" || this.SiparisNo==undefined){
+      this.alertify.warning("Sipariş No Boş Olamaz!") 
+      return;
+    } 
+    if(this.SiparisNo.length != 15){
+      this.alertify.warning("Sipariş No Alanı 15 Karakter Olmalıdır!") 
+      return;
+    } 
+    if(this.PlasiyerKod==null || this.PlasiyerKod=="" || this.PlasiyerKod==undefined){
+      this.alertify.warning("Plasiyer Seçiniz!") 
+      return;
+    } 
+    if(this.DepoKodu<=0){
+      this.alertify.warning("Depo Seçiniz!") 
+      return;
+    } 
+
+    this.confirmationDialogService.confirm('Sipariş', 'Listedeki Kalemler İçin Sipariş Oluşturulacak, Devam Edilsin mi?')
+    .then(async (confirmed:any) => 
+    {
+      if(confirmed.sonuc==true)  {
+        this.blockUI.start(EkranMesaj.Kaydet);
+        var sonuc = await this.siparissrc.IrsaliyeOlustur(this.datalist,this.FirmaKodu,this.SiparisTarih,this.SiparisNo,this.PlasiyerKod,this.DepoKodu,this.IthalatTip,this.SipTurId);
+        if(sonuc.Success==true){
+            this.blockUI.stop();  
+            this.alertify.success(EkranMesaj.KayitTamamlandi) 
+            this.modalService.dismissAll();
+            this.mesajver.confirm('Bilgilendirme',sonuc.Message);
+        } else{
+            this.blockUI.stop(); 
+            this.mesajver.confirm('Bilgilendirme',sonuc.Message);
+        } 
+      }
+    })
+    .catch(() => {
+    });
+  } 
+
+  SiparisTarihChg(e:any){
+    this.SiparisTarih =moment(e._d).format("yyyy-MM-DD");
+  } 
+
+  irsaliyeMod(content:any){ 
+    if(this.datalist==null || this.datalist.length<=0){
+      this.alertify.warning("Şablon Yükledikten Sonra İrsaliye Aktarım Süreci Başlatılabilir!");
+      return;
+    }  
+    if(this.datalist.filter((x)=>x.StokKartNetsisteVar==false).length>0){
+      this.alertify.warning("Stok Kartı Tanımlı Olmayan Kalemler Mevcut, İşleme Devam Edilemiyor!");
+      return;
+    }
+    this.SiparisTarih =moment(new Date()).format("yyyy-MM-DD");
+    this.SipTipId=0;
+    this.SipTurId=0;
+    this.SiparisNo="";
+    this.PlasiyerKod="";
+    this.FirmaKodu="";
+    this.FirmaAdi="";
+    this.DepoKodu=1;
+    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' }); 
+  }
+
+  defPla(event: any) {
+    this.PlasiyerKod = "";
+    event.stopPropagation();
+  }
+  
+  defIhr(event: any) {
+    this.IthalatTip = "";
+    event.stopPropagation();
+  }
 }

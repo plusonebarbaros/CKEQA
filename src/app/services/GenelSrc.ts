@@ -23,7 +23,91 @@ export class GenelApi {
    return await this.http.get<Result<DashModel>>(url).pipe( map((res:any)=> res));
   }
 
+  async KullPozisyonEkle(post:ConnKulPozisyonModel,tip:IslemTipi):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+    let options = { headers: headers };
+    
+    const body =  JSON.stringify({ 
+      "Data":  post,  
+      "Token":this.kullsrc.token, 
+      "Tip":tip, 
+    });
+  
+    var result = await this.http.post<any>(this.semUrl+"/Tanim/KullPozisyonEkle", body, options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+  }
+  
+  async GetKullPozisyon(Id:number)
+  { 
+     let url=this.semUrl+"/Tanim/GetKullPozisyon?Id="+Id+"&Token="+ this.kullsrc.token; 
+     return await this.http.get<Result<ConnKulPozisyonModel>>(url).pipe( map((res:any)=> res));
+  } 
+  
+  async KullDepartmanEkle(post:ConnKulDepartmanModel,tip:IslemTipi):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+    let options = { headers: headers };
+    
+    const body =  JSON.stringify({ 
+      "Data":  post,  
+      "Token":this.kullsrc.token, 
+      "Tip":tip, 
+    });
+  
+    var result = await this.http.post<any>(this.semUrl+"/Tanim/KullDepartmanEkle", body, options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+  }
+  
+  async GetKullDepartman(Id:number)
+  { 
+     let url=this.semUrl+"/Tanim/GetKullDepartman?Id="+Id+"&Token="+ this.kullsrc.token; 
+     return await this.http.get<Result<ConnKulDepartmanModel>>(url).pipe( map((res:any)=> res));
+  } 
+
 } 
+
+export class ConnKulPozisyonModel {    
+  Id:number=0;   
+  Tanim:string="";
+
+  EkleyenId:number=0; 
+  Ekleyen:string="";
+  GuncelleyenId:number=0;
+  Guncelleyen:string="";
+  EkTarih:Date=new Date();
+  GuncelTarih:Date=new Date(); 
+  Aktif:boolean=false;
+}
+
+export class ConnKulDepartmanModel {    
+  Id:number=0;   
+  Tanim:string="";
+  
+  EkleyenId:number=0; 
+  Ekleyen:string="";
+  GuncelleyenId:number=0;
+  Guncelleyen:string="";
+  EkTarih:Date=new Date();
+  GuncelTarih:Date=new Date(); 
+  Aktif:boolean=false;
+}
 
 export  class DashAylikSatisModel { 
   A1_OCAK: number=0;

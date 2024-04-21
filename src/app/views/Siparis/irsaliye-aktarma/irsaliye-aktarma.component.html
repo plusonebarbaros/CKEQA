@@ -2,9 +2,9 @@
 
     <nav class="menu-navigation-icons">
         <a href="#" *ngIf="yetki.Ekle" class="menu-green" (click)="topluyukle(datamultipleup)"><i class="fas fa-file-excel"></i><span>Excel Yükle</span></a>
-        <a href="#" (click)="siparisMod(modSiparisAktarim)" class="menu-blue" ><i class="fas fa-plus-circle"></i><span>Sipariş</span></a> 
+        <a href="#" (click)="irsaliyeMod(modSiparisAktarim)" class="menu-blue" ><i class="fas fa-plus-circle"></i><span>İrsaliye</span></a> 
 
-        <a href="#" href="../../../../assets/sablon/SIPARIS-SABLON.xlsx" style="float: right!important;" class="menu-blue" title="Sipariş Aktarım Şablon İndir"><i class="fas fa-file-excel"></i><span>Şablon</span></a> 
+        <a href="#" href="../../../../assets/sablon/FATURA-FIYAT-KONTROL.xlsx" style="float: right!important;" class="menu-blue" title="Fatura Fiyat Kontrol Şablon İndir"><i class="fas fa-file-excel"></i><span>Şablon</span></a> 
         <a href="#" *ngIf="yetki.Export" (click)="this.gridDataList.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
     
     </nav>
@@ -43,31 +43,42 @@
             [showPageSizeSelector]="false"
             [showInfo]="true"
             [showNavigationButtons]="true">
-        </dxo-pager>    
-
-        <dxi-column dataField="StokKartNetsisteVar" caption="Netsis Stok Kart" cellTemplate="cellTeslimDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
-        <div *dxTemplate="let cell of 'cellTeslimDurum'"> 
+        </dxo-pager>  
+        
+        <dxi-column dataField="StokKartNetsisteVar" caption="Netsis Stok Kart" cellTemplate="cellStokKartNetsisteVar" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellStokKartNetsisteVar'"> 
           <span *ngIf="cell.data.StokKartNetsisteVar" class="badge pill-medium bg-success">Var</span>
           <span *ngIf="!cell.data.StokKartNetsisteVar" class="badge pill-medium bg-danger">Yok</span>    
         </div>
+
+        <dxi-column dataField="FARKLI" caption="Fiyat Farkı Var" cellTemplate="cellTeslimDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellTeslimDurum'"> 
+          <span *ngIf="cell.data.FARKLI" class="badge pill-medium bg-danger">Evet</span>
+          <span *ngIf="!cell.data.FARKLI" class="badge pill-medium bg-success">Hayır</span>    
+        </div>
         
-        <dxi-column dataField="STOK_KODU" caption="Stok Kodu" [width]="125" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="SIPARIS_NO" caption="Sipariş No" [style.width.%]="10" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="STOK_KODU" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false"></dxi-column>
         <dxi-column dataField="STOK_ADI" caption="Stok Adı" [width]="275" [allowEditing]="false"></dxi-column>
-        <dxi-column dataField="RAF" caption="Raf" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
         <dxi-column dataField="MIKTAR" caption="Miktar" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
-        <dxi-column dataField="BAKIYE" caption="Bakiye" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
-        <dxi-column dataField="DOVIZTIP" [style.width.%]="10" caption="Döviz Tip"  [allowEditing]="false" alignment="center"></dxi-column> 
-        <dxi-column dataField="FIYAT" [style.width.%]="10" caption="Fiyat"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
-        <dxi-column dataField="TOPLAM" [style.width.%]="10" caption="Toplam"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
-        <dxi-column dataField="SIPARISNO" [style.width.%]="10" caption="Sipariş No"  [allowEditing]="false" alignment="center"></dxi-column> 
+        <dxi-column dataField="SIP_FIYAT" caption="Sipariş Fiyat" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+        <dxi-column dataField="TOPLAM_SIP" caption="Sipariş Toplam" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+        <dxi-column dataField="FAT_FIYAT" caption="Fatura Fiyat" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+        <dxi-column dataField="TOPLAM_FAT" caption="Fatura Toplam" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
 
         <dxo-summary>
           <dxi-total-item
-              column="TOPLAM"
+              column="TOPLAM_SIP"
               valueFormat="#,##0.00"
               displayFormat="{0}"
               summaryType="sum">
-          </dxi-total-item>           
+          </dxi-total-item>
+          <dxi-total-item
+              column="TOPLAM_FAT"
+              valueFormat="#,##0.00"
+              displayFormat="{0}"
+              summaryType="sum">
+          </dxi-total-item> 
         </dxo-summary>
 
         </dx-data-grid> 
@@ -75,7 +86,7 @@
 
  <ng-template #datamultipleup let-modal>
         <div class="modal-header">
-          <h4 class="modal-title" >Sipariş Kalem Kontrol</h4> 
+          <h4 class="modal-title" >Fatura Kontrol</h4> 
         </div>
         <div class="modal-body">
           <div style="clear:both;margin-bottom:15px!important"></div>
@@ -93,10 +104,9 @@
 
  <ng-template #modSiparisAktarim let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" >Sipariş Aktarım</h4> 
+    <h4 class="modal-title" >İrsaliye Aktarım</h4> 
   </div>
-  <div class="modal-body"> 
-      
+  <div class="modal-body">       
     
     <mat-form-field appearance="outline" [style.width.%]="100">
       <mat-label>Firma Seçiniz</mat-label>
@@ -113,24 +123,15 @@
 
     
     <mat-form-field appearance="outline" [style.width.%]="50">
-      <mat-label>Sipariş Tarih</mat-label>
-      <input matInput [matDatepicker]="dp2" placeholder="Sipariş Tarih" [(ngModel)]="SiparisTarih" (ngModelChange)="SiparisTarihChg($event)">
+      <mat-label>İrsaliye Tarih</mat-label>
+      <input matInput [matDatepicker]="dp2" placeholder="İrsaliye Tarih" [(ngModel)]="SiparisTarih" (ngModelChange)="SiparisTarihChg($event)">
        <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
       <mat-datepicker #dp2></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="outline" [style.width.%]="50">
-      <mat-label>Sipariş Tipi</mat-label>
-      <mat-select name="SipTipId" [(ngModel)]="SipTipId" (ngModelChange)="sipTipChg($event)">  
-        <mat-option [value]="0">Seçiniz</mat-option>
-        <mat-option [value]="7">Alınan Siparişler</mat-option>
-        <mat-option [value]="6">Verilen Siparişler</mat-option> 
-      </mat-select>
-   </mat-form-field> 
-
-    <mat-form-field appearance="outline" [style.width.%]="50">
-      <mat-label>Sipariş No</mat-label>
-      <input matInput placeholder="Sipariş No" [(ngModel)]="SiparisNo" [max]="15" [min]="15">
+      <mat-label>İrsaliye No</mat-label>
+      <input matInput placeholder="İrsaliye No" [(ngModel)]="SiparisNo" maxlength="15" minlength="15" [max]="15" [min]="15">
     </mat-form-field>
 
     <mat-form-field appearance="outline" [style.width.%]="50">
@@ -196,11 +197,10 @@
   </div>
   <div class="modal-footer"> 
     <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
-    <button type="button" class="btn btn-success" (click)="siparisOlustur()">Sipariş Oluştur</button>
+    <button type="button" class="btn btn-success" (click)="irsaliyeOlustur()">Sipariş Oluştur</button>
   </div>
 </ng-template>
 
-     
 <ng-template #carihesapsecmod let-modal>
   <div class="modal-header">
     <h4 class="modal-title" >Firma Seç</h4> 
