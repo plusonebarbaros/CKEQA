@@ -9,8 +9,9 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { PrimParametreModel, GenelApi, EkranMesaj, IslemTipi, StokGrupModel } from 'src/app/services/GenelSrc';
-import { KullaniciYetki, KullaniciModel, OnayHesapModel, SirketYetki, AcenteYetki, DepoYetki, YetkiGrup, KasaYetki, BankaYetki, DepoYetkiModel, MuhatapYetkiModel, SirketBirim, SapSirket, KategoriYetkiModel, KullaniciSrcService, DepoModel, MuhatapModel } from 'src/app/services/KullaniciSrc';
+import { KullaniciYetki, KullaniciModel, OnayHesapModel, SirketYetki, AcenteYetki, DepoYetki, YetkiGrup, KasaYetki, BankaYetki, DepoYetkiModel, MuhatapYetkiModel, SirketBirim, SapSirket, KategoriYetkiModel, KullaniciSrcService, MuhatapModel } from 'src/app/services/KullaniciSrc';
 import { NotifyService } from 'src/app/services/notify';
+import { NtsDepoModel, SiparisService } from 'src/app/services/SiparisSrc';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
 
 @Component({
@@ -58,6 +59,7 @@ export class KullaniciDetayComponent implements OnInit {
   sirketlist: SapSirket[]=[]; 
   SapSirket:string=""; 
   kulkategoriyetkilist:KategoriYetkiModel[]=[];
+  depolist: NtsDepoModel[]=[];   
 
   public autoGrupYetki: FormControl = new FormControl();
   public filterGrupYetki: ReplaySubject<YetkiGrup[]> = new ReplaySubject<YetkiGrup[]>(1);
@@ -71,6 +73,10 @@ export class KullaniciDetayComponent implements OnInit {
   public autoPozisyon: FormControl = new FormControl();
   public filterPozisyon: ReplaySubject<OnayHesapModel[]> = new ReplaySubject<OnayHesapModel[]>(1); 
 
+  public formDepo: FormControl = new FormControl();
+  public filterDepo: ReplaySubject<NtsDepoModel[]> = new ReplaySubject<NtsDepoModel[]>(1);
+
+
   protected _onDestroy = new Subject<void>();
 
   constructor( 
@@ -79,6 +85,7 @@ export class KullaniciDetayComponent implements OnInit {
     private confirm: CofirmsrcService,    
     private kullanicisrc:KullaniciSrcService,
     private genelsrv:GenelApi,
+    private siparissrc:SiparisService,
   ) { 
     this.allMode = 'allPages';
     this.checkBoxesMode = 'always';
@@ -117,12 +124,45 @@ export class KullaniciDetayComponent implements OnInit {
     this.GetGrupYetkiList();  
     this.DepartmanList();  
     this.PozisyonList();  
+    this.GetDepoList();  
      
     this.autoGrupYetki.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterGrupYetkiList();});  
     this.autoSirket.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterSirketList();});  
     this.autoDepartman.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterDepartmanList();});  
     this.autoPozisyon.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterPozisyonList();});  
+    this.formDepo.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterDepoList();});  
+
   }
+
+  async GetDepoList()  {
+    this.blockUI.start(EkranMesaj.Listele);
+    var sonuc = await this.siparissrc.GetDepoList(); 
+    this.blockUI.stop();  
+    if(sonuc.Success){
+      this.depolist=sonuc.List;
+      this.filterDepo.next(this.depolist.slice());
+    }else{
+      this.alertify.warning(sonuc.Message);
+      return;
+    }    
+  } 
+
+  protected filterDepoList() {
+    if (!this.depolist) {
+      return;
+    } 
+    let search = this.formDepo.value+"";
+    if (!search) {
+      this.filterDepo.next(this.depolist.slice());
+      return;
+    } else {
+      search = search.toUpperCase();
+    } 
+    this.filterDepo.next(
+      this.depolist.filter(item => (item?.DEPO_ISMI??"").toUpperCase().indexOf(search) > -1)
+    );
+  }
+
 
   protected filterPozisyonList() {
     if (!this.pozisyonlist) {
@@ -247,43 +287,6 @@ export class KullaniciDetayComponent implements OnInit {
      }
    )
   }
-  
-  async GetKullaniciDepoYetki() {
-    this.blockUI.start("Depo Yetki Okunuyor...");
-    (await this.kullanicisrc.GetKullaniciDepoYetki(this.seciliuser.Id)).subscribe((data)=>{  
-      this.blockUI.stop();  
-      if(!data.Success){
-        this.alertify.warning(data.Message);
-        return;
-      }
-      this.kuldepoyetkilist=data.List;  
-   })   
-  }
-
-  async GetKullaniciKategoriYetki() {
-    this.blockUI.start("Kategori Yetki Okunuyor...");
-    (await this.kullanicisrc.GetKullaniciKategoriYetki(this.seciliuser.Id)).subscribe((data)=>{  
-      this.blockUI.stop();  
-      if(!data.Success){
-        this.alertify.warning(data.Message);
-        return;
-      }
-      this.kulkategoriyetkilist=data.List;  
-   })   
-  }
-
-  async GetKullaniciMuhatapYetki() {
-    this.blockUI.start("Muhatap Yetki Okunuyor...");
-    (await this.kullanicisrc.GetKullaniciMuhatapYetki(this.seciliuser.Id)).subscribe((data)=>{  
-      this.blockUI.stop();  
-      if(!data.Success){
-        this.alertify.warning(data.Message);
-        return;
-      }
-      this.kulmuhatapyetkilist=data.List;  
-   })  
-  }
-
 
   async GetKullaniciYetki() {
     this.blockUI.start("Yetki Okunuyor...");
@@ -314,16 +317,7 @@ export class KullaniciDetayComponent implements OnInit {
     this.secilitab=e.tab.textLabel;
     if(e.tab.textLabel=="Kullanıcı Yetki"){
       this.GetKullaniciYetki();
-    }    
-    else if(e.tab.textLabel=="Depo Yetki" ){
-      this.GetKullaniciDepoYetki();
-    }
-    else if(e.tab.textLabel=="Muhatap Yetki"){
-      this.GetKullaniciMuhatapYetki();
-    }
-    else if(e.tab.textLabel=="Kategori Yetki"){
-      this.GetKullaniciKategoriYetki();
-    } 
+    }  
   }
 
   async kaydet(){ 

@@ -243,99 +243,7 @@ export class KullaniciSrcService {
        let url=this.semUrl+"/Login/GetKullaniciDetay?EmpId="+EmpId+"&Token="+ this.token; 
         return await this.http.get<Result<OnayHesapModel[]>>(url).pipe( map((res:any)=> res));
   }
-  async KullaniciDepoYetkiEkle(Kull:KullaniciModel,List:DepoModel[],Yetki:DepoYetkiModel[],SapSirket:string,Tip:IslemTipi):Promise<ReturnValues>  {
-    const headers = new HttpHeaders(
-      {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Headers': 'Content-Type',
-     }
-    ); 
   
-    let options = { headers: headers };
-    
-    const body =  JSON.stringify({  
-      "Kull":  Kull,    
-      "List":  List,   
-      "Yetki":  Yetki,   
-      "Tip":  Tip,   
-      "SapSirket":SapSirket, 
-      "Token":this.token
-    });
-  
-    var result = await this.http.post<any>(this.semUrl+"/Login/KullaniciDepoYetkiEkle", body, options).toPromise();
-  
-    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
-    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
-  }
-  async GetKullaniciDepoYetki(EmpId:number)
-  { 
-       let url=this.semUrl+"/Login/GetKullaniciDepoYetki?EmpId="+EmpId+"&Token="+ this.token; 
-        return await this.http.get<Result<ConDepoYetki[]>>(url).pipe( map((res:any)=> res)); 
-  }
-  async KullaniciMuhatapYetkiEkle(Kull:KullaniciModel,List:MuhatapModel[],SapSirket:string):Promise<ReturnValues>  {
-    const headers = new HttpHeaders(
-      {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Headers': 'Content-Type',
-     }
-    ); 
-  
-    let options = { headers: headers };
-    
-    const body =  JSON.stringify({  
-      "Kull":  Kull,    
-      "List":  List,   
-      "SapSirket":SapSirket, 
-      "Token":this.token
-    });
-  
-    var result = await this.http.post<any>(this.semUrl+"/Login/KullaniciMuhatapYetkiEkle", body, options).toPromise();
-  
-    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
-    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
-  }
-  async KullaniciKategoriYetkiEkle(Kull:KullaniciModel,List:StokGrupModel[],Yetki:KategoriYetkiModel[],SapSirket:string,Tip:IslemTipi):Promise<ReturnValues>  {
-    const headers = new HttpHeaders(
-      {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Headers': 'Content-Type',
-     }
-    ); 
-  
-    let options = { headers: headers };
-    
-    const body =  JSON.stringify({  
-      "Kull":  Kull,    
-      "List":  List,   
-      "Yetki":  Yetki,   
-      "Tip":  Tip,   
-      "SapSirket":SapSirket, 
-      "Token":this.token
-    });
-  
-    var result = await this.http.post<any>(this.semUrl+"/Login/KullaniciKategoriYetkiEkle", body, options).toPromise();
-  
-    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
-    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
-  }
-  async GetKullaniciMuhatapYetki(EmpId:number)
-  { 
-       let url=this.semUrl+"/Login/GetKullaniciMuhatapYetki?EmpId="+EmpId+"&Token="+ this.token; 
-        return await this.http.get<Result<MuhatapYetkiModel[]>>(url).pipe( map((res:any)=> res));
-  }
-  async GetKullaniciKategoriYetki(EmpId:number)
-  { 
-       let url=this.semUrl+"/Login/GetKullaniciKategoriYetki?EmpId="+EmpId+"&Token="+ this.token; 
-        return await this.http.get<Result<KategoriYetkiModel[]>>(url).pipe( map((res:any)=> res)); 
-  }
-  async GetDepoList(SapSirket:string)
-  { 
-       let url=this.semUrl+"/Login/GetDepoList?SapSirket="+SapSirket+"&Token="+ this.token; 
-        return await this.http.get<Result<DepoModel[]>>(url).pipe( map((res:any)=> res));
-  }
   async GetMuhatapList(SapSirket:string,blockRun:any)
   { 
        let url=this.semUrl+"/Login/GetMuhatapList?SapSirket="+SapSirket+"&Token="+ this.token; 
@@ -350,66 +258,6 @@ export class KullaniciSrcService {
   let url=this.semUrl+"/Login/GetSirketYetki?Token="+ this.token;
     return this.http.get<Result<KulSirketYetki>>(url).pipe(map((res: any) => res));
   } 
-  async GrupDepoYetkiEkle(Grup:YetkiGrup,List:DepoModel[],Yetki:DepoYetkiModel[],SapSirket:string,Tip:IslemTipi):Promise<ReturnValues>  {
-    const headers = new HttpHeaders(
-      {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Headers': 'Content-Type',
-     }
-    ); 
-  
-    let options = { headers: headers };
-    
-    const body =  JSON.stringify({  
-      "Grup":  Grup,    
-      "List":  List,   
-      "Yetki":  Yetki,   
-      "SapSirket":SapSirket, 
-      "Tip":Tip, 
-      "Token":this.token
-    });
-  
-    var result = await this.http.post<any>(this.semUrl+"/Login/GrupDepoYetkiEkle", body, options).toPromise();
-  
-    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
-    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
-  }
-  async GetGrupDepoYetki(GrupId:number)
-  { 
-       let url=this.semUrl+"/Login/GetGrupDepoYetki?GrupId="+GrupId+"&Token="+ this.token; 
-        return await this.http.get<Result<DepoYetkiModel[]>>(url).pipe( map((res:any)=> res));
-  }
-  async GrupKategoriYetkiEkle(Grup:YetkiGrup,List:StokGrupModel[],Yetki:KategoriYetkiModel[],SapSirket:string,Tip:IslemTipi):Promise<ReturnValues>  {
-    const headers = new HttpHeaders(
-      {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Headers': 'Content-Type',
-     }
-    ); 
-  
-    let options = { headers: headers };
-    
-    const body =  JSON.stringify({  
-      "Grup":  Grup,    
-      "List":  List,   
-      "Yetki":  Yetki,   
-      "SapSirket":SapSirket, 
-      "Tip":Tip, 
-      "Token":this.token
-    });
-  
-    var result = await this.http.post<any>(this.semUrl+"/Login/GrupKategoriYetkiEkle", body, options).toPromise();
-  
-    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
-    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
-  }
-  async GetGrupKategoriYetki(GrupId:number)
-  { 
-       let url=this.semUrl+"/Login/GetGrupKategoriYetki?GrupId="+GrupId+"&Token="+ this.token; 
-        return await this.http.get<Result<KategoriYetkiModel[]>>(url).pipe( map((res:any)=> res));
-  }
   async  KullaniciSifreGonder(List:KullaniciModel[]):Promise<ReturnValues>  {
     const headers = new HttpHeaders(
       {
@@ -544,10 +392,7 @@ export class MuhatapModel{
   dbName:string="";   
   cmpName:string="";     
 }
-export class DepoModel{ 
-  dbName:string="";   
-  cmpName:string="";     
-}
+
 export class SapSirket{ 
   dbName:string="";   
   cmpName:string="";     
@@ -751,6 +596,7 @@ export class KullaniciModel {
   KullaniciYetki:KullaniciYetki[]=[];
   DefaultSirket:number=0;
   Sirket: string[]=[]; 
+  Depo: number[]=[]; 
   AktifSirket:string="";
   KullaniciIzinli:number=0;
   IzinBitisTarih:any;
@@ -764,19 +610,6 @@ export class KullaniciModel {
   VekilKullanici:string="";
   KullaniciTipId:number=0;
   KullaniciTip:string="";
-  FirmaKodu:string="";
-  FirmaAdi:string="";
-  TeslimatAdresKodu:string="";
-  MalzemeGoruntulemeYetki:number=0;
-  MalzemeSablonId:number=0;
-  MalzemeSablon:string="";
-  SiparisKilit: boolean=false;  
-  TeslimatTipId:number=0;
-  TeslimatTip:string="";
-  TeslimatGun: number[]=[];   
-  TeslimAdresDogru:number=0;
-  SevkAdresTanimli:number=0;
-  SevkGunTanimli:string="";
  }
 
  export  class OnayHesapModel {

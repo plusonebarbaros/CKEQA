@@ -185,11 +185,11 @@
          noEntriesFoundLabel="Kayıt Bulunamadı...">
         </ngx-mat-select-search>
       </mat-option>
-      <mat-option *ngFor="let gr of filterIhr | async" [value]="gr.Code" >
-        {{gr.Name}}
+      <mat-option *ngFor="let gr of filterIhr | async" [value]="gr.ErpId" >
+        {{gr.Code}}
       </mat-option>
     </mat-select>
-    <button mat-button matSuffix *ngIf="IthalatTip!=''" mat-icon-button (click)="defIhr($event)">
+    <button mat-button matSuffix *ngIf="IthalatTip!=0" mat-icon-button (click)="defIhr($event)">
        <mat-icon>close</mat-icon>
    </button>
 </mat-form-field>  
@@ -197,7 +197,7 @@
   </div>
   <div class="modal-footer"> 
     <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
-    <button type="button" class="btn btn-success" (click)="irsaliyeOlustur()">Sipariş Oluştur</button>
+    <button type="button" class="btn btn-success" (click)="irsaliyeOlustur()">İrsaliye Oluştur</button>
   </div>
 </ng-template>
 

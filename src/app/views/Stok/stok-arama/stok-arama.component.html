@@ -58,6 +58,11 @@
           <dxi-column dataField="STOK_KODU" caption="Stok Kodu" [width]="125" [allowEditing]="false"></dxi-column>
           <dxi-column dataField="STOK_ADI" caption="Stok Adı" [width]="275" [allowEditing]="false"></dxi-column>
           <dxi-column dataField="INGILIZCE_ADI" caption="Eng.Stok Adı" [width]="275" [allowEditing]="false"></dxi-column>
+          <dxi-column dataField="DEPOSTOK_1" caption="Depo Stok 1" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+          <dxi-column dataField="DEPOSTOK_5" caption="Depo Stok 5" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+          <dxi-column dataField="DEPOSTOK_51" caption="Depo Stok 51" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
+          <dxi-column dataField="RAF" caption="Raf" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
+
           <dxi-column dataField="BARKOD1" caption="Barkod 1" [style.width.%]="10" [allowEditing]="false"></dxi-column>
           <dxi-column dataField="BARKOD2" caption="Barkod 2" [style.width.%]="10" [allowEditing]="false"></dxi-column>
           <dxi-column dataField="BARKOD3" caption="Barkod 3" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
@@ -68,12 +73,8 @@
           <dxi-column dataField="KOD_4" caption="Kod 4" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
           <dxi-column dataField="KOD_5" caption="Kod 5" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
           <dxi-column dataField="MENSEI" caption="Menşei" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
-          <dxi-column dataField="RAF" caption="Raf" [style.width.%]="10" [allowEditing]="false"></dxi-column>       
             
           <dxi-column dataField="FIYAT1" caption="Fiyat 1" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
-          <dxi-column dataField="DEPOSTOK_1" caption="Depo Stok 1" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
-          <dxi-column dataField="DEPOSTOK_5" caption="Depo Stok 5" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
-          <dxi-column dataField="DEPOSTOK_51" caption="Depo Stok 51" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>  
 
           <dxi-column caption="İşlemler" cellTemplate="cellTemplate" [width]="175" alignment="center" [fixed]="true" fixedPosition="right"></dxi-column>
           <div *dxTemplate="let cell of 'cellTemplate'">

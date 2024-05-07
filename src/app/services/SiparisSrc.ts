@@ -28,7 +28,7 @@ export class SiparisService {
   return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
 } 
 
-async SiparisOlustur(List:SiparisAktarimModel[],CariKodu:string,SipTipId:number,SipTurId:number,SiparisTarih:any,SiparisNo:string,PlasiyerKod:string,DepoKodu:number,IthalatTip:string):Promise<ReturnValues>  {
+async SiparisOlustur(List:SiparisAktarimModel[],CariKodu:string,SipTipId:number,SipTurId:number,SiparisTarih:any,SiparisNo:string,PlasiyerKod:string,DepoKodu:number,IthalatTip:number):Promise<ReturnValues>  {
   const headers = new HttpHeaders(
     {
       'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ async SaticiSipKontrol(formdata:FormData):Promise<ReturnValuesList<SaticiSipKont
   return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
 } 
 
-async IrsaliyeOlustur(List:SaticiSipKontrolModel[],CariKodu:string,SiparisTarih:any,SiparisNo:string,PlasiyerKod:string,DepoKodu:number,IthalatTip:string,SipTurId:number):Promise<ReturnValues>  {
+async IrsaliyeOlustur(List:SaticiSipKontrolModel[],CariKodu:string,SiparisTarih:any,SiparisNo:string,PlasiyerKod:string,DepoKodu:number,IthalatTip:number,SipTurId:number):Promise<ReturnValues>  {
   const headers = new HttpHeaders(
     {
       'Content-Type': 'application/json',
@@ -193,12 +193,14 @@ export  class SaticiSipKontrolModel {
   TOPLAM_FAT: number=0;
   StokKartNetsisteVar:boolean=false;
   DOVIZTIP: number=0;
+  SIPKONT: number=0;
 } 
 
 export  class IhracatTasimaTip {
   Id: number=0;
   Code: string="";  
   Name: string="";  
+  ErpId: number=0;
 }  
 
 export  class NtsDepoModel {

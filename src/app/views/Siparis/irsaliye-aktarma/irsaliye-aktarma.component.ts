@@ -44,9 +44,9 @@ export class IrsaliyeAktarmaComponent implements OnInit {
   SipTurId:number=0;
   SiparisNo:string="";
   PlasiyerKod:string="";
-  DepoKodu:number=1;
+  DepoKodu:number=60;
   SiparisTarih:any;
-  IthalatTip:string="";
+  IthalatTip:number=0;
   FirmaAdi:string="";
   FirmaKodu:string="";
 
@@ -102,7 +102,7 @@ export class IrsaliyeAktarmaComponent implements OnInit {
       search = search.toUpperCase();
     } 
     this.filterIhr.next(
-      this.ihrtasimatip.filter(item => (item?.Name??"").toUpperCase().indexOf(search) > -1)
+      this.ihrtasimatip.filter(item => (item?.Code??"").toUpperCase().indexOf(search) > -1)
     );
   }
 
@@ -340,7 +340,7 @@ export class IrsaliyeAktarmaComponent implements OnInit {
     this.PlasiyerKod="";
     this.FirmaKodu="";
     this.FirmaAdi="";
-    this.DepoKodu=1;
+    this.DepoKodu=60;
     this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' }); 
   }
 
@@ -350,7 +350,7 @@ export class IrsaliyeAktarmaComponent implements OnInit {
   }
   
   defIhr(event: any) {
-    this.IthalatTip = "";
+    this.IthalatTip = 0;
     event.stopPropagation();
   }
 }

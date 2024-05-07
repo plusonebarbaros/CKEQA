@@ -130,7 +130,7 @@
 
     <mat-form-field appearance="outline" [style.width.%]="50">
       <mat-label>Sipariş No</mat-label>
-      <input matInput placeholder="Sipariş No" [(ngModel)]="SiparisNo" [max]="15" [min]="15">
+      <input matInput placeholder="Sipariş No" [(ngModel)]="SiparisNo" maxlength="15" minlength="15">
     </mat-form-field>
 
     <mat-form-field appearance="outline" [style.width.%]="50">
@@ -184,11 +184,11 @@
          noEntriesFoundLabel="Kayıt Bulunamadı...">
         </ngx-mat-select-search>
       </mat-option>
-      <mat-option *ngFor="let gr of filterIhr | async" [value]="gr.Code" >
-        {{gr.Name}}
+      <mat-option *ngFor="let gr of filterIhr | async" [value]="gr.ErpId" >
+        {{gr.Code}}
       </mat-option>
     </mat-select>
-    <button mat-button matSuffix *ngIf="IthalatTip!=''" mat-icon-button (click)="defIhr($event)">
+    <button mat-button matSuffix *ngIf="IthalatTip!=0" mat-icon-button (click)="defIhr($event)">
        <mat-icon>close</mat-icon>
    </button>
 </mat-form-field>  

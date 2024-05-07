@@ -72,6 +72,21 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+
+                <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+                  <mat-label>Depo Yetki</mat-label>
+                    <mat-select  #multiSelect  [(ngModel)]="seciliuser.Depo" [multiple]="true">
+                      <mat-option>
+                        <ngx-mat-select-search [formControl]="formDepo"  
+                         placeholderLabel="Ara..."
+                         noEntriesFoundLabel="Kayıt Bulunamadı...">
+                        </ngx-mat-select-search>
+                      </mat-option>
+                      <mat-option *ngFor="let tss of filterDepo | async" [value]="tss.DEPO_KODU" >
+                        {{tss.DEPO_ISMI}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
       
             <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
               <mat-label>Grup Yetki</mat-label>
