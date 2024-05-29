@@ -169,8 +169,8 @@
          noEntriesFoundLabel="Kayıt Bulunamadı...">
         </ngx-mat-select-search>
       </mat-option>
-      <mat-option *ngFor="let gr of filterDepo | async" [value]="gr.DEPO_KODU" >
-        {{gr.DEPO_ISMI}}
+      <mat-option *ngFor="let gr of filterDepo | async" [value]="gr.WhsCode" >
+        {{gr.WhsName}}
       </mat-option>
     </mat-select> 
 </mat-form-field>

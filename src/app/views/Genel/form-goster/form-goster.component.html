@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h4 class="modal-title" >Form Önizleme</h4>
+    <button type="button" class="btn btn-danger" aria-label="Close" (click)="mailGoster()">
+      <i class="fa fa-envelope" aria-hidden="true"></i>
+    </button>	 
+  </div>
+  <div class="modal-body">
+        <div class="card belgemail" *ngIf="mailgonder">
+          <div class="card-body">
+          <mat-form-field appearance="outline" [style.width.%]="50" style="padding-right: 10px;">
+            <mat-label>Kime</mat-label>
+            <input matInput placeholder="Kime" type="text" [(ngModel)]="to"  autocomplete="off">
+          </mat-form-field> 
+
+          <mat-form-field appearance="outline" [style.width.%]="50">
+            <mat-label>Bilgi</mat-label>
+            <input matInput placeholder="Bilgi" type="text" [(ngModel)]="cc"  autocomplete="off">
+          </mat-form-field>  
+
+              <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Mail Başlık</mat-label>
+                <input matInput placeholder="Mail Başlık" type="text" [(ngModel)]="baslik" autocomplete="off">
+            </mat-form-field>   
+
+            <mat-form-field appearance="outline" class="example-full-width"  [style.width.%]="100">
+              <mat-label>Mail İçerik</mat-label> 
+              <textarea matInput placeholder="Mail İçerik..." rows="3" [(ngModel)]="icerik"  autocomplete="off"></textarea>
+          </mat-form-field>
+          <button type="button" class="btn btn-success" (click)="mailGonder()" alignment="right">Mail Gönder</button>
+
+        </div>
+      </div>
+      <div style="clear: both;margin-bottom: 5px;"></div> 
+
+      <div class="myIframe">
+          <iframe [src]="pdfdata" *ngIf="pdfgoster"></iframe>
+          <img [src]="pdfdata" *ngIf="!pdfgoster">
+      </div>
+   </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="dismiss()">Kapat</button> 
+  </div>   

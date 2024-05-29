@@ -22,7 +22,7 @@ import { Title } from '@angular/platform-browser';
 import { CofirmsrcService } from './utils/confirm-dialog/cofirmsrc.service';
 import moment from 'moment';
 import { LoadingComponent } from './loading/loading.component';
-import { GenelApi, EkranMesaj, DashModel, DashRaporModel, DashRaporOzetModel, MenuExapand } from './services/GenelSrc';
+import { GenelApi, EkranMesaj, MenuExapand, IlceModel, SehirModel, UlkeModel } from './services/GenelSrc';
 import { KullaniciModel, KullaniciSrcService, FilterMod, KullaniciYetki, KulSirketYetki, User } from './services/KullaniciSrc';
 import { StokAramaComponent } from './views/Stok/stok-arama/stok-arama.component';
 import { RafBulmaComponent } from './views/Stok/raf-bulma/raf-bulma.component';
@@ -32,6 +32,7 @@ import { GrupYetkiComponent } from './views/Yonetim/grup-yetki/grup-yetki.compon
 import { KullaniciPozisyonComponent } from './views/Yonetim/kullanici-pozisyon/kullanici-pozisyon.component';
 import { KullaniciDepartmanComponent } from './views/Yonetim/kullanici-departman/kullanici-departman.component';
 import { IrsaliyeAktarmaComponent } from './views/Siparis/irsaliye-aktarma/irsaliye-aktarma.component';
+import { OzelSiparisComponent } from './views/Siparis/ozel-siparis/ozel-siparis.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -102,8 +103,6 @@ export class AppComponent implements OnInit,AfterViewInit {
   isWaiting: boolean = false; 
   dogrulandi:boolean = false; 
   Reuser: User = new User("","","","","",0,"");
-  Data: DashRaporOzetModel;
-  Rapor: DashRaporModel[]=[];
   GuncelSifre:string="";
   YeniSifre:string="";
   YeniSifreTekrar:string="";
@@ -136,7 +135,6 @@ export class AppComponent implements OnInit,AfterViewInit {
       this.allMode = 'allPages';
       this.checkBoxesMode = 'always';  
       this.loguser=new KullaniciModel();
-      this.Data=new DashRaporOzetModel();
       this.secilisube=new KulSirketYetki();
 
       for(var i = 1; i <= 50; i++){
@@ -177,13 +175,11 @@ export class AppComponent implements OnInit,AfterViewInit {
       }
     } 
     if(tabid==1)this.tabService.addTab(new Tab(StokAramaComponent, "Stok Arama", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0001")[0]},tabid));
-    else if(tabid==2)this.tabService.addTab(new Tab(RafBulmaComponent, "Raf Bulma", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0002")[0]},tabid));
-    else if(tabid==3)this.tabService.addTab(new Tab(SiparisAktarmaComponent, "Sipariş Girişi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0006")[0]},tabid));
-    else if(tabid==4)this.tabService.addTab(new Tab(KullaniciComponent, "Kullanıcı Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0007")[0]},tabid));
-    else if(tabid==5)this.tabService.addTab(new Tab(GrupYetkiComponent, "Grup Yetki Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0008")[0]},tabid));
+    else if(tabid==3)this.tabService.addTab(new Tab(KullaniciComponent, "Kullanıcı Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0007")[0]},tabid));
+    else if(tabid==4)this.tabService.addTab(new Tab(GrupYetkiComponent, "Grup Yetki Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0008")[0]},tabid));
+    else if(tabid==5)this.tabService.addTab(new Tab(KullaniciDepartmanComponent, "Departman Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0010")[0]},tabid));
     else if(tabid==6)this.tabService.addTab(new Tab(KullaniciPozisyonComponent, "Pozisyon Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0011")[0]},tabid));
-    else if(tabid==7)this.tabService.addTab(new Tab(KullaniciDepartmanComponent, "Departman Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0010")[0]},tabid));
-    else if(tabid==8)this.tabService.addTab(new Tab(IrsaliyeAktarmaComponent, "Fatura Kontrol", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0012")[0]},tabid));
+    else if(tabid==7)this.tabService.addTab(new Tab(OzelSiparisComponent, "Özel Sipariş", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0012")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }
@@ -242,6 +238,9 @@ export class AppComponent implements OnInit,AfterViewInit {
 
   async DataLoad() {
     await this.GetKullaniciYetki(this.loguser.Id);
+    await this.GetSehirler();
+    await this.GetUlkeList();
+    await this.GetIlceList(); 
 
     this.kullsrc.kullToken = this.kulltoken;
     this.kullsrc.kullUserId = this.loguser.Id;
@@ -262,6 +261,80 @@ export class AppComponent implements OnInit,AfterViewInit {
       sessionStorage.setItem("AktifTab","0");
   })  
   }
+
+  async GetSehirler() {
+    this.kullsrc.sehirlist=[];
+    this.blockUI.start(EkranMesaj.Listele);
+    (await this.genelsrv.GetSehirList("")).subscribe(
+      data =>{
+        this.blockUI.stop();  
+        if(!data.Success){
+          this.alertify.warning(data.Message);
+          return;
+        }
+        let sehir =data.List;           
+
+        const ilsec = new SehirModel();
+        ilsec.Code= "00";
+        ilsec.Name ="Seçiniz";
+           
+        this.kullsrc.sehirlist.push(ilsec); 
+        sehir.forEach((item: SehirModel)=>{
+          this.kullsrc.sehirlist.push(item);
+        })   
+     }
+   ) 
+  }
+
+  async GetUlkeList() {
+    this.kullsrc.ulkelist=[];
+
+    this.blockUI.start(EkranMesaj.Listele);
+    (await this.genelsrv.GetUlkeList("")).subscribe(
+      data =>{
+        this.blockUI.stop();  
+        if(!data.Success){
+          this.alertify.warning(data.Message);
+          return;
+        }
+        let ulke =data.List;   
+
+        const ilsec = new UlkeModel();
+        ilsec.Code= "00";
+        ilsec.Name ="Seçiniz";
+           
+        this.kullsrc.ulkelist.push(ilsec); 
+        ulke.forEach((item: UlkeModel)=>{
+          this.kullsrc.ulkelist.push(item);
+        })   
+     }
+   ) 
+  }
+
+  async GetIlceList() {
+    this.blockUI.start(EkranMesaj.Listele);
+    (await this.genelsrv.GetIlceList("")).subscribe(
+      data =>{
+        this.blockUI.stop(); 
+        if(!data.Success){
+          this.alertify.warning(data.Message);
+          return;
+        }
+        let ilce =data.List; 
+        this.kullsrc.ilcelist=[];
+
+        const ilcesec = new IlceModel();
+        ilcesec.Id= 0;
+        ilcesec.IlId ="0";
+        ilcesec.IlceAdi ="Seçiniz";
+           
+        this.kullsrc.ilcelist.push(ilcesec); 
+        ilce.forEach((item: IlceModel)=>{
+          this.kullsrc.ilcelist.push(item);
+        })    
+     }
+   ) 
+  } 
 
   satirSec(e:any){} 
 

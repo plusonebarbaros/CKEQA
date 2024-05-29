@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import moment from 'moment';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, isEmpty, map } from 'rxjs/operators'; 
-import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrupModel, IslemTipi } from './GenelSrc';
+import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrupModel, IslemTipi, UlkeModel } from './GenelSrc';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,7 @@ export class KullaniciSrcService {
   tumdepolist: DepoYetki[]=[];
   sehirlist: SehirModel[]=[];    
   ilcelist: IlceModel[]=[];    
+  ulkelist: UlkeModel[]=[];   
   userperm:KullaniciYetki[]=[];
   aktifsirket:string="";
   kullUserId:number=0;
@@ -324,6 +325,12 @@ export class KullaniciSrcService {
     var sonuc = JSON.parse(JSON.stringify(result))['Model'];
     return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
   }  
+
+  async GetKullaniciDepoYetki(EmpId:number)
+  { 
+       let url=this.semUrl+"/Login/GetKullaniciDepoYetki?EmpId="+EmpId+"&Token="+ this.token; 
+        return await this.http.get<Result<ConDepoYetki[]>>(url).pipe( map((res:any)=> res)); 
+  }
 }
 
 export  class User {

@@ -16,6 +16,7 @@ import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxSortableModule } from 'devextreme-angular/ui/sortable';   
 import { DxTabPanelModule } from 'devextreme-angular/ui/tab-panel';    
 import { DxSelectBoxModule } from 'devextreme-angular/ui/select-box'; 
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { AppComponent } from './app.component';
 
@@ -63,6 +64,9 @@ import { GrupYetkiDetayComponent } from './views/Yonetim/grup-yetki-detay/grup-y
 import { KullaniciDepartmanComponent } from './views/Yonetim/kullanici-departman/kullanici-departman.component';
 import { KullaniciPozisyonComponent } from './views/Yonetim/kullanici-pozisyon/kullanici-pozisyon.component';
 import { IrsaliyeAktarmaComponent } from './views/Siparis/irsaliye-aktarma/irsaliye-aktarma.component';
+import { OzelSiparisComponent } from './views/Siparis/ozel-siparis/ozel-siparis.component';
+import { OzelSiparisDetayComponent } from './views/Siparis/ozel-siparis-detay/ozel-siparis-detay.component';
+import { SistemParametreComponent } from './views/Yonetim/sistem-parametre/sistem-parametre.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -87,6 +91,9 @@ locale(navigator.language);
     KullaniciDepartmanComponent,
     KullaniciPozisyonComponent,
     IrsaliyeAktarmaComponent,
+    OzelSiparisComponent,
+    OzelSiparisDetayComponent,
+    SistemParametreComponent,
       
       ],
   imports: [
@@ -130,13 +137,15 @@ locale(navigator.language);
     CommonModule,
     DxCalendarModule,
     DxProgressBarModule,
-    DxChartModule
+    DxChartModule,
+    MatFormFieldModule,
+
+
       ],
   providers: [
     { provide: LOCALE_ID, useValue: "tr-TR" },
     { provide: MAT_DATE_LOCALE, useValue: 'tr-TR' },
-    {provide:'semUrl',useValue:'http://localhost:3525/api'},
-    //{provide:'semUrl',useValue:'http://ciroapi.harmantr.com/api'},
+    { provide:'semUrl',useValue:'http://localhost:17379/api'},
     TabService,
     MatDatepickerModule,     
   ],

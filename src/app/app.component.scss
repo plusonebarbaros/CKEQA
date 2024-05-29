@@ -1090,7 +1090,7 @@ color: #ffffff!important;
 
  
 .panel {
-margin-bottom: 20px;
+margin-bottom: 7px;
 background-color: #ffffff;
 border: 1px solid transparent;
 border-radius: 4px;
@@ -1394,4 +1394,17 @@ height: 78vh!important;
 
 .badegesecim{ 
 cursor: pointer;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%) sepia(0%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
+}
+
+.input-saat{
+  width: 100px!important;
+    height: 39px!important;
+    border: 1px solid silver!important;
+    border-radius: 4px!important;
+    margin-top: 0px !important;
+    text-align: center!important;
 }

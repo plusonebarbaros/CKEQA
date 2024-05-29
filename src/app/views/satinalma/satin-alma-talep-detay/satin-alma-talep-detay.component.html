@@ -1,0 +1,411 @@
+<div class="content">
+<nav class="menu-navigation-icons">
+  <a href="#" class="menu-silver" (click)="TalepDetayGetir()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a> 
+  <a href="#" [hidden]="talepmaster.Durum=='T' && yetki.Ekle" class="menu-green" (click)="kaydet(true)"><i class="fas fa-save"></i><span>{{talepmaster.Id>0 ? 'Kaydet':'Kaydet'}}</span></a> 
+  <a *ngIf="talepmaster.Durum!='T' && yetki.Ekle" href="#" class="menu-blue" (click)="kalemEklemod(modtlpkalemekle)"><i class="fas fa-plus-circle"></i><span>Kalem Ekle</span></a>
+  <a href="#" (click)="belgeYukleModal(belgeyukle)" *ngIf="this.evrekyuklegoster" class="menu-red" style="width: 95px!important;"><i class="fas fa-file-upload"></i><span>Talep Belge</span></a>
+  <a *ngIf="this.silgoster && yetki.Sil" href="#" class="menu-red" (click)="kayitsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a>
+  <a *ngIf="this.tekraronaygoster" href="#" class="menu-yellow" (click)="tekraronayMod(tekraronaymod)"><i class="fas fa-redo-alt"></i><span>Tekrar Onay</span></a>
+
+  <a href="#" (click)="this.gridTalepDetay.instance.showColumnChooser()" style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
+  <a href="#" (click)="this.gridTalepDetay.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+  <a href="#" (click)="formYazdir(talepform)"  *ngIf="talepmaster.Id>0 && yetki.Export" class="menu-magenta" style="float: right!important;"><i class="fas fa-file-pdf"></i><span>Pdf</span></a> 
+
+  
+</nav>
+<div style="clear:both"></div>
+  
+<div class="border-start border-0 border-3 border-warning">
+  <div class="panel-group"> 
+    <div class="panel panel-default" style="padding-top: 20px;">
+    
+     <mat-form-field appearance="outline"   [style.width.%]="15" style="padding-right: 10px;">
+       <mat-label>Talep Tarih</mat-label> 
+       <input matInput [matDatepicker]="dp" placeholder="Talep Tarihi"  [(ngModel)]="talepmaster.Tarih" >
+     <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+     <mat-datepicker #dp></mat-datepicker>
+   </mat-form-field> 
+     
+    <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+       <mat-label>Talep Eden</mat-label>
+       <input matInput placeholder="Talep Eden" [(ngModel)]="talepmaster.Ekleyen" readonly> 
+   </mat-form-field> 
+   
+    <mat-form-field appearance="outline" [style.width.%]="50" style="padding-right: 10px;">
+        <mat-label>Talep Nedeni</mat-label>
+        <input matInput placeholder="Talep Nedeni" [(ngModel)]="talepmaster.Aciklama" autocomplete="off">
+    </mat-form-field> 
+   
+    <div class="clear-fix"></div> 
+
+    </div>
+  </div>
+</div>
+ 
+ <div class="clear-fix"></div> 
+ 
+<dx-data-grid class="devgrid65"  #gridTalepDetay 
+[dataSource]="talepdetay"   
+[showBorders]="true" 
+[remoteOperations]="true"
+[showColumnLines]="false"
+[showRowLines]="true" 
+[rowAlternationEnabled]="true"
+[focusedRowEnabled]="true"
+[columnAutoWidth]="true"
+[allowColumnResizing]="true"
+keyExpr="Id" 
+columnResizingMode = "widget"  
+(onEditingStart)="overrideOnValueChanged($event)"
+(onRowUpdated)="CellDegisti($event)" 
+(onSelectionChanged)="silgosterChanged($event)"
+> 
+<dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+<dxo-filter-row [visible]="true"></dxo-filter-row>
+<dxo-header-filter [visible]="true"></dxo-header-filter>
+<dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+<dxo-load-panel [enabled]="true"></dxo-load-panel> 
+<dxo-column-chooser [enabled]="false" mode="select"></dxo-column-chooser>
+<dxo-scrolling mode="virtual" showScrollbar="'always'" useNative="false" scrollByThumb="true" ></dxo-scrolling> 
+<dxo-paging [pageSize]="30"> </dxo-paging>
+<dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
+<dxo-selection [selectAllMode]="allMode" [showCheckBoxesMode]="checkBoxesMode" mode="multiple"></dxo-selection>
+ <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+
+ <dxi-column caption="#" cellTemplate="cellTarihce" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+ <div *dxTemplate="let cell of 'cellTarihce'"> 
+   <i class="fas fa-info-circle" (click)="tarihceDetay(belgetarihcemod,cell.data)" title="Talep Tarihçe Detayını Görebilirsiniz" style="cursor:pointer"></i>
+ </div> 
+ 
+ <dxi-column dataField="Durum" caption="Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+ <div *dxTemplate="let cell of 'cellDurum'"> 
+     <span *ngIf="cell.data.DurumId===0" style="cursor: pointer;" class="badge pill-medium bg-secondary" (click)="onaytakip(onaytakipmod,cell.data)">İşlem Yapılmadı</span>
+     <span *ngIf="cell.data.DurumId===1" style="cursor: pointer;" class="badge pill-medium bg-info" (click)="onaytakip(onaytakipmod,cell.data)">Onay Bekliyor</span>    
+     <span *ngIf="cell.data.DurumId===2" style="cursor: pointer;" class="badge pill-medium bg-success" (click)="onaytakip(onaytakipmod,cell.data)">Tamamlandı</span>    
+     <span *ngIf="cell.data.DurumId===3" style="cursor: pointer;" class="badge pill-medium bg-danger" (click)="onaytakip(onaytakipmod,cell.data)">Reddedildi</span>    
+     <span *ngIf="cell.data.DurumId===4" style="cursor: pointer;" class="badge pill-medium bg-warning" (click)="onaytakip(onaytakipmod,cell.data)">İptal</span>    
+ </div> 
+
+<dxi-column dataField="StokKodu" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
+<dxi-column dataField="StokAdi" caption="Stok Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+
+<dxi-column
+  dataField="TalepDurumId"
+  caption="İhtiyaç Durum"
+  [style.width.%]="10" alignment="center">         
+  <dxo-lookup
+      [dataSource]="talepihtdurumlist"
+      displayExpr="Adi"
+      valueExpr="Id">
+  </dxo-lookup>
+  </dxi-column>
+
+<dxi-column dataField="Miktar" [style.width.%]="10"  caption="İhtiyaç Miktar" alignment="right" dataType="number" format="#,##0.00"> </dxi-column> 
+<dxi-column dataField="OnaylananMiktar" [style.width.%]="10" caption="Onaylanan Miktar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00" ></dxi-column> 
+<dxi-column dataField="TalepMiktar" [style.width.%]="10" caption="Talep Miktar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+<dxi-column dataField="BirimTutar" [style.width.%]="10" caption="Tahmini Tutar"  [allowEditing]="true" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+<dxi-column dataField="ToplamTutar" [style.width.%]="10" caption="Toplam Tutar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+
+<dxi-column
+  dataField="BirimId"
+  caption="Birim"
+  [style.width.%]="10" alignment="center" [allowEditing]="true">         
+  <dxo-lookup
+      [dataSource]="olcubirimlist"
+      displayExpr="Adi"
+      valueExpr="Id">
+  </dxo-lookup>
+  </dxi-column>
+
+
+<dxi-column
+dataField="DepoKodu"
+caption="Teslim Adres"
+[style.width.%]="10" alignment="center" [allowEditing]="true">         
+<dxo-lookup
+    [dataSource]="depolist"
+    displayExpr="DepoAdi"
+    valueExpr="DepoKodu">
+</dxo-lookup>
+</dxi-column>
+  
+<dxi-column dataField="Aciklama" caption="Ürün/Hizmet Açıklama" [width]="200" [allowEditing]="true"></dxi-column> 
+  
+<dxi-column dataField="TalepDurum" caption="Talep Durum" [width]="200" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
+
+ <dxi-column dataField="SapTalepNo" caption="Sap Talep No" [style.width%]="10" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
+<dxi-column dataField="SapTeklifNo" caption="Sap Teklif No" [style.width%]="10" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
+<dxi-column dataField="SapSiparisNo" caption="Sap Sipariş No" [style.width%]="10" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
+ 
+<dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen"  [visible]="false"></dxi-column> 
+<dxi-column [style.width.%]="10" caption="Kayıt Tarih" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"  [visible]="false"></dxi-column> 
+<dxi-column [style.width.%]="10" caption="Guncelleyen" dataField="Guncelleyen"   [visible]="false"></dxi-column> 
+<dxi-column [style.width.%]="10" caption="Güncelleme Tarih" dataField="GuncelTarih" dataType="date" format="dd.MM.yyyy HH:mm"  [visible]="false"></dxi-column>
+ 
+
+</dx-data-grid> 
+ 
+</div>
+
+<ng-template #modtlpkalemekle let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" >Kalem Ekle</h4> 
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="input-group">
+
+        <mat-form-field appearance="outline" [style.width.%]="25" style="padding-right: 10px;">
+          <mat-label>Stok Grup</mat-label>
+            <mat-select  #singleSelect [(ngModel)]="StokGrupId" (ngModelChange)="kalemAraDef()">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="formStokGrup"  
+                 placeholderLabel="Ara..."
+                 noEntriesFoundLabel="Kayıt Bulunamadı...">
+                </ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let gr of filterStokGrup | async" [value]="gr.ItmsGrpCod" >
+                {{gr.ItmsGrpNam}}
+              </mat-option>
+            </mat-select>
+            <button mat-button matSuffix *ngIf="StokGrupId>0" mat-icon-button (click)="defGrup($event)">
+               <mat-icon>close</mat-icon>
+           </button>
+          </mat-form-field> 
+
+        <input autofocus [style.width.%]="70" type="text" class="form-control" autocomplete="off" placeholder="Aramak İstediğiniz Ürünü Kısaca Yazın..." [(ngModel)]="kalemkeyword" (keyup)="kalemAra($event)">
+        <span class="input-group-btn">
+          <button class="btn btn-danger btn-mini" title="Arama Temizle" (click)="aramaTemizle()">
+            <span class="fas fa-window-close"></span>
+          </button>
+      </span>
+    </div>
+    </div>
+    <div style="clear:both"></div>
+    <hr/>
+
+    <dx-data-grid  class="devgrid30"
+    [dataSource]="kalemlist"
+    [showBorders]="true"
+    [showRowLines]="true"
+    [remoteOperations]="true"
+    [showColumnLines]="true"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true"
+    [columnAutoWidth]="true"
+    [allowColumnResizing]="true"
+    keyExpr="DocEntry" 
+    columnResizingMode = "widget" 
+    [allowColumnReordering]="true"
+    (onCellPrepared)="onCellPreparedKalem($event)"  
+    > 
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-header-filter [allowSearch]="true"></dxo-header-filter> 
+    <dxo-column-chooser [enabled]="false" mode="select"></dxo-column-chooser>
+    <dxo-scrolling 
+    mode="virtual"
+    showScrollbar="'always'"
+    useNative="false"
+    scrollByThumb="true" >
+  </dxo-scrolling> 
+    <dxo-selection mode="single"></dxo-selection>  
+    
+     <dxo-editing 
+          mode="cell"
+          [allowUpdating]="true" >
+     </dxo-editing>
+     
+    <dxi-column dataField="ItmsGrpNam" caption="Grup Adı" [style.width.%]="10" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="ItemCode" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" [visible]="false"></dxi-column>
+    <dxi-column dataField="ItemName" caption="Stok Adı" [style.width.%]="10" [allowEditing]="false"></dxi-column>  
+    
+    <dxi-column
+    dataField="TalepDurumId"
+    caption="İhtiyaç Durum"
+    [style.width.%]="10" alignment="center">         
+    <dxo-lookup
+        [dataSource]="talepihtdurumlist"
+        displayExpr="Adi"
+        valueExpr="Id">
+    </dxo-lookup>
+    </dxi-column>
+   
+    <dxi-column placeholder="Miktar Giriniz..." dataField="Miktar" caption="Miktar" [style.width.%]="10" alignment="center" format="#,##0.####" onfocus="this.select()"></dxi-column>    
+  
+    <dxi-column
+    dataField="BirimId"
+    caption="Birim"
+    [style.width.%]="10" alignment="center">         
+    <dxo-lookup
+        [dataSource]="olcubirimlist"
+        displayExpr="Adi"
+        valueExpr="Id">
+    </dxo-lookup>
+    </dxi-column>
+    
+    <dxi-column dataField="BirimTutar" [style.width.%]="10" caption="Tahmini Tutar"  [allowEditing]="true" alignment="center" dataType="number" format="#,##0.00" onfocus="this.select()"></dxi-column> 
+  
+    <dxi-column
+    dataField="DepoKodu"
+    caption="Teslim Adres"
+    [style.width.%]="10" alignment="center">         
+    <dxo-lookup
+        [dataSource]="depolist"
+        displayExpr="DepoAdi"
+        valueExpr="DepoKodu">
+    </dxo-lookup>
+    </dxi-column>
+    
+    <dxi-column  
+    dataField="Aciklama"  
+    caption="Ürün/Hizmet Açıklama"  
+    [style.width.%]="10">
+    </dxi-column>   
+    
+    <dxi-column caption="Belge Yükle" cellTemplate="cellBElge" [style.width.%]="10" alignment="center" [allowEditing]="false" ></dxi-column>
+    <div *dxTemplate="let cell of 'cellBElge'">   
+      <!-- <input name="Yüklemek İstediğiniz Dosyaları Seçiniz" [ngModel]="cell.data.Files" title="Yüklemek İstediğiniz Dosyaları Seçiniz" type="file" multiple (change)="uploadFile(cell.data,$event)" /> -->
+  
+      <label [for]="('inputFile'+cell.data.DocEntry)" class="btn btn-xs btn-default" style="margin-bottom: 0px!important;">Dosya Seç <span *ngIf="cell.data.Files>0"> - {{cell.data.Files}}</span> </label>
+      <input type="file" [id]="('inputFile'+cell.data.DocEntry)" multiple [name]="('inputFile'+cell.data.DocEntry)" class="d-none" (change)="uploadFile(cell.data,$event)">
+  
+    </div> 
+  
+    </dx-data-grid>   
+     
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+    <button type="button" class="btn btn-success" (click)="listeyeekle()">Listeye Ekle</button>
+  </div>
+</ng-template>
+
+<ng-template #firmasec let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" >Firma Seç</h4> 
+  </div>
+  <div class="modal-body"> 
+      <div class="row">
+          <div class="input-group">
+            <input autofocus type="text" class="form-control" autocomplete="off" placeholder="Aramak İstediğiniz Firmayı Kısaca Yazın..." [(ngModel)]="firmakalemkeyword" (keyup)="firmaAra($event)">
+            <span class="input-group-btn">
+              <button class="btn btn-info btn-mini" title="Arama Temizle" (click)="firmaAramaTemizle()">
+                  <span class="fas fa-sync-alt"></span>
+              </button>
+          </span>
+        </div>
+        </div>
+        <div style="clear:both"></div>
+        <hr/>
+        <dx-data-grid class="devgrid30" #gridTalepFirmaSec
+        [dataSource]="firmalist"
+        [showBorders]="true"
+        [showRowLines]="true" 
+        [showColumnLines]="false"
+        [showRowLines]="true" 
+        [rowAlternationEnabled]="true"
+        [focusedRowEnabled]="true"
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true"
+        keyExpr="FirmaKodu" 
+        columnResizingMode = "widget" 
+        [allowColumnReordering]="true"  
+        (onSelectionChanged)="onFirmaChg($event)"
+        (onRowDblClick)="firmaSecimYap()"
+        > 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-filter-row [visible]="false"></dxo-filter-row>
+        <dxo-header-filter [visible]="false"></dxo-header-filter>
+        <dxo-paging [enabled]="false"></dxo-paging>
+                    <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+        <dxo-header-filter [allowSearch]="false"></dxo-header-filter>
+        <dxo-selection mode="single"></dxo-selection>   
+              
+        <dxi-column dataField="FirmaAdi" caption="Müşteri Adı" [width]="350"></dxi-column>
+
+        <dxi-column dataField="CariTip" caption="Tip" cellTemplate="cellCardType" [width]="10+'%'" alignment="center"></dxi-column>
+        <div *dxTemplate="let cc of 'cellCardType'">
+            <div>{{cc.value=="S"?'Satıcı':cc.value=="C"? 'Müşteri':'Diğer'}}</div>
+        </div> 
+        <dxi-column dataField="ParaBirim" caption="Para Birim" [width]="100"></dxi-column>
+        <dxi-column dataField="Tel1" caption="Telefon" [width]="125"></dxi-column>
+        <dxi-column dataField="VergiN" caption="Vergi/Tckn" [width]="150"></dxi-column>  
+        
+        </dx-data-grid>  
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="finhspkapat" class="btn btn-danger" (click)="modal.dismiss('Cross click')"  #closeBtn>Vazgeç</button>
+    <button type="button" class="btn btn-success" (click)="firmaSecimYap()">Seçim Yap</button>
+  </div>
+</ng-template> 
+ 
+<ng-template #onaytakipmod let-modal>
+  <div class="modal-header">
+  <h4 class="modal-title" >Onay Takip</h4> 
+  <button type="button" class="btn btn-danger" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+  <div class="modal-body">
+  <app-onay-durum-kontrol [onayid]="onayid"></app-onay-durum-kontrol>
+  </div> 
+</ng-template>   
+
+<ng-template #talepform let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" >Talep Form</h4> 
+  </div>
+  <div style="max-height:100%!important; overflow-y: scroll">
+  
+  <div class="modal-body" >
+     <div class="myIframe">
+      <iframe [src]="pdfdata" ></iframe>
+  </div>
+  </div>
+</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button> 
+  </div>
+</ng-template>
+
+<ng-template #belgeyukle let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" >Belgeler</h4> 
+    <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <app-belge-goruntule [semkey]="this.secilikalem.SatirGuid" [kayitid]="this.secilikalem.Id" [ekranid]="1" [secilidata]="this.secilikalem" [defbelgetipid]="1"></app-belge-goruntule>  
+</ng-template>
+
+<ng-template #tekraronaymod let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" >Tekrar Onay</h4> 
+  </div>
+  <div class="modal-body">  
+      <div style="clear:both" style="margin-bottom:5px!important"></div> 
+       
+   <mat-form-field appearance="outline" [style.width.%]="100" >
+      <mat-label>Açıklama</mat-label> 
+      <textarea matInput placeholder="Açıklama" [(ngModel)]="TekrarOnayAciklama" rows="4" autocomplete="off" maxlength="254"></textarea>
+  </mat-form-field>   
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="finodemekpt" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+    <button type="button" class="btn btn-success" (click)="tekraronay()">Onaya Gönder</button>
+  </div>
+</ng-template>  
+
+<ng-template #belgetarihcemod let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" >Tarihçe</h4> 
+    <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <app-talep-tarihce [SatirGuid]="this.secilikalem.SatirGuid"></app-talep-tarihce>  
+</ng-template>

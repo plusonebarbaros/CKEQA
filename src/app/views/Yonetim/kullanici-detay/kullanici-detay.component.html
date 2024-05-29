@@ -82,8 +82,8 @@
                          noEntriesFoundLabel="Kayıt Bulunamadı...">
                         </ngx-mat-select-search>
                       </mat-option>
-                      <mat-option *ngFor="let tss of filterDepo | async" [value]="tss.DEPO_KODU" >
-                        {{tss.DEPO_ISMI}}
+                      <mat-option *ngFor="let tss of filterDepo | async" [value]="tss.WhsCode" >
+                        {{tss.WhsName}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

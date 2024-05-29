@@ -4,7 +4,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DxDataGridComponent } from 'devextreme-angular';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { ConnKulPozisyonModel, IslemTipi, EkranMesaj, GenelApi } from 'src/app/services/GenelSrc';
+import { ConnKulPozisyonModel, EkranMesaj, GenelApi, IslemTipi } from 'src/app/services/GenelSrc';
 import { KullaniciYetki } from 'src/app/services/KullaniciSrc';
 import { NotifyService } from 'src/app/services/notify';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';

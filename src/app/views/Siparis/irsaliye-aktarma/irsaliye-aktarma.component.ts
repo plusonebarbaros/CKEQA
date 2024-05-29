@@ -11,7 +11,7 @@ import { GenelApi, EkranMesaj } from 'src/app/services/GenelSrc';
 import { KullaniciYetki } from 'src/app/services/KullaniciSrc';
 import { MesajversrcService } from 'src/app/services/mesajversrc.service';
 import { NotifyService } from 'src/app/services/notify';
-import { SiparisService, SaticiSipKontrolModel, Customer, IhracatTasimaTip, NtsDepoModel, PlasiyerModel } from 'src/app/services/SiparisSrc';
+import { SiparisService, SaticiSipKontrolModel, Customer, IhracatTasimaTip, PlasiyerModel, DepoModel } from 'src/app/services/SiparisSrc';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
 
 @Component({
@@ -37,7 +37,7 @@ export class IrsaliyeAktarmaComponent implements OnInit {
   secilifirma:Customer;
   kalemkeyword:string=""; 
   plalist: PlasiyerModel[]=[];    
-  depolist: NtsDepoModel[]=[];    
+  depolist: DepoModel[]=[];    
   ihrtasimatip: IhracatTasimaTip[]=[];    
 
   SipTipId:number=0;
@@ -54,7 +54,7 @@ export class IrsaliyeAktarmaComponent implements OnInit {
   public filterPla: ReplaySubject<PlasiyerModel[]> = new ReplaySubject<PlasiyerModel[]>(1); 
 
   public formDepo: FormControl = new FormControl();
-  public filterDepo: ReplaySubject<NtsDepoModel[]> = new ReplaySubject<NtsDepoModel[]>(1); 
+  public filterDepo: ReplaySubject<DepoModel[]> = new ReplaySubject<DepoModel[]>(1); 
 
   public formIhr: FormControl = new FormControl();
   public filterIhr: ReplaySubject<IhracatTasimaTip[]> = new ReplaySubject<IhracatTasimaTip[]>(1); 
@@ -118,7 +118,7 @@ export class IrsaliyeAktarmaComponent implements OnInit {
       search = search.toUpperCase();
     } 
     this.filterDepo.next(
-      this.depolist.filter(item => (item?.DEPO_ISMI??"").toUpperCase().indexOf(search) > -1)
+      this.depolist.filter(item => (item?.WhsName??"").toUpperCase().indexOf(search) > -1)
     );
   }
 
@@ -138,18 +138,20 @@ export class IrsaliyeAktarmaComponent implements OnInit {
     );
   }
 
-  async GetDepoList()  {
+  async GetDepoList() { 
     this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.siparissrc.GetDepoList(); 
-    this.blockUI.stop();  
-    if(sonuc.Success){
-      this.depolist=sonuc.List;
-      this.filterDepo.next(this.depolist.slice());
-    }else{
-      this.alertify.warning(sonuc.Message);
-      return;
-    }    
-  } 
+    (await this.siparissrc.GetDepoList()).subscribe(
+      data =>{
+        this.blockUI.stop(); 
+        if(!data.Success){
+          this.alertify.warning(data.Message);
+          return;
+        }
+        this.depolist=data.List;   
+        this.filterDepo.next(this.depolist.slice());
+     }
+   )
+  }
 
   async GetIhracatTeslimTipList()  {
     this.blockUI.start(EkranMesaj.Listele);

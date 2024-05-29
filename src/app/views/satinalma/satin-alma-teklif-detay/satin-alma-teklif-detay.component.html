@@ -1,0 +1,367 @@
+ 
+<div class="content">
+    <nav class="menu-navigation-icons">
+        <a href="#" (click)="TekDetDataLoad()" class="menu-silver" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a *ngIf="teklif.DurumId==0" href="#" class="menu-green" (click)="kaydet()"><i class="fas fa-save"></i><span>Kaydet</span></a>
+        <a *ngIf="teklif.DurumId==0"  href="#" class="menu-blue" (click)="onayaGonderMod(onayagondermodal)"><i class="fas fa-check"></i><span>Tamamla</span></a>
+        <a *ngIf="teklif.DurumId==1 || teklif.DurumId==5"  href="#" class="menu-magenta" (click)="geriCekMod(onaygericek)"><i class="fas fa-undo"></i><span>Geri Çek</span></a>
+        <a *ngIf="teklif.DurumId==2"  href="#" class="menu-blue" (click)="siparis()"><i class="fas fa-receipt"></i><span>Sipariş</span></a>
+        <a href="#" (click)="teklifBelgeler(modteklifbelgeler)" class="menu-red" style="width: 95px!important;"><i class="fas fa-file-upload"></i><span>Teklif Belge</span></a>
+
+ 
+        <!-- <a href="#" (click)="teklifMail()"  class="menu-magenta" style="float: right!important;"><i class="fas fa-file-pdf"></i><span>Mail</span></a>  -->
+    </nav>
+    <div style="clear:both"></div> 
+    <dx-data-grid class="devgrid38"  #gridTeklifDetayList
+    [dataSource]="teklifkalem"
+    [showBorders]="true"
+    [showColumnLines]="true"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true"
+    [columnAutoWidth]="true"
+    [allowColumnResizing]="true"
+    keyExpr="SatirGuid" 
+    columnResizingMode = "widget" 
+    [allowColumnReordering]="true" 
+    (onEditorPreparing)="onEditorPreparing($event)" 
+    (onSelectionChanged)="silgosterChanged($event)"
+    > 
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-paging [enabled]="false"></dxo-paging>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel>  
+    <dxo-selection mode="single"></dxo-selection> 
+    <dxo-scrolling 
+    mode="virtual"
+    showScrollbar="'always'"
+    useNative="false"
+    scrollByThumb="true" >
+    </dxo-scrolling>            
+    <dxo-editing mode="cell" [allowUpdating]="degisebilir" startEditAction="dblClick">
+    </dxo-editing>
+
+    <dxo-keyboard-navigation
+    [editOnKeyPress]="true"
+    [enterKeyAction]="'moveFocus'"
+    [enterKeyDirection]="'column'"
+  >
+  </dxo-keyboard-navigation>
+  
+    <dxi-column caption="#" cellTemplate="cellTarihce" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+    <div *dxTemplate="let cell of 'cellTarihce'"> 
+        <i class="fas fa-paperclip" (click)="belgeYukleModal(modteklifbelgeler,cell.data)" title="Talep Belgeleri Görüntüleyebilirsiniz" style="cursor:pointer"></i>
+    </div>    
+
+    <dxi-column [width]="170" caption="Depo" dataField="DepoAdi" [allowEditing]="false"></dxi-column>  
+    <dxi-column [width]="140" caption="Stok Kodu" dataField="StokKodu" [allowSearch]="true" [allowEditing]="false"></dxi-column>
+    <dxi-column [width]="170" caption="Stok Adı" dataField="StokAdi" [allowSearch]="true" [allowEditing]="false"></dxi-column>
+
+    <dxi-column dataField="TalepIhtDurum" caption="İhtiyaç Durum" cellTemplate="cellTalepDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+    <div *dxTemplate="let cell of 'cellTalepDurum'"> 
+      <span *ngIf="cell.data.TalepDurumId===1" style="cursor: pointer;" class="badge pill-medium bg-info">Normal</span>
+      <span *ngIf="cell.data.TalepDurumId===2" style="cursor: pointer;" class="badge pill-medium bg-warning">Orta</span>    
+      <span *ngIf="cell.data.TalepDurumId===3" style="cursor: pointer;" class="badge pill-medium bg-danger">Acil</span>    
+    </div>
+
+    <dxi-column [width]="95" caption="Miktar" dataField="TeklifMiktar"  alignment="right" [allowEditing]="false"></dxi-column>
+    <dxi-column [width]="85" caption="Birim" dataField="Birim" [allowSearch]="true" alignment="center" [allowEditing]="false"></dxi-column>
+    <dxi-column [width]="125" caption="Tahmini Tutar" dataField="TahminiTutar"  alignment="right" format="#,##0.####" [allowEditing]="false"></dxi-column>
+
+    <dxi-column caption="{{baslik1}}" [width]="250" alignment="center" [visible]="baslik1goster">
+        <dxi-column [width]="105" caption="İlk Teklif" dataField="Firma1IlkFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true" onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="110" caption="Revize Teklif" dataField="Firma1RevFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="105" caption="Son Teklif" dataField="Firma1SonFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+
+        <dxi-column [width]="115" caption="Toplam" dataField="Firma1SonFiyatToplam" [allowSearch]="true" alignment="right" [allowEditing]="false" format="#,##0.####"></dxi-column> 
+        
+        <dxi-column dataField="Firma1SecildiSat" caption="Satın Alma Tercih" cellTemplate="cellFirma1SecildiSat" [style.width.%]="4" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellFirma1SecildiSat'">
+            <i *ngIf="!cell.data.Firma1SecildiSat"  class="fa fa-times-circle onaylidegilicon"></i>
+            <i *ngIf="cell.data.Firma1SecildiSat" class="fas fa-thumbs-up onaysecimicon"></i>     
+        </div>  
+
+        <dxi-column [width]="90" title="Onay Başlığına Çift Tıklayarak Tüm Satırları Onaylyabilirsiniz" caption="Tercih"  headerCellTemplate="firma1fullonay" cellTemplate="secim1template1" alignment="center" [allowSorting]="false"></dxi-column>    
+        <div *dxTemplate="let info of 'firma1fullonay'">
+            <div (dblclick)="firmafullsec(1)" style="color: red;"><i class="fa fa-file-pdf-o" style="cursor: pointer;font-size: 18px;" (click)="formGoster(1)"></i> {{info.column.caption}} </div>
+        </div>
+        <div *dxTemplate="let d1 of 'secim1template1'">
+            <i *ngIf="!d1.data.Firma1Secildi" (click)="teklifonay(d1,1)" class="fas fa-check onaylandisecimicon"></i>
+            <i *ngIf="d1.data.Firma1Secildi" (click)="teklifonay(d1,1)" class="fas fa-thumbs-up onaysecimicon"></i>     
+        </div> 
+    </dxi-column>
+
+    <dxi-column caption="{{baslik2}}" [width]="250" alignment="center" [visible]="baslik2goster">
+        <dxi-column [width]="105" caption="İlk Teklif" dataField="Firma2IlkFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="110" caption="Revize Teklif" dataField="Firma2RevFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="105" caption="Son Teklif" dataField="Firma2SonFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+
+        <dxi-column [width]="115" caption="Toplam" dataField="Firma2SonFiyatToplam" [allowSearch]="true" alignment="right" [allowEditing]="false" format="#,##0.####"></dxi-column>
+       
+        <dxi-column dataField="Firma2SecildiSat" caption="Satın Alma Tercih" cellTemplate="cellFirma2SecildiSat" [style.width.%]="4" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellFirma2SecildiSat'">
+            <i *ngIf="!cell.data.Firma2SecildiSat"  class="fa fa-times-circle onaylidegilicon"></i>
+            <i *ngIf="cell.data.Firma2SecildiSat" class="fas fa-thumbs-up onaysecimicon"></i>     
+        </div> 
+
+        <dxi-column [width]="90" title="Onay Başlığına Çift Tıklayarak Tüm Satırları Onaylyabilirsiniz" caption="Tercih" headerCellTemplate="firma2fullonay" cellTemplate="secim1template2" alignment="center" [allowSorting]="false"></dxi-column>
+        <div *dxTemplate="let info of 'firma2fullonay'">
+            <div (dblclick)="firmafullsec(2)" style="color: red;"><i class="fa fa-file-pdf-o" style="cursor: pointer;font-size: 18px;" (click)="formGoster(2)"></i> {{info.column.caption}}</div>
+        </div> 
+        <div *dxTemplate="let d of 'secim1template2'">
+            <i *ngIf="!d.data.Firma2Secildi" (click)="teklifonay(d,2)" class="fas fa-check onaylandisecimicon"></i>
+            <i *ngIf="d.data.Firma2Secildi" (click)="teklifonay(d,2)" class="fas fa-thumbs-up onaysecimicon"></i>
+        </div>
+
+    </dxi-column>
+
+    <dxi-column caption="{{baslik3}}" [width]="250" alignment="center" [visible]="baslik3goster">
+        <dxi-column [width]="105" caption="İlk Teklif" dataField="Firma3IlkFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="110" caption="Revize Teklif" dataField="Firma3RevFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="105" caption="Son Teklif" dataField="Firma3SonFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+
+        <dxi-column [width]="115" caption="Toplam" dataField="Firma3SonFiyatToplam" [allowSearch]="true" alignment="right" [allowEditing]="false" format="#,##0.####"></dxi-column>  
+        
+        <dxi-column dataField="Firma3SecildiSat" caption="Satın Alma Tercih" cellTemplate="cellFirma3SecildiSat" [style.width.%]="4" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellFirma3SecildiSat'">
+            <i *ngIf="!cell.data.Firma3SecildiSat"  class="fa fa-times-circle onaylidegilicon"></i>
+            <i *ngIf="cell.data.Firma3SecildiSat" class="fas fa-thumbs-up onaysecimicon"></i>     
+        </div>
+
+        <dxi-column [width]="90" title="Onay Başlığına Çift Tıklayarak Tüm Satırları Onaylyabilirsiniz" caption="Tercih" headerCellTemplate="firma3fullonay"  cellTemplate="secim1template3" alignment="center" [allowSorting]="false"></dxi-column>        
+        <div *dxTemplate="let info of 'firma3fullonay'">
+            <div (dblclick)="firmafullsec(3)" style="color: red;"><i class="fa fa-file-pdf-o" style="cursor: pointer;font-size: 18px;" (click)="formGoster(3)"></i> {{info.column.caption}}</div>
+        </div>
+        
+        <div *dxTemplate="let d of 'secim1template3'">
+            <i *ngIf="!d.data.Firma3Secildi" (click)="teklifonay(d,3)" class="fas fa-check onaylandisecimicon"></i>            
+            <i *ngIf="d.data.Firma3Secildi"  (click)="teklifonay(d,3)" class="fas fa-thumbs-up onaysecimicon"></i>            
+        </div>  
+    </dxi-column>  
+
+    <dxi-column caption="{{baslik4}}" [width]="250" alignment="center" [visible]="baslik4goster">
+        <dxi-column [width]="105" caption="İlk Teklif" dataField="Firma4IlkFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="110" caption="Revize Teklif" dataField="Firma4RevFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="105" caption="Son Teklif" dataField="Firma4SonFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+
+        <dxi-column [width]="115" caption="Toplam" dataField="Firma4SonFiyatToplam" [allowSearch]="true" alignment="right" [allowEditing]="false" format="#,##0.####"></dxi-column>  
+        
+        <dxi-column dataField="Firma4SecildiSat" caption="Satın Alma Tercih" cellTemplate="cellFirma4SecildiSat" [style.width.%]="4" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellFirma4SecildiSat'">
+            <i *ngIf="!cell.data.Firma4SecildiSat"  class="fa fa-times-circle onaylidegilicon"></i>
+            <i *ngIf="cell.data.Firma4SecildiSat" class="fas fa-thumbs-up onaysecimicon"></i>     
+        </div> 
+
+        <dxi-column [width]="90" title="Onay Başlığına Çift Tıklayarak Tüm Satırları Onaylyabilirsiniz" caption="Tercih" headerCellTemplate="firma4fullonay"  cellTemplate="secim1template4" alignment="center" [allowSorting]="false"></dxi-column>        
+        <div *dxTemplate="let info of 'firma4fullonay'">
+            <div (dblclick)="firmafullsec(4)" style="color: red;"><i class="fa fa-file-pdf-o" style="cursor: pointer;font-size: 18px;" (click)="formGoster(4)"></i> {{info.column.caption}}</div>
+        </div>
+        
+        <div *dxTemplate="let d of 'secim1template4'">
+            <i *ngIf="!d.data.Firma4Secildi" (click)="teklifonay(d,4)" class="fas fa-check onaylandisecimicon"></i>            
+            <i *ngIf="d.data.Firma4Secildi" (click)="teklifonay(d,4)" class="fas fa-thumbs-up onaysecimicon"></i>            
+        </div>  
+    </dxi-column>  
+
+    <dxi-column caption="{{baslik5}}" [width]="250" alignment="center" [visible]="baslik5goster">
+        <dxi-column [width]="105" caption="İlk Teklif" dataField="Firma5IlkFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="110" caption="Revize Teklif" dataField="Firma5RevFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+        <dxi-column [width]="105" caption="Son Teklif" dataField="Firma5SonFiyat" [allowSearch]="true" alignment="right" format="#,##0.####" [allowEditing]="true"  onfocus="this.select()"></dxi-column> 
+
+        <dxi-column [width]="115" caption="Toplam" dataField="Firma5SonFiyatToplam" [allowSearch]="true" alignment="right" [allowEditing]="false" format="#,##0.####"></dxi-column>  
+        
+        <dxi-column dataField="Firma5SecildiSat" caption="Satın Alma Tercih" cellTemplate="cellFirma5SecildiSat" [style.width.%]="4" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellFirma5SecildiSat'">
+            <i *ngIf="!cell.data.Firma5SecildiSat"  class="fa fa-times-circle onaylidegilicon"></i>
+            <i *ngIf="cell.data.Firma5SecildiSat" class="fas fa-thumbs-up onaysecimicon"></i>     
+        </div> 
+
+        <dxi-column [width]="90" title="Onay Başlığına Çift Tıklayarak Tüm Satırları Onaylyabilirsiniz" caption="Tercih" headerCellTemplate="firma5fullonay"  cellTemplate="secim1template5" alignment="center" [allowSorting]="false"></dxi-column>        
+        <div *dxTemplate="let info of 'firma5fullonay'">
+            <div (dblclick)="firmafullsec(5)" style="color: red;"><i class="fa fa-file-pdf-o" style="cursor: pointer;font-size: 18px;" (click)="formGoster(5)"></i> {{info.column.caption}}</div>
+        </div>
+        
+        <div *dxTemplate="let d of 'secim1template5'">
+            <i *ngIf="!d.data.Firma5Secildi" (click)="teklifonay(d,5)" class="fas fa-check onaylandisecimicon"></i>            
+            <i *ngIf="d.data.Firma5Secildi" (click)="teklifonay(d,5)" class="fas fa-thumbs-up onaysecimicon"></i>            
+        </div>  
+    </dxi-column>  
+
+    <dxi-column [width]="200" caption="Talep Aciklama" dataField="TalepAciklama" [allowSearch]="true" [allowEditing]="false"></dxi-column> 
+    <dxi-column [width]="200" caption="Teklif Aciklama" dataField="TeklifAciklama" [allowSearch]="true" [allowEditing]="true"></dxi-column> 
+    <dxi-column [width]="115" caption="Talep No" dataField="TalepNo" [allowSearch]="true" [allowEditing]="false" alignment="center"></dxi-column> 
+    <dxi-column [width]="115" caption="Teklif No" dataField="SapTeklifNo" [allowSearch]="true" [allowEditing]="false" alignment="center"></dxi-column> 
+    <dxi-column [width]="115" caption="Sipariş No" dataField="SapSiparisNo" [allowSearch]="true" [allowEditing]="false" alignment="center"></dxi-column> 
+    
+
+    </dx-data-grid>  
+    <div style="clear:both" style="margin-bottom: 10px;"></div>
+   
+        <div style="width: 67%!important;float:left;">
+            <label for="" style="font-weight: bold;">Teklif Alınan Tedarilçiler</label>
+    
+            <dx-data-grid  #gridTeklifDetayFirma class="devgrid30"
+            [dataSource]="firmalist"
+            [showBorders]="true"
+            [showColumnLines]="false"
+            [showRowLines]="true" 
+            [rowAlternationEnabled]="true"
+            [focusedRowEnabled]="true"
+            [allowColumnResizing]="true" 
+            [columnAutoWidth]="true" 
+            keyExpr="Id"  
+            columnResizingMode = "widget" 
+             [allowColumnReordering]="true" 
+             (onCellPrepared)="onCellPrepared($event)"
+             (onRowUpdated)="CellDegisti($event)"
+            > 
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxo-load-panel [enabled]="true"></dxo-load-panel>  
+            <dxo-selection mode="single"></dxo-selection> 
+            <dxo-scrolling 
+            mode="virtual"
+            showScrollbar="'always'"
+            useNative="false"
+            scrollByThumb="true" >
+            </dxo-scrolling> 
+            <dxo-editing 
+            mode="cell"
+            [allowUpdating]="true" >
+            </dxo-editing>    
+          
+            <dxi-column [width]="230" caption="Firma Adı" dataField="FirmaAdi" [allowSearch]="true" [allowEditing]="false"></dxi-column> 
+            <dxi-column [width]="102" caption="Para Birim" dataField="ParaBirim" [allowSearch]="true" [allowEditing]="false" alignment="center"></dxi-column> 
+        
+            <dxi-column [width]="115" caption="İlk Toplam" dataField="Toplam" [allowSearch]="true" alignment="right" format="#,##0.##" [allowEditing]="false"></dxi-column>  
+            <dxi-column [width]="105" caption="Revize Tpl" dataField="RevToplam" [allowSearch]="true" alignment="right" format="#,##0.##" [allowEditing]="false"></dxi-column>  
+            <dxi-column [width]="115" caption="Son Toplam" dataField="SonFiyatToplam" [allowSearch]="true" alignment="right" format="#,##0.##" [allowEditing]="false"></dxi-column>  
+            <dxi-column [width]="137" caption="Son Toplam TRY" dataField="SonFiyatToplamTRY" [allowSearch]="true" alignment="right" format="#,##0.##" [allowEditing]="false"></dxi-column>  
+
+            <dxi-column [width]="115" caption="İndirim" dataField="RevOran" [allowSearch]="true" alignment="right" format="#,##0.##" [allowEditing]="false"></dxi-column>  
+            <dxi-column [width]="135" caption="Sipariş Toplam" dataField="SiparisToplam" [allowSearch]="true" alignment="right" format="#,##0.##" [allowEditing]="false"></dxi-column>  
+            <dxi-column [width]="157" caption="Sipariş Toplam TRY" dataField="SiparisToplamTRY" [allowSearch]="true" alignment="right" format="#,##0.##" [allowEditing]="false"></dxi-column>  
+           
+            <dxi-column [width]="102" caption="Kur Tarih" dataField="KurTarih" [allowSearch]="true" [allowEditing]="true" dataType="date" format="dd.MM.yyyy" alignment="center"></dxi-column> 
+            <dxi-column [width]="102" caption="Kur" dataField="Kur" [allowSearch]="true" [allowEditing]="true" alignment="center"></dxi-column> 
+            <dxi-column [width]="135" caption="Çalışma Şekli" dataField="CalismaSekli" [allowSearch]="true" [allowEditing]="false" alignment="center"></dxi-column> 
+            <dxi-column [width]="120" caption="Firma Kodu" dataField="FirmaKodu" [allowSearch]="true" [allowEditing]="false"></dxi-column> 
+
+            <dxi-column
+            dataField="VadeGun"
+            caption="Teklif Vade" alignment="center"
+            [width]="115">         
+            <dxo-lookup
+                [dataSource]="odemeyontemlist"
+                displayExpr="OdemeAdi"
+                valueExpr="OdemeKod">
+            </dxo-lookup>
+            </dxi-column>
+        
+            <dxi-column [width]="495" caption="Açıklama" dataField="Aciklama" [allowSearch]="true" maxLength:254></dxi-column> 
+            </dx-data-grid> 
+        </div>
+    
+        <div style="width: 30%!important;float:left;margin-left: 20px;">
+            <label for="" style="font-weight: bold;">Teklif Tarihçe</label>
+    
+            <dx-data-grid  #gridTeklifLog class="devgrid30"
+            [dataSource]="teklifloglist"
+            [showBorders]="true"
+            [showColumnLines]="false"
+            [showRowLines]="true" 
+            [rowAlternationEnabled]="true"
+            [focusedRowEnabled]="true"
+            [allowColumnResizing]="true" 
+            [columnAutoWidth]="true" 
+            keyExpr="Id"  
+            columnResizingMode = "widget" 
+             [allowColumnReordering]="true" 
+            > 
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+            <dxo-paging [enabled]="false"></dxo-paging>
+            <dxo-load-panel [enabled]="true"></dxo-load-panel>  
+            <dxo-selection mode="single"></dxo-selection> 
+            <dxo-scrolling 
+            mode="virtual"
+            showScrollbar="'always'"
+            useNative="false"
+            scrollByThumb="true" >
+            </dxo-scrolling>  
+        
+            <dxi-column [width]="290" caption="Açıklama" dataField="Aciklama" [allowSearch]="true" [style.width.%]="50"></dxi-column>
+              
+            <dxi-column [width]="150" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
+            <dxi-column [width]="125" caption="Kayıt" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+        
+            </dx-data-grid> 
+           
+        </div>  
+</div>
+
+<ng-template #modtalepbelgeler let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Belgeler</h4> 
+      <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <app-belge-goruntule [semkey]="this.secilikalem.SatirGuid" [kayitid]="this.secilikalem.TalepId" [ekranid]="1" [secilidata]="this.secilikalem" [defbelgetipid]="1"></app-belge-goruntule>  
+</ng-template>
+
+<ng-template #modteklifbelgeler let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Belgeler</h4> 
+      <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <app-belge-goruntule [semkey]="this.teklif.semkey" [kayitid]="this.teklif.Id" [ekranid]="2" [secilidata]="this.teklif" [defbelgetipid]="5"></app-belge-goruntule>  
+</ng-template>
+
+<ng-template #onayagondermodal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Teklif Onaya Gönder</h4> 
+    </div>
+    <div class="modal-body">  
+        <div style="clear:both" style="margin-bottom:5px!important"></div> 
+         
+     <mat-form-field appearance="outline" [style.width.%]="100" >
+        <mat-label>Açıklama</mat-label> 
+        <textarea matInput placeholder="Açıklama" [(ngModel)]="Aciklama" rows="4" autocomplete="off" maxlength="254"></textarea>
+    </mat-form-field>   
+  
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="finodemekpt" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+      <button type="button" class="btn btn-success" (click)="onayaGonder()">Gönder</button>
+    </div>
+  </ng-template>  
+
+   
+<ng-template #onaygericek let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Teklif Geri Çekme</h4> 
+    </div>
+    <div class="modal-body">  
+        <div style="clear:both" style="margin-bottom:5px!important"></div> 
+         
+     <mat-form-field appearance="outline" [style.width.%]="100" >
+        <mat-label>Açıklama</mat-label> 
+        <textarea matInput placeholder="Açıklama" [(ngModel)]="Aciklama" rows="4" autocomplete="off" maxlength="254"></textarea>
+    </mat-form-field>   
+  
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="finodemekpt" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+      <button type="button" class="btn btn-success" (click)="geriCek()">Kaydet</button>
+    </div>
+  </ng-template>  

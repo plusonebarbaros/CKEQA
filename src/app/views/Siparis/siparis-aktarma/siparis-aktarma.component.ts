@@ -11,7 +11,7 @@ import { EkranMesaj, GenelApi } from 'src/app/services/GenelSrc';
 import { KullaniciYetki } from 'src/app/services/KullaniciSrc';
 import { MesajversrcService } from 'src/app/services/mesajversrc.service';
 import { NotifyService } from 'src/app/services/notify';
-import { Customer, IhracatTasimaTip, NtsDepoModel, PlasiyerModel, SiparisAktarimModel, SiparisService } from 'src/app/services/SiparisSrc';
+import { Customer, DepoModel, IhracatTasimaTip, PlasiyerModel, SiparisAktarimModel, SiparisService } from 'src/app/services/SiparisSrc';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
 
 @Component({
@@ -31,7 +31,7 @@ export class SiparisAktarmaComponent implements OnInit {
   yetki:KullaniciYetki;
   datalist: SiparisAktarimModel[]=[];    
   plalist: PlasiyerModel[]=[];    
-  depolist: NtsDepoModel[]=[];    
+  depolist: DepoModel[]=[];    
   ihrtasimatip: IhracatTasimaTip[]=[];    
   silgoster:boolean=false;  
   secilidata:SiparisAktarimModel; 
@@ -55,7 +55,7 @@ export class SiparisAktarmaComponent implements OnInit {
   public filterPla: ReplaySubject<PlasiyerModel[]> = new ReplaySubject<PlasiyerModel[]>(1); 
 
   public formDepo: FormControl = new FormControl();
-  public filterDepo: ReplaySubject<NtsDepoModel[]> = new ReplaySubject<NtsDepoModel[]>(1); 
+  public filterDepo: ReplaySubject<DepoModel[]> = new ReplaySubject<DepoModel[]>(1); 
 
   public formIhr: FormControl = new FormControl();
   public filterIhr: ReplaySubject<IhracatTasimaTip[]> = new ReplaySubject<IhracatTasimaTip[]>(1); 
@@ -120,7 +120,7 @@ export class SiparisAktarmaComponent implements OnInit {
       search = search.toUpperCase();
     } 
     this.filterDepo.next(
-      this.depolist.filter(item => (item?.DEPO_ISMI??"").toUpperCase().indexOf(search) > -1)
+      this.depolist.filter(item => (item?.WhsName??"").toUpperCase().indexOf(search) > -1)
     );
   }
 
@@ -299,18 +299,20 @@ export class SiparisAktarmaComponent implements OnInit {
    this.GetSonBelgeNo(e);
   }
 
-  async GetDepoList()  {
+  async GetDepoList() { 
     this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.siparissrc.GetDepoList(); 
-    this.blockUI.stop();  
-    if(sonuc.Success){
-      this.depolist=sonuc.List;
-      this.filterDepo.next(this.depolist.slice());
-    }else{
-      this.alertify.warning(sonuc.Message);
-      return;
-    }    
-  } 
+    (await this.siparissrc.GetDepoList()).subscribe(
+      data =>{
+        this.blockUI.stop(); 
+        if(!data.Success){
+          this.alertify.warning(data.Message);
+          return;
+        }
+        this.depolist=data.List;   
+        this.filterDepo.next(this.depolist.slice());
+     }
+   )
+  }
 
   SiparisTarihChg(e:any){
     this.SiparisTarih =moment(e._d).format("yyyy-MM-DD");

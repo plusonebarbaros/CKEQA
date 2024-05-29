@@ -1,0 +1,209 @@
+ 
+<mat-drawer-container class="mat-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+        <div class="modal-header" style="text-align: center;">
+             <h5 class="modal-title" id="myModalLabel2">Filtre</h5>
+        </div>
+        <div class="body">
+            <div style="clear:both;margin-bottom: 15px!important"></div>  
+
+            <mat-form-field appearance="outline" [style.width.%]="100">
+              <mat-label>Teslim Durum</mat-label>
+              <mat-select name="GosterimId" [(ngModel)]="TeslimDurumId">
+              <mat-option [value]="0">Bekliyor</mat-option>
+              <mat-option [value]="1">Tamamlandı</mat-option> 
+              <mat-option [value]="2">Tümü</mat-option> 
+              </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" [style.width.%]="100">
+              <mat-label>Muhasebe Kontrol</mat-label>
+              <mat-select name="GosterimId" [(ngModel)]="MuhKontrolId">
+              <mat-option [value]="0">Bekliyor</mat-option>
+              <mat-option [value]="1">Tamamlandı</mat-option> 
+              <mat-option [value]="2">Tümü</mat-option> 
+              </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" [style.width.%]="100">
+            <mat-label>Satın Alma Kontrol</mat-label>
+            <mat-select name="GosterimId" [(ngModel)]="SatKontrolId">
+            <mat-option [value]="0">Bekliyor</mat-option>
+            <mat-option [value]="1">Tamamlandı</mat-option> 
+            <mat-option [value]="2">Tümü</mat-option> 
+            </mat-select>
+        </mat-form-field>
+
+            <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Başlangış Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp" placeholder="Başlangış Tarih"  [(ngModel)]="filter.Baslangic" (ngModelChange)="BasTarihChg($event)">
+                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Bitiş Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"  [(ngModel)]="filter.Bitis" (ngModelChange)="BitTarihChg($event)">
+                <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker #dp1></mat-datepicker>
+              </mat-form-field>
+
+            <div style="clear:both;margin-bottom: 5px!important"></div>  
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default" (click)="drawer.toggle()" value="Kapat" />
+            <input type="button" class="btn btn-info" (click)="GetTalepKontrolList()" value="Listele" />
+        </div>
+    </mat-drawer>
+   
+    <mat-drawer-content> 
+
+      <div class="content">
+          <nav class="menu-navigation-icons">
+              <a href="#" class="menu-silver" (click)="GetTalepKontrolList()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+              <a href="#" (click)="drawer.toggle()" class="menu-silver"><i class="fas fa-filter"></i><span>Filtre</span></a> 
+              <a href="#" (click)="belgeYukleModal(belgeyukle)" *ngIf="evrekyuklegoster" class="menu-red" style="width: 95px!important;"><i class="fas fa-file-upload"></i><span>Talep Belge</span></a>
+
+              <a href="#" (click)="this.gridTalepKontrolList.instance.showColumnChooser()" style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
+              <a href="#" (click)="this.gridTalepKontrolList.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+
+          </nav>
+          <div style="clear:both"></div>          
+          
+          <dx-data-grid class="devgrid76" #gridTalepKontrolList
+          [dataSource]="taleplist"  
+          [showBorders]="true"
+          [showColumnLines]="false"
+          [showRowLines]="true" 
+          [rowAlternationEnabled]="true"
+          [focusedRowEnabled]="true"
+          [columnAutoWidth]="true"
+          [allowColumnResizing]="true" 
+          [allowColumnReordering]="true"
+          keyExpr="SatirGuid" 
+          columnResizingMode = "widget"   
+          (onSelectionChanged)="silgosterChanged($event)" 
+          > 
+          <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+          <dxo-scrolling 
+            mode="virtual"
+            showScrollbar="'always'"
+            useNative="false"
+            scrollByThumb="true" >
+        </dxo-scrolling> 
+          <dxo-load-panel [enabled]="true"></dxo-load-panel>
+          <dxo-paging [pageSize]="30"> </dxo-paging>
+          <dxo-pager
+              [visible]="true" 
+              displayMode="'compact'"
+              [showPageSizeSelector]="false"
+              [showInfo]="true"
+              [showNavigationButtons]="true">
+          </dxo-pager> 
+          <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+          <dxo-selection
+          [selectAllMode]="allMode"
+          [showCheckBoxesMode]="checkBoxesMode"
+          mode="multiple"
+          ></dxo-selection> 
+
+          <dxi-column dataField="Durum" caption="Onay Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+          <div *dxTemplate="let cell of 'cellDurum'"> 
+              <span *ngIf="cell.data.DurumId===0" style="cursor: pointer;" class="badge pill-medium bg-secondary" (click)="onaytakip(onaytakipmod,cell.data)">İşlem Yapılmadı</span>
+              <span *ngIf="cell.data.DurumId===1" style="cursor: pointer;" class="badge pill-medium bg-info" (click)="onaytakip(onaytakipmod,cell.data)">Onay Bekliyor</span>    
+              <span *ngIf="cell.data.DurumId===2" style="cursor: pointer;" class="badge pill-medium bg-success" (click)="onaytakip(onaytakipmod,cell.data)">Tamamlandı</span>    
+              <span *ngIf="cell.data.DurumId===3" style="cursor: pointer;" class="badge pill-medium bg-danger" (click)="onaytakip(onaytakipmod,cell.data)">Reddedildi</span>    
+              <span *ngIf="cell.data.DurumId===4" style="cursor: pointer;" class="badge pill-medium bg-warning" (click)="onaytakip(onaytakipmod,cell.data)">İptal</span>    
+          </div> 
+
+          <dxi-column [width]="100" caption="Talep Id" dataField="TalepId" alignment="center"></dxi-column> 
+          <dxi-column [width]="130" caption="Sap Talep No" dataField="SapTalepNo" alignment="center"></dxi-column> 
+          <dxi-column [width]="145" caption="Sap Teklif No" dataField="SapTeklifNo" alignment="center"></dxi-column> 
+          <dxi-column [width]="145" caption="Sap Sipariş No" dataField="SiparisNo" alignment="center"></dxi-column> 
+          <dxi-column [style.width.%]="15" caption="Sap Sipariş Tarih" dataField="SiparisTarih" dataType="date" format="dd.MM.yyyy HH:mm" alignment="center"></dxi-column>   
+  
+          <dxi-column [style.width.%]="15" dataField="SiparisFirmaKodu" caption="Firma Kodu"  [allowEditing]="false" > </dxi-column>
+          <dxi-column [style.width.%]="15" dataField="SiparisFirmaAdi" caption="Firma Adı" [allowEditing]="false" > </dxi-column>
+
+          <dxi-column  dataField="StokKodu" caption="Stok Kodu"  [style.width.%]="15" [allowEditing]="false" > </dxi-column>
+          <dxi-column  dataField="StokAdi" caption="Stok Adı"  [style.width.%]="15" [allowEditing]="false" > </dxi-column>
+
+          <dxi-column dataField="TalepIhtDurum" caption="İhtiyaç Durum" cellTemplate="cellTalepDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+          <div *dxTemplate="let cell of 'cellTalepDurum'"> 
+            <span *ngIf="cell.data.TalepDurumId===1" style="cursor: pointer;" class="badge pill-medium bg-info">Normal</span>
+            <span *ngIf="cell.data.TalepDurumId===2" style="cursor: pointer;" class="badge pill-medium bg-warning">Orta</span>    
+            <span *ngIf="cell.data.TalepDurumId===3" style="cursor: pointer;" class="badge pill-medium bg-danger">Acil</span>    
+          </div> 
+
+          
+
+          <dxi-column dataField="TalepDurum" caption="Sap Talep Durum" [width]="200" [allowEditing]="false" alignment="center"></dxi-column> 
+
+
+          <dxi-column  dataField="Miktar" caption="Talep Miktar"  [style.width.%]="15" [allowEditing]="false" alignment="center"> </dxi-column>
+          <dxi-column  dataField="TeslimMiktar" caption="Teslim Miktar"  [style.width.%]="15" [allowEditing]="false" alignment="center"> </dxi-column>
+          <dxi-column  dataField="Birim" caption="Birim"  [style.width.%]="15" [allowEditing]="false" alignment="center"> </dxi-column>
+          <dxi-column  dataField="DepoAdi" caption="Depo"  [style.width.%]="15" [allowEditing]="false" alignment="center"> </dxi-column>
+          <dxi-column  dataField="Aciklama" caption="Açıklama"  [style.width.%]="15" [allowEditing]="false" > </dxi-column>         
+          
+          <dxi-column dataField="TeslimDurum" caption="Teslim Durum" cellTemplate="cellTeslimDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+          <div *dxTemplate="let cell of 'cellTeslimDurum'"> 
+            <span *ngIf="cell.data.TeslimDurum===0" style="cursor: pointer;" class="badge pill-medium bg-info">Bekliyor</span>
+            <span *ngIf="cell.data.TeslimDurum===1" style="cursor: pointer;" class="badge pill-medium bg-success">Tamamlandı</span>    
+          </div>
+
+          <dxi-column dataField="MuhKonrtol" caption="Muhasebe Kontrol" cellTemplate="cellMuhKonrtol" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+          <div *dxTemplate="let cell of 'cellMuhKonrtol'"> 
+            <span *ngIf="cell.data.MuhKonrtol===0" style="cursor: pointer;" class="badge pill-medium bg-info">Bekliyor</span>
+            <span *ngIf="cell.data.MuhKonrtol===1" style="cursor: pointer;" class="badge pill-medium bg-success">Tamamlandı</span>    
+          </div>
+
+          <dxi-column dataField="SatinAlmaKontrol" caption="Satın Alma Kontrol" cellTemplate="cellSatinAlmaKontrol" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+          <div *dxTemplate="let cell of 'cellSatinAlmaKontrol'"> 
+            <span *ngIf="cell.data.SatinAlmaKontrol===0" style="cursor: pointer;" class="badge pill-medium bg-info">Bekliyor</span>
+            <span *ngIf="cell.data.SatinAlmaKontrol===1" style="cursor: pointer;" class="badge pill-medium bg-success">Tamamlandı</span>    
+          </div>
+
+          <dxi-column  dataField="MuhKontrolEden" caption="Muhasebe Kontrol Eden"  [style.width.%]="10" [allowEditing]="false" alignment="center"> </dxi-column>    
+          <dxi-column [style.width.%]="15" caption="Muhasebe Kontrol Tarih" dataField="MuhKontrolTarih" dataType="date" format="dd.MM.yyyy HH:mm" alignment="center"></dxi-column>  
+
+          <dxi-column  dataField="SatinAlmaKontrolEden" caption="Satın Alma Kontrol Eden"  [style.width.%]="10" [allowEditing]="false" alignment="center"> </dxi-column>    
+          <dxi-column [style.width.%]="15" caption="Satın Alma Kontrol Tarih" dataField="SatinAlmaKontrolTarih" dataType="date" format="dd.MM.yyyy HH:mm" alignment="center"></dxi-column>  
+
+          <dxi-column  dataField="SapSirketId" caption="Şirket"  [style.width.%]="15" [allowEditing]="false" alignment="center" [visible]="false"> </dxi-column>
+          <dxi-column [style.width.%]="15" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
+          <dxi-column [style.width.%]="10" caption="Departman" dataField="Departman" alignment="center"></dxi-column> 
+          <dxi-column [style.width.%]="10" caption="Pozisyon" dataField="Pozisyon" alignment="center"></dxi-column> 
+
+          <dxi-column [style.width.%]="15" caption="Kayıt Tarih" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column>   
+            
+          </dx-data-grid>  
+      </div>
+
+</mat-drawer-content> 
+</mat-drawer-container>
+
+<ng-template #belgeyukle let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Belgeler</h4> 
+      <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <app-belge-goruntule [semkey]="this.secilikalem.SatirGuid" [kayitid]="this.secilikalem.Id" [ekranid]="1" [secilidata]="this.secilikalem" [defbelgetipid]="1"></app-belge-goruntule>  
+  </ng-template>
+
+
+  <ng-template #onaytakipmod let-modal>
+    <div class="modal-header">
+    <h4 class="modal-title" >Onay Takip</h4> 
+    <button type="button" class="btn btn-danger" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    <app-onay-durum-kontrol [onayid]="onayid"></app-onay-durum-kontrol>
+    </div> 
+  </ng-template>   

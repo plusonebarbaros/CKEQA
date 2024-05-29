@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { IslemTipi, Result, ReturnValues, ReturnValuesList } from './GenelSrc';
 import { KullaniciSrcService } from './KullaniciSrc';
+import { ItemsFile } from './SatinAlmaSrc';
 
 @Injectable({
   providedIn: 'root'
@@ -77,23 +78,13 @@ async GetSonBelgeNo(SiparisTip:number)
   let url=this.semUrl+"/Siparis/GetSonBelgeNo?Token="+ this.kullsrc.token + "&SiparisTip="+ SiparisTip; 
   return await this.http.get<Result<string>>(url).pipe( map((res:any)=> res));
 }
-
-async GetDepoList():Promise<ReturnValuesList<NtsDepoModel>>  {
-  const headers = new HttpHeaders(
-    {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Access-Control-Allow-Headers': 'Content-Type' }); 
-
-   let options = { headers: headers }; 
-   const body =  JSON.stringify({ 
-     "Token":this.kullsrc.token, 
-   });
-
- var result = await this.http.post<any>(this.semUrl+"/Siparis/GetDepoList", body, options).toPromise(); 
- var sonuc = JSON.parse(JSON.stringify(result));  
- return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
+ 
+async GetDepoList()
+{ 
+  let url=this.semUrl+"/Login/GetDepoList?Token="+ this.kullsrc.token; 
+  return await this.http.get<Result<DepoModel>>(url).pipe( map((res:any)=> res));
 }
+ 
 
 async GetIhracatTeslimTipList():Promise<ReturnValuesList<IhracatTasimaTip>>  {
   const headers = new HttpHeaders(
@@ -176,8 +167,202 @@ async IrsaliyeOlustur(List:SaticiSipKontrolModel[],CariKodu:string,SiparisTarih:
   return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
 }
 
+async  OzelSiparisOluttur(baslik:ConnOzelSiparis,satir:OzelSiparisKalem[],Tip:IslemTipi):Promise<ReturnValues>  {
+  const headers = new HttpHeaders(
+    {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Headers': 'Content-Type',
+   }
+  ); 
+
+    let options = { headers: headers };
+
+    const body =  JSON.stringify({ 
+      "Baslik":  baslik,
+      "Satir":  satir,
+      "Tip":  Tip,
+      "Token":this.kullsrc.token
+    });
+ 
+    var result = await this.http.post<any>(this.semUrl+"/SatinAlma/OzelSiparisOluttur", body,options).toPromise();
+
+  var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+  return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+ } 
+ async OzelSiparisFormYazdir(Talep:ConnOzelSiparis,raporid:number):Promise<ReturnValues>  {
+  const headers = new HttpHeaders(
+    {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Headers': 'Content-Type',
+   }
+  );
+
+    let options = { headers: headers };
+
+    const body =  JSON.stringify({
+      "Talep":  Talep,
+      "RaporId":  raporid,
+      "Token":this.kullsrc.token,
+    });
+
+  var result = await this.http.post<any>(this.semUrl+"/SatinAlma/TalepFormYazdir", body, options).toPromise();
+
+  var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+  return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+}
+
+
 
 }
+
+export class OzelSiparisKalem {  
+  Id:number=0;
+  TalepId:number=0;
+  OnayId:number=0;
+  StokKodu: string="";
+  StokAdi: string="";
+  Aciklama: string="";
+  DepoKodu: string="";
+  DepoAdi: string=""; 
+  SapSirketId: string="";
+  SapSirket: string="";
+  BirimId:number=0;
+  Birim:string="" 
+  Miktar: number=0;
+  KaynakDepoStok:number=0;
+  TalepMiktar:number=0;
+  OnaylananMiktar:number=0;
+  DepoStok:number=0;  
+  TalepNo:number=0; 
+  Bakiye:number=0;
+  Durum:String="Y";
+  TalepDurum:string="";
+  DurumStr:string="";
+  SatirGuid:string="";
+  EkleyenId:number=0; 
+  Ekleyen:string="";
+  GuncelleyenId:number=0;
+  Guncelleyen:string="";
+  EkTarih:any; 
+  GuncelTarih:any;  
+  TeklifHazirlikNo:number=0; 
+  TeklifHazirlikGuid:string="";
+  TeklifMiktar:number=0;
+  TahminiTutar:number=0;
+  BirimTutar:number=0;
+  ToplamTutar:number=0;
+  KdvOran:string="";
+  validkey:string="";
+  AlimYapildi:string="";
+  TalepTuru:string="";
+  TalepTuruStr:string="";
+  FirmaKodu:string="";
+  FirmaAdi:string="";
+  Onaylayacak:string="";
+  Kalan:number=0;
+  OnayAciklama:string="";
+  SonAlisFiyat:number=0;
+  OrtalamaAlisFiyat:number=0;
+  SonAlisMiktar:number=0;
+  BelgeBase64:string="";
+  BelgeAdi:string="";
+  BelgeUzanti:string="";
+  Aktif:boolean=false;
+  TeslimMiktar:number=0;
+  KalanMiktar:number=0;
+  BelgeNo:string="";
+  BelgeTarih:any; 
+  GirisMiktar:number=0;
+  DurumId:number=0;
+  Departman:string="";
+  Pozisyon:string="";
+  Files:number=0;
+  Base64List:ItemsFile[]=[];
+  SiparisTarih:any;
+  SiparisNo:number=0;
+  SiparisFirmaKodu:string="";
+  SiparisFirmaAdi:string="";
+  SatinAlmaKontrolAciklama:string="";
+  TalepDurumId:number=0;
+  TalepIhtDurum:string="";
+
+  MuhKonrtol:number=0;
+  MuhKontrolEdenId:number=0;
+  MuhKontrolEden:string="";
+  MuhKontrolTarih:any; 
+
+  SatinAlmaKontrol:number=0;
+  SatinAlmaKontrolEdenId:number=0;
+  SatinAlmaKontrolEden:string="";
+  SatinAlmaKontrolTarih:any; 
+
+  DuranVarlikDurumId:number=0;
+  DuranVarlikIslemTarih:any; 
+  DuranVarlikIslemYapanId:number=0;
+  DuranVarlikIslemYapan:string="";
+  DuranVarlikSiparisId:number=0;
+  DuranVarlikUrunKodu:string="";
+  DuranVarlikUrunAdi:string="";
+}  
+export  class ConnOzelSiparis {
+  Id: number=0;
+  Tarih: any;  
+  SiparisTarih: any;  
+  TeslimTarih: any;  
+  TeslimSaati: string="";  
+  UrunKodu: string="";  
+  UrunAdi: string="";  
+  Birim: string="";  
+  Aciklama: string="";  
+  PastaUstuYazi: string="";  
+  MusteriAdi: string="";  
+  Telefon1: string="";
+  Telefon2: string=""; 
+  Gsm: string="";
+  VergiDairesi: string="";  
+  VergiNo: string="";
+  Tckn: string="";
+  IndirimOran: number=0;
+  Adres: string="";  
+  Email: string="";  
+  SehirKod: string=""; 
+  Sehir: string=""; 
+  IlceKod: number=0;
+  Ilce: string="";
+  Ulke: string="";
+  SiparisVerenKisi: string="";
+  SiparisVerenTelefon: string="";
+  TeslimatKisi: string="";
+  TeslimatTarih: any;
+  TeslimatSubeId: string="";
+  TeslimatTel: string="";
+  TeslimatGsm: string="";
+  TeslimatAdres: string="";
+  FaturaNotu: string="";
+  Tutar: number=0;
+  Iskonto: number=0;
+  EKUcret: number=0;
+  GenelToplam: number=0;
+  Kapora: number=0;
+  Aktif: boolean=false;  
+  ErpSirket: string="";
+  EkleyenId:number=0; 
+  Ekleyen:string="";
+  GuncelleyenId:number=0;
+  Guncelleyen:string="";
+  EkTarih:any; 
+  GuncelTarih:any;  
+  validkey:string="";
+  DurumId:number=0;
+  Durum:string="";
+  TeslimSehirKod: string=""; 
+  TeslimSehir: string=""; 
+  TeslimIlceKod: number=0;
+  TeslimIlce: string="";
+} 
+
 
 export  class SaticiSipKontrolModel {
   SIPARIS_NO: string="";  
@@ -203,9 +388,9 @@ export  class IhracatTasimaTip {
   ErpId: number=0;
 }  
 
-export  class NtsDepoModel {
-  DEPO_KODU: number=0;
-  DEPO_ISMI: string="";  
+export  class DepoModel {
+  WhsCode: string="";  
+  WhsName: string="";  
 } 
 
 export  class PlasiyerModel {

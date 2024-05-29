@@ -9,14 +9,14 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />  
     <meta http-equiv="Pragma" content="no-cache" />  
     <meta http-equiv="Expires" content="0" />   
-    <title>Harman B2B</title> 
+    <title>Butterfly B2B</title> 
      
   </head>
   <body class="hold-transition sidebar-mini layout-fixed">   
     <div class="wrapper" *ngIf="userLogin"> 
       <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <div class="dts-head">
-          <label>Harman B2B</label>
+          <label>Butterfly B2B</label>
           <div style="margin-top: -16px;">
             <i class="nav-icon fas fa-circle text-success" style="margin-top: 5px;margin-right: 5px;font-size: 11px!important;"></i>
             <span class="text" style="font-size: 14px!important;">{{loguser.AktifSirket}} Şirketinde Çalışıyorsunuz </span>  
@@ -46,7 +46,7 @@
    
     <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4" style="overflow-y: auto!important;" *ngIf="userLogin">         
         <div class="mainsem-logo">
-          <img class="logocss" src="../assets/logo/ef-logo.png" width="70" height="50">
+          <img class="logocss" src="../assets/logo/FLY-LOGO.png" width="70" height="50">
          </div>
        
         <div class="clearfix" style="margin-bottom: 15px;"></div>
@@ -67,7 +67,7 @@
           <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
           <span>Rapor</span>
         </div> 
-        <div class="mainsem" style="height:80px !important;" (click)="addNewTab(25)" >
+        <div class="mainsem" style="height:80px !important;" (click)="addNewTab(1)" >
           <div style="display: block;"><i class="fas fa-exclamation-circle fafont"></i></div>
           <span>Sistem Destek</span>
         </div>
@@ -76,16 +76,16 @@
     <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='1'">
       <ul class="mainright-ul">  
       
-        <li [ngClass]="getCSSClasses(114)" (click)="addNewTab(114)"  *ngIf="submainMenuShow('Sistem Parametre')">
+        <li [ngClass]="getCSSClasses(2)" (click)="addNewTab(2)"  *ngIf="submainMenuShow('Sistem Parametre')">
           <a href="#"><i class="fas fa-cogs"></i> Sistem Parametreleri</a>
       </li>
         <li class="mainrightsem submenutop baslikmenu" *ngIf="submainMenuShow('Kullanıcı Yönetimi')">
             <a href="#" class="mastermenu" (click)="menuEx[0].Exapnd = !menuEx[0].Exapnd" [attr.aria-expanded]="!menuEx[0].Exapnd" aria-controls="navbarContent">
               <i class="fas fa-users"></i> Kullanıcı Yönetimi</a>
             <ul class="nav collapse submenusem" [ngbCollapse]="!menuEx[0].Exapnd">
-              <li (click)="addNewTab(4)" [ngClass]="getCSSClassesSub(4)" *ngIf="childMenuShow('YT0007')"><a href="#">● Kullanıcılar</a></li> 
-              <li (click)="addNewTab(5)" [ngClass]="getCSSClassesSub(5)" *ngIf="childMenuShow('YT0008')"><a href="#">● Grup Yetkileri</a></li>  
-              <li (click)="addNewTab(7)" [ngClass]="getCSSClassesSub(7)" *ngIf="childMenuShow('YT0010')"><a href="#">● Departman Tanım</a></li> 
+              <li (click)="addNewTab(3)" [ngClass]="getCSSClassesSub(3)" *ngIf="childMenuShow('YT0007')"><a href="#">● Kullanıcılar</a></li> 
+              <li (click)="addNewTab(4)" [ngClass]="getCSSClassesSub(4)" *ngIf="childMenuShow('YT0008')"><a href="#">● Grup Yetkileri</a></li>  
+              <li (click)="addNewTab(5)" [ngClass]="getCSSClassesSub(5)" *ngIf="childMenuShow('YT0010')"><a href="#">● Departman Tanım</a></li> 
               <li (click)="addNewTab(6)" [ngClass]="getCSSClassesSub(6)" *ngIf="childMenuShow('YT0011')"><a href="#">● Pozisyon Tanım</a></li>  
             </ul> 
         </li>  
@@ -95,22 +95,22 @@
     <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='2'">
       <ul class="mainright-ul"> 
         <li [ngClass]="getCSSClasses(1)" (click)="addNewTab(1)" *ngIf="childMenuShow('YT0001')"><a href="#"><i class="fas fa-newspaper"></i> Stok Arama</a></li>  
-        <li [ngClass]="getCSSClasses(2)" (click)="addNewTab(2)" *ngIf="childMenuShow('YT0002')"><a href="#"><i class="fas fa-newspaper"></i> Raf Bulma</a></li>  
         </ul>
     </aside>
 
     <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='3'">
       <ul class="mainright-ul"> 
-        <li [ngClass]="getCSSClasses(3)" (click)="addNewTab(3)" *ngIf="childMenuShow('YT0006')"><a href="#"><i class="fas fa-newspaper"></i> Sipariş Girişi</a></li>  
-        <li [ngClass]="getCSSClasses(8)" (click)="addNewTab(8)" *ngIf="childMenuShow('YT0012')"><a href="#"><i class="fas fa-newspaper"></i> Fatura Kontrol</a></li>  
+        <li [ngClass]="getCSSClasses(7)" (click)="addNewTab(7)" *ngIf="childMenuShow('YT0006')"><a href="#"><i class="fas fa-newspaper"></i> Özel Sipariş</a></li>  
+        <li [ngClass]="getCSSClasses(8)" (click)="addNewTab(8)" *ngIf="childMenuShow('YT0012')"><a href="#"><i class="fas fa-newspaper"></i> Depo Transferi</a></li>  
+        <li [ngClass]="getCSSClasses(9)" (click)="addNewTab(9)" *ngIf="childMenuShow('YT0012')"><a href="#"><i class="fas fa-newspaper"></i> Satın Alma Talep</a></li>  
         
         </ul>
     </aside>
   
     <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='4'">
       <ul class="mainright-ul"> 
-        <li [ngClass]="getCSSClasses(21)" (click)="addNewTab(21)" *ngIf="childMenuShow('YT0013')"><a href="#"><i class="fas fa-newspaper"></i> Rapor Araçları</a></li> 
-        <li [ngClass]="getCSSClasses(22)" (click)="addNewTab(22)" *ngIf="childMenuShow('YT0014')"><a href="#"><i class="fas fa-newspaper"></i> Raporlarım</a></li> 
+        <li [ngClass]="getCSSClasses(10)" (click)="addNewTab(10)" *ngIf="childMenuShow('YT0013')"><a href="#"><i class="fas fa-newspaper"></i> Rapor Araçları</a></li> 
+        <li [ngClass]="getCSSClasses(11)" (click)="addNewTab(11)" *ngIf="childMenuShow('YT0014')"><a href="#"><i class="fas fa-newspaper"></i> Raporlarım</a></li> 
         </ul>
     </aside>
     
