@@ -1,0 +1,127 @@
+<div class="content">
+    <nav class="menu-navigation-icons">
+        <a href="#" class="menu-silver" (click)="DataListele()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="yeniEkle(dataaddmod)"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a> 
+        <a href="#" class="menu-red" *ngIf="this.silgoster && yetki.Sil" (click)="dataSil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a> 
+    </nav>
+    <div style="clear:both"></div>
+    
+    <dx-data-grid class="devgrid74"  #gridCrmDurumTanim
+    [dataSource]="datalist"
+    [showBorders]="true"
+    [showColumnLines]="false"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true"
+    [columnAutoWidth]="true"
+    [allowColumnResizing]="true"
+    keyExpr="Id" 
+    columnResizingMode = "widget" 
+    [allowColumnReordering]="true"
+    (onSelectionChanged)="silgosterChanged($event)"
+    > 
+     <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-paging [enabled]="false"></dxo-paging>
+                        <dxo-load-panel [enabled]="true"></dxo-load-panel>  
+    <dxo-selection mode="single"></dxo-selection> 
+    <dxo-scrolling 
+        mode="virtual"
+        showScrollbar="'always'"
+        useNative="false"
+        scrollByThumb="true" >
+    </dxo-scrolling> 
+      
+    <dxi-column dataField="Id" caption="Id" cellTemplate="cellTemplate" [style.width.%]="10" alignment="center"></dxi-column>
+    <div *dxTemplate="let cell of 'cellTemplate'" (dblclick)="onaydetay(dataaddmod,cell.data)">
+        <div class="dxgrididfield" >{{cell.text}}</div>
+    </div> 
+
+    <dxi-column caption="Onay Detay" cellTemplate="cellTemplateDetay" [width]="75" alignment="center"></dxi-column>
+    <div *dxTemplate="let cell of 'cellTemplateDetay'" > 
+        <span (click)="kayitdetay(cell.data)" class="badge pill-medium badge-info" style="cursor:pointer">Detay</span>
+    </div>
+     
+    <dxi-column [style.width.%]="10" caption="Ana Kategori" dataField="AnaKategori" alignment="center"></dxi-column>   
+    <dxi-column [style.width.%]="10" caption="Kategori" dataField="Kategori" alignment="center"></dxi-column>   
+    <dxi-column [style.width.%]="10" caption="Tanım" dataField="Tanim" ></dxi-column>   
+    <dxi-column [style.width.%]="10" caption="Gerekli Onay" dataField="GerekliOnay" alignment="center"></dxi-column>   
+    <dxi-column [style.width.%]="10" caption="Gerekli Ret" dataField="GerekliRet" alignment="center"></dxi-column>    
+    <dxi-column [style.width.%]="10" caption="Tutar Kontrol" dataField="TutarKontrol" alignment="center"></dxi-column>   
+    <dxi-column [style.width.%]="10" caption="Onay Sıralı" dataField="OnaySiralimi" alignment="center"></dxi-column>   
+      
+    <dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Kayıt Tarih" dataField="Kayit" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Guncelleyen" dataField="Guncelleyen" ></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Güncelleme Tarih" dataField="Guncelleme" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+      
+    </dx-data-grid> 
+    </div>
+    
+    <ng-template #dataaddmod let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" >Kategori Master Tanım <span *ngIf="secilidata.Id>0"> - {{secilidata.Id}}</span></h4> 
+        </div>
+        <div class="modal-body">
+           
+            <div class="row">
+                <mat-form-field appearance="outline" [style.width.%]="100" >
+                    <mat-label>Onay Kategori</mat-label>
+                  <mat-select [(ngModel)]="secilidata.KategoriId" name="secdonem">
+                    <mat-option *ngFor="let secpb of kategorilist" [value]="secpb.Id">
+                      {{secpb.KategoriKod}} - {{secpb.Kategori}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> 
+            </div>
+ 
+            <div class="row">
+                <mat-form-field appearance="outline" [style.width.%]="100">
+                    <mat-label>Tanım</mat-label>
+                    <input matInput placeholder="Tanım" [(ngModel)]="secilidata.Tanim" type="text" autocomplete="off" maxlength="254">
+                </mat-form-field>  
+            </div>  
+            <div class="row">
+                <mat-form-field appearance="outline" [style.width.%]="50" style="padding-right: 10px;">
+                    <mat-label>Gerekli Onay</mat-label>
+                    <input matInput placeholder="Gerekli Onay" [(ngModel)]="secilidata.GerekliOnay" type="number" autocomplete="off">
+                </mat-form-field>  
+
+                <mat-form-field appearance="outline" [style.width.%]="50">
+                    <mat-label>Gerekli Ret</mat-label>
+                    <input matInput placeholder="AGerekli Retdı" [(ngModel)]="secilidata.GerekliRet" type="number" autocomplete="off">
+                </mat-form-field>  
+            </div>  
+
+            <div class="row">
+                <mat-form-field appearance="outline" [style.width.%]="50" style="padding-right: 10px;">
+                    <mat-label>Otomatik Onay Süre</mat-label>
+                    <input matInput placeholder="Otomatik Onay Süre" [(ngModel)]="secilidata.OtomatikOnaySure" type="number" autocomplete="off">
+                </mat-form-field>  
+ 
+
+                <mat-form-field appearance="outline" [style.width.%]="50">
+                    <mat-label>Tutar Kontrol</mat-label> 
+                    <mat-select name="TutarKontrol" [(ngModel)]="secilidata.TutarKontrol"> 
+                        <mat-option [value]="false">Hayır</mat-option>
+                        <mat-option [value]="true">Evet</mat-option>    
+                    </mat-select>
+                  </mat-form-field> 
+            </div> 
+            <div class="row">
+                <mat-form-field appearance="outline" [style.width.%]="50">
+                    <mat-label>Onay Sıral mı</mat-label> 
+                    <mat-select name="TutarKontrol" [(ngModel)]="secilidata.OnaySiralimi"> 
+                        <mat-option [value]="false">Hayır</mat-option>
+                        <mat-option [value]="true">Evet</mat-option>    
+                    </mat-select>
+                  </mat-form-field> 
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
+          <button type="button" class="btn btn-success" (click)="kaydet()">Kaydet</button>
+        </div>
+      </ng-template>
+     

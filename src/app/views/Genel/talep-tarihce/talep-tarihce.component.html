@@ -1,0 +1,29 @@
+ 
+
+   <dx-data-grid  class="devgrid30"
+   [dataSource]="datalist"
+   [showBorders]="true"
+   [remoteOperations]="true"
+   [showColumnLines]="false"
+   [showRowLines]="true" 
+   [rowAlternationEnabled]="true"
+   [focusedRowEnabled]="true"
+   [columnAutoWidth]="true"
+   [allowColumnResizing]="true"
+   keyExpr="Id" 
+   columnResizingMode = "widget" 
+   [allowColumnReordering]="true" 
+   > 
+   <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+   <dxo-filter-row [visible]="true"></dxo-filter-row>
+   <dxo-header-filter [visible]="true"></dxo-header-filter>
+   <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+   <dxo-paging [enabled]="false"></dxo-paging>
+   <dxo-load-panel [enabled]="true"></dxo-load-panel>   
+   
+   <dxi-column [style.width.%]="10" dataField="Id" caption="Id"></dxi-column>  
+   <dxi-column [style.width.%]="10" dataField="Aciklama" caption="Açıklama"></dxi-column>   
+   <dxi-column [style.width.%]="10" dataField="IslemYapan" caption="İşlem Yapan" ></dxi-column>   
+   <dxi-column [style.width.%]="10" dataField="Tarih" caption="Tarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+   
+   </dx-data-grid>   

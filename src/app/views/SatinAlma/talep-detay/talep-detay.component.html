@@ -1,197 +1,50 @@
 <div class="content">
     <nav class="menu-navigation-icons">
       <a href="#" class="menu-silver" (click)="TalepDetayGetir()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a> 
-      <a href="#" *ngIf="yetki.Ekle" class="menu-green" (click)="kaydet(true)"><i class="fas fa-save"></i><span>{{master.Id>0 ? 'Kaydet':'Kaydet'}}</span></a> 
-      <a *ngIf="master.Durum!='T' && yetki.Ekle" href="#" class="menu-blue" (click)="kalemEklemod(modtlpkalemekle)"><i class="fas fa-plus-circle"></i><span>Kalem Ekle</span></a>
+      <a href="#" [hidden]="talepmaster.Durum=='T' && yetki.Ekle" class="menu-green" (click)="kaydet(true)"><i class="fas fa-save"></i><span>{{talepmaster.Id>0 ? 'Kaydet':'Kaydet'}}</span></a> 
+      <a *ngIf="talepmaster.Durum!='T' && yetki.Ekle" href="#" class="menu-blue" (click)="kalemEklemod(modtlpkalemekle)"><i class="fas fa-plus-circle"></i><span>Kalem Ekle</span></a>
       <a href="#" (click)="belgeYukleModal(belgeyukle)" *ngIf="this.evrekyuklegoster" class="menu-red" style="width: 95px!important;"><i class="fas fa-file-upload"></i><span>Talep Belge</span></a>
       <a *ngIf="this.silgoster && yetki.Sil" href="#" class="menu-red" (click)="kayitsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a>
+      <a *ngIf="this.tekraronaygoster" href="#" class="menu-yellow" (click)="tekraronayMod(tekraronaymod)"><i class="fas fa-redo-alt"></i><span>Tekrar Onay</span></a>
     
       <a href="#" (click)="this.gridTalepDetay.instance.showColumnChooser()" style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
       <a href="#" (click)="this.gridTalepDetay.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
-      <a href="#" (click)="formYazdir(talepform)"  *ngIf="master.Id>0 && yetki.Export" class="menu-magenta" style="float: right!important;"><i class="fas fa-file-pdf"></i><span>Pdf</span></a> 
+      <a href="#" (click)="formYazdir(talepform)"  *ngIf="talepmaster.Id>0 && yetki.Export" class="menu-magenta" style="float: right!important;"><i class="fas fa-file-pdf"></i><span>Pdf</span></a> 
     
       
     </nav>
     <div style="clear:both"></div>
-        
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <label class="panel-baslik">Sipariş ve Müşteri Bilgileri</label>
-            <div class="clear-fix"></div> 
-
-            
-            <mat-form-field appearance="outline" [style.width.%]="50" >
-                <mat-label>Müşteri Adı</mat-label>
-                <input matInput placeholder="Müşteri Adı" [(ngModel)]="master.MusteriAdi" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Siparişi Veren Kişi</mat-label>
-                <input matInput placeholder="Siparişi Veren Kişi" [(ngModel)]="master.SiparisVerenKisi" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Cep Telefon</mat-label>
-                <input matInput placeholder="Cep Telefon" [(ngModel)]="master.Gsm" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Telefon</mat-label>
-                <input matInput placeholder="Telefon" [(ngModel)]="master.Telefon1" autocomplete="off">
-            </mat-form-field>            
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Email</mat-label>
-                <input matInput placeholder="Email" [(ngModel)]="master.Email" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Vergi Dairesi</mat-label>
-                <input matInput placeholder="Vergi Dairesi" [(ngModel)]="master.VergiDairesi" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Vergi No</mat-label>
-                <input matInput placeholder="Vergi No" [(ngModel)]="master.VergiNo" autocomplete="off" [max]="10" [min]="10">
-            </mat-form-field>
- 
-
-            <mat-form-field appearance="outline" [style.width.%]="50" >
-                <mat-label>Adres</mat-label>
-                <input matInput placeholder="Adres" [(ngModel)]="master.Adres" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25">
-                <mat-label>Şehir</mat-label>
-                  <mat-select  #singleSelect [(ngModel)]="master.SehirKod" (selectionChange)="onSehirChg($event)">
-                    <mat-option>
-                      <ngx-mat-select-search [formControl]="formSehir"  
-                       placeholderLabel="Ara..."
-                       noEntriesFoundLabel="Kayıt Bulunamadı...">
-                      </ngx-mat-select-search>
-                    </mat-option>
-                    <mat-option *ngFor="let sh of filterSehir | async" [value]="sh.Code" >
-                      {{sh.Name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
       
-              <mat-form-field appearance="outline" [style.width.%]="25">
-                <mat-label>İlçe</mat-label>
-                  <mat-select  #singleSelect [(ngModel)]="master.IlceKod">
-                    <mat-option>
-                      <ngx-mat-select-search [formControl]="formilce"  
-                       placeholderLabel="Ara..."
-                       noEntriesFoundLabel="Kayıt Bulunamadı...">
-                      </ngx-mat-select-search>
-                    </mat-option>
-                    <mat-option *ngFor="let si of filterilcer | async" [value]="si.Id" >
-                      {{si.IlceAdi}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field> 
-          
+    <div class="border-start border-0 border-3 border-warning">
+      <div class="panel-group"> 
+        <div class="panel panel-default" style="padding-top: 20px;">
+        
+         <mat-form-field appearance="outline"   [style.width.%]="15" style="padding-right: 10px;">
+           <mat-label>Talep Tarih</mat-label> 
+           <input matInput [matDatepicker]="dp" placeholder="Talep Tarihi"  [(ngModel)]="talepmaster.Tarih" >
+         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+         <mat-datepicker #dp></mat-datepicker>
+       </mat-form-field> 
+         
+        <mat-form-field appearance="outline" [style.width.%]="20" style="padding-right: 10px;">
+           <mat-label>Talep Eden</mat-label>
+           <input matInput placeholder="Talep Eden" [(ngModel)]="talepmaster.Ekleyen" readonly> 
+       </mat-form-field> 
+       
+        <mat-form-field appearance="outline" [style.width.%]="50" style="padding-right: 10px;">
+            <mat-label>Talep Nedeni</mat-label>
+            <input matInput placeholder="Talep Nedeni" [(ngModel)]="talepmaster.Aciklama" autocomplete="off">
+        </mat-form-field> 
+       
+        <div class="clear-fix"></div> 
+    
         </div>
+      </div>
     </div>
      
      <div class="clear-fix"></div> 
-
-     <div class="panel panel-default">            
-        <div class="panel-body">
-            <label class="panel-baslik">Teslimat Bilgileri</label>
-            <div class="clear-fix"></div> 
-
-            <mat-form-field appearance="outline" [style.width.%]="25">
-              <mat-label>Teslimat Şube</mat-label>
-                <mat-select  #singleSelect [(ngModel)]="master.TeslimatSubeId">
-                  <mat-option>
-                    <ngx-mat-select-search [formControl]="formSube"  
-                     placeholderLabel="Ara..."
-                     noEntriesFoundLabel="Kayıt Bulunamadı...">
-                    </ngx-mat-select-search>
-                  </mat-option>
-                  <mat-option *ngFor="let sh of filterSube | async" [value]="sh.DepoKodu" >
-                    {{sh.DepoAdi}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Teslimat Kişi</mat-label>
-                <input matInput placeholder="Talep Eden" [(ngModel)]="master.TeslimatKisi"> 
-            </mat-form-field> 
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Teslimat Cep Telefon</mat-label>
-                <input matInput placeholder="Talep Cep Telefon" [(ngModel)]="master.TeslimatGsm"> 
-            </mat-form-field>  
-
-            <mat-form-field appearance="outline"   [style.width.%]="15" >
-                <mat-label>Teslim Tarih</mat-label> 
-                <input matInput [matDatepicker]="dp2" placeholder="Teslim Tarihi"  [(ngModel)]="master.TeslimTarih" >
-              <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
-              <mat-datepicker #dp2></mat-datepicker>
-            </mat-form-field> 
-
-            <input class="input-saat" type="time" [(ngModel)]="master.TeslimSaati" step="300"/>
- 
-
-            <div class="clear-fix"></div>            
-
-            <mat-form-field appearance="outline" [style.width.%]="50" >
-                <mat-label>Teslimat Adres</mat-label>
-                <input matInput placeholder="Açıklama" [(ngModel)]="master.TeslimatAdres" autocomplete="off">
-            </mat-form-field> 
-
-            <mat-form-field appearance="outline" [style.width.%]="25">
-                <mat-label>Teslim Şehir</mat-label>
-                  <mat-select  #singleSelect [(ngModel)]="master.TeslimSehirKod" (selectionChange)="onSehirTeslimChg($event)">
-                    <mat-option>
-                      <ngx-mat-select-search [formControl]="formSehir"  
-                       placeholderLabel="Ara..."
-                       noEntriesFoundLabel="Kayıt Bulunamadı...">
-                      </ngx-mat-select-search>
-                    </mat-option>
-                    <mat-option *ngFor="let sh of filterSehir | async" [value]="sh.Code" >
-                      {{sh.Name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-      
-              <mat-form-field appearance="outline" [style.width.%]="25">
-                <mat-label>Teslim İlçe</mat-label>
-                  <mat-select  #singleSelect [(ngModel)]="master.TeslimIlceKod">
-                    <mat-option>
-                      <ngx-mat-select-search [formControl]="formilceTeslim"  
-                       placeholderLabel="Ara..."
-                       noEntriesFoundLabel="Kayıt Bulunamadı...">
-                      </ngx-mat-select-search>
-                    </mat-option>
-                    <mat-option *ngFor="let si of filterilcerTeslim | async" [value]="si.Id" >
-                      {{si.IlceAdi}}
-                    </mat-option>
-                  </mat-select>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="50" >
-              <mat-label>Pasta Üstü Yazı</mat-label>
-              <input matInput placeholder="Pasta Üstü Yazı" [(ngModel)]="master.PastaUstuYazi" autocomplete="off">
-          </mat-form-field> 
-
-          <mat-form-field appearance="outline" [style.width.%]="50" >
-              <mat-label>Açıklama</mat-label>
-              <input matInput placeholder="Açıklama" [(ngModel)]="master.Aciklama" autocomplete="off">
-          </mat-form-field> 
-
-
-           
-
-        </div>
-    </div>
-
-    <div class="clear-fix"></div> 
      
-    <dx-data-grid class="devgrid25"  #gridTalepDetay 
+    <dx-data-grid class="devgrid65"  #gridTalepDetay 
     [dataSource]="talepdetay"   
     [showBorders]="true" 
     [remoteOperations]="true"
@@ -226,18 +79,32 @@
      
      <dxi-column dataField="Durum" caption="Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
      <div *dxTemplate="let cell of 'cellDurum'"> 
-         <span *ngIf="cell.data.DurumId===0" style="cursor: pointer;" class="badge pill-medium bg-secondary" (click)="onaytakip(onaytakipmod,cell.data)">İşlem Yapılmadı</span>
-         <span *ngIf="cell.data.DurumId===1" style="cursor: pointer;" class="badge pill-medium bg-info" (click)="onaytakip(onaytakipmod,cell.data)">Onay Bekliyor</span>    
-         <span *ngIf="cell.data.DurumId===2" style="cursor: pointer;" class="badge pill-medium bg-success" (click)="onaytakip(onaytakipmod,cell.data)">Tamamlandı</span>    
-         <span *ngIf="cell.data.DurumId===3" style="cursor: pointer;" class="badge pill-medium bg-danger" (click)="onaytakip(onaytakipmod,cell.data)">Reddedildi</span>    
-         <span *ngIf="cell.data.DurumId===4" style="cursor: pointer;" class="badge pill-medium bg-warning" (click)="onaytakip(onaytakipmod,cell.data)">İptal</span>    
+       <span *ngIf="cell.data.DurumId===0" style="cursor: pointer;" class="badge pill-medium bg-secondary" (click)="onaytakip(onaytakipmod,cell.data)">İşlem Yapılmadı</span>
+       <span *ngIf="cell.data.DurumId===1" style="cursor: pointer;" class="badge pill-medium bg-info" (click)="onaytakip(onaytakipmod,cell.data)">Onay Bekliyor</span>    
+       <span *ngIf="cell.data.DurumId===2" style="cursor: pointer;" class="badge pill-medium bg-success" (click)="onaytakip(onaytakipmod,cell.data)">Tamamlandı</span>    
+       <span *ngIf="cell.data.DurumId===3" style="cursor: pointer;" class="badge pill-medium bg-danger" (click)="onaytakip(onaytakipmod,cell.data)">Reddedildi</span>    
+       <span *ngIf="cell.data.DurumId===4" style="cursor: pointer;" class="badge pill-medium bg-warning" (click)="onaytakip(onaytakipmod,cell.data)">İptal</span>    
+       <span *ngIf="cell.data.DurumId===5" style="cursor: pointer;" class="badge pill-medium bg-secondary" (click)="onaytakip(onaytakipmod,cell.data)">Depo Kontrolünde</span>
      </div> 
     
-    <dxi-column dataField="UrunKodu" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
-    <dxi-column dataField="UrunAdi" caption="Stok Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
-       
-    <dxi-column dataField="Miktar" [style.width.%]="10"  caption="Miktar" alignment="right" dataType="number" format="#,##0.00"> </dxi-column> 
-    <dxi-column dataField="Fiyat" [style.width.%]="10" caption="Birim Tutar"  [allowEditing]="true" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+    <dxi-column dataField="StokKodu" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
+    <dxi-column dataField="StokAdi" caption="Stok Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+    
+    <dxi-column
+      dataField="TalepDurumId"
+      caption="İhtiyaç Durum"
+      [style.width.%]="10" alignment="center">         
+      <dxo-lookup
+          [dataSource]="talepihtdurumlist"
+          displayExpr="Adi"
+          valueExpr="Id">
+      </dxo-lookup>
+      </dxi-column>
+    
+    <dxi-column dataField="Miktar" [style.width.%]="10"  caption="İhtiyaç Miktar" alignment="right" dataType="number" format="#,##0.00"> </dxi-column> 
+    <dxi-column dataField="OnaylananMiktar" [style.width.%]="10" caption="Onaylanan Miktar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00" ></dxi-column> 
+    <dxi-column dataField="TalepMiktar" [style.width.%]="10" caption="Talep Miktar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+    <dxi-column dataField="BirimTutar" [style.width.%]="10" caption="Birim Tutar"  [allowEditing]="true" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
     <dxi-column dataField="ToplamTutar" [style.width.%]="10" caption="Toplam Tutar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
     
     <dxi-column
@@ -249,11 +116,11 @@
           displayExpr="Adi"
           valueExpr="Id">
       </dxo-lookup>
-      </dxi-column>    
+    </dxi-column>   
     
     <dxi-column
     dataField="DepoKodu"
-    caption="Teslim Şube"
+    caption="Teslim Adres"
     [style.width.%]="10" alignment="center" [allowEditing]="true">         
     <dxo-lookup
         [dataSource]="depolist"
@@ -262,19 +129,17 @@
     </dxo-lookup>
     </dxi-column>
       
-    <dxi-column dataField="Aciklama" caption="Ürün/Hizmet Açıklama" [width]="200" [allowEditing]="true"></dxi-column> 
-      
-    <dxi-column dataField="TalepDurum" caption="Talep Durum" [width]="200" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
+    <dxi-column dataField="Aciklama" caption="Ürün/Hizmet Açıklama" [width]="200" [allowEditing]="true"></dxi-column>       
+    <dxi-column dataField="TalepDurum" caption="Talep Durum" [width]="200" [allowEditing]="false" alignment="center" ></dxi-column> 
     
-     <dxi-column dataField="SapTalepNo" caption="Sap Talep No" [style.width%]="10" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
-    <dxi-column dataField="SapTeklifNo" caption="Sap Teklif No" [style.width%]="10" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
-    <dxi-column dataField="SapSiparisNo" caption="Sap Sipariş No" [style.width%]="10" [allowEditing]="false" alignment="center" [visible]="false"></dxi-column> 
+     <dxi-column dataField="SapTalepNo" caption="Sap Talep No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
+    <dxi-column dataField="SapTeklifNo" caption="Sap Teklif No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
+    <dxi-column dataField="SapSiparisNo" caption="Sap Sipariş No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
      
-    <dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen"  [visible]="false"></dxi-column> 
-    <dxi-column [style.width.%]="10" caption="Kayıt Tarih" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"  [visible]="false"></dxi-column> 
-    <dxi-column [style.width.%]="10" caption="Guncelleyen" dataField="Guncelleyen"   [visible]="false"></dxi-column> 
-    <dxi-column [style.width.%]="10" caption="Güncelleme Tarih" dataField="GuncelTarih" dataType="date" format="dd.MM.yyyy HH:mm"  [visible]="false"></dxi-column>
-     
+    <dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Kayıt Tarih" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Guncelleyen" dataField="Guncelleyen" ></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Güncelleme Tarih" dataField="GuncelTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column>     
     
     </dx-data-grid> 
      
@@ -288,7 +153,7 @@
         <div class="row">
           <div class="input-group">
     
-            <mat-form-field appearance="outline" [style.width.%]="25" >
+            <mat-form-field appearance="outline" [style.width.%]="25" style="padding-right: 10px;">
               <mat-label>Stok Grup</mat-label>
                 <mat-select  #singleSelect [(ngModel)]="StokGrupId" (ngModelChange)="kalemAraDef()">
                   <mat-option>
@@ -355,6 +220,16 @@
         <dxi-column dataField="ItemCode" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" [visible]="false"></dxi-column>
         <dxi-column dataField="ItemName" caption="Stok Adı" [style.width.%]="10" [allowEditing]="false"></dxi-column>  
         
+        <dxi-column
+        dataField="TalepDurumId"
+        caption="İhtiyaç Durum"
+        [style.width.%]="10" alignment="center">         
+        <dxo-lookup
+            [dataSource]="talepihtdurumlist"
+            displayExpr="Adi"
+            valueExpr="Id">
+        </dxo-lookup>
+        </dxi-column>
        
         <dxi-column placeholder="Miktar Giriniz..." dataField="Miktar" caption="Miktar" [style.width.%]="10" alignment="center" format="#,##0.####" onfocus="this.select()"></dxi-column>    
       
@@ -373,7 +248,7 @@
       
         <dxi-column
         dataField="DepoKodu"
-        caption="Teslim Şube"
+        caption="Teslim Adres"
         [style.width.%]="10" alignment="center">         
         <dxo-lookup
             [dataSource]="depolist"
@@ -502,7 +377,26 @@
         </button>
       </div>
       <app-belge-goruntule [semkey]="this.secilikalem.SatirGuid" [kayitid]="this.secilikalem.Id" [ekranid]="1" [secilidata]="this.secilikalem" [defbelgetipid]="1"></app-belge-goruntule>  
-    </ng-template> 
+    </ng-template>
+    
+    <ng-template #tekraronaymod let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" >Tekrar Onay</h4> 
+      </div>
+      <div class="modal-body">  
+          <div style="clear:both" style="margin-bottom:5px!important"></div> 
+           
+       <mat-form-field appearance="outline" [style.width.%]="100" >
+          <mat-label>Açıklama</mat-label> 
+          <textarea matInput placeholder="Açıklama" [(ngModel)]="TekrarOnayAciklama" rows="4" autocomplete="off" maxlength="254"></textarea>
+      </mat-form-field>   
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="finodemekpt" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+        <button type="button" class="btn btn-success" (click)="tekraronay()">Onaya Gönder</button>
+      </div>
+    </ng-template>  
     
     <ng-template #belgetarihcemod let-modal>
       <div class="modal-header">

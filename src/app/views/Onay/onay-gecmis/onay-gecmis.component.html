@@ -1,0 +1,97 @@
+<mat-drawer-container class="mat-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+        <div class="modal-header" style="text-align: center;">
+             <h5 class="modal-title" id="myModalLabel2">Filtre</h5>
+        </div>
+        <div class="body">
+            <div style="clear:both;margin-bottom: 15px!important"></div>  
+            <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Başlangıç Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp" placeholder="Başlangıç Tarih"  [(ngModel)]="filter.Baslangic" (ngModelChange)="BasTarihChg($event)">
+                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+              </mat-form-field> 
+
+              <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Bitiş Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp2" placeholder="Bitiş Tarih"  [(ngModel)]="filter.Bitis" (ngModelChange)="BitTarihChg($event)">
+                 <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                <mat-datepicker #dp2></mat-datepicker>
+              </mat-form-field> 
+
+            <div style="clear:both;margin-bottom: 5px!important"></div> 
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default" (click)="drawer.toggle()" value="Kapat" />
+            <input type="button" class="btn btn-info" (click)="OnKayitListele()" value="Listele" />
+        </div>
+    </mat-drawer>
+   
+    <mat-drawer-content> 
+        <div class="content">
+            <nav class="menu-navigation-icons">
+                <a href="#" (click)="OnKayitListele()" class="menu-silver" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>  
+                <a href="#" (click)="drawer.toggle()" class="menu-silver" ><i class="fas fa-filter"></i><span>Filtre</span></a> 
+            </nav>
+            <div style="clear:both"></div>
+
+            <dx-data-grid class="devgrid74" #gridOnayGecmis
+    [dataSource]="datalist"
+    [showBorders]="true"
+    [showColumnLines]="false"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true"
+    [columnAutoWidth]="true"
+    [allowColumnResizing]="true"
+    keyExpr="Id" 
+    columnResizingMode = "widget" 
+    [allowColumnReordering]="true"  
+    > 
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter><dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-selection mode="single"></dxo-selection>    
+    <dxo-scrolling 
+    mode="virtual"
+    showScrollbar="'always'"
+    useNative="false"
+    scrollByThumb="true" >
+  </dxo-scrolling> 
+    <dxo-load-panel [enabled]="true"></dxo-load-panel>
+    <dxo-paging [pageSize]="30"> </dxo-paging>
+    <dxo-pager
+        [visible]="true" 
+        displayMode="'compact'"
+        [showPageSizeSelector]="false"
+        [showInfo]="true"
+        [showNavigationButtons]="true">
+    </dxo-pager>     
+
+    <dxi-column dataField="Belgeno" caption="Talep No" cellTemplate="cellBelgeno" [style.width.%]="10" alignment="center"></dxi-column>
+    <div *dxTemplate="let cell of 'cellBelgeno'">
+        <div class="dxgrididfield" (dblclick)="talepDetay(cell.data)">{{cell.text}}</div>
+    </div>
+
+    <dxi-column dataField="Tarih" caption="Onay Tarih" dataType="date" format="dd.MM.yyyy HH:mm" [style.width.%]="10">
+        <dxo-header-filter [allowSearch]="true" ></dxo-header-filter>
+    </dxi-column> 
+ 
+    <dxi-column [style.width.%]="10" caption="Onay Bölüm" dataField="OnayBolum" alignment="center"></dxi-column>  
+
+    <dxi-column dataField="Islem" caption="İşlem" cellTemplate="cellTemplate" [style.width.%]="20"></dxi-column>
+    <div *dxTemplate="let cell of 'cellTemplate'">
+        <div [innerHTML]="cell.text"></div>
+    </div> 
+
+    <dxi-column [style.width.%]="10" caption="Açıklama" dataField="Aciklama"></dxi-column> 
+     
+    <dxi-column [style.width.%]="10" caption="Talep Eden" dataField="TalepEden" alignment="center"></dxi-column>
+    <dxi-column [style.width.%]="10" caption="Onaylayan" dataField="Olusturan" alignment="center"></dxi-column>  
+            </dx-data-grid>  
+        </div>
+    </mat-drawer-content> 
+  </mat-drawer-container>
+  
+
+ 

@@ -44,7 +44,7 @@ export class KullaniciComponent implements OnInit {
     private tabService: TabService, 
     ) {
     this.seciliuser = new KullaniciModel; 
-    this.yetki=this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0006")[0];  
+    this.yetki=this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0007")[0];
     }
 
   ngOnInit(): void { 

@@ -50,7 +50,7 @@ export class GrupYetkiComponent implements OnInit {
       this.allMode = 'allPages';
       this.checkBoxesMode = 'always';
       this.secilidata=new YetkiGrup();  
-      this.yetki=new  KullaniciYetki();
+      this.yetki=this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0008")[0];
     }   
 
   ngOnInit() {    

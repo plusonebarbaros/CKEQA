@@ -62,7 +62,11 @@
         <div class="mainsem" (click)="menugoster('3')"  *ngIf="mainMenuShow('Sipariş Yönetim')">
           <div style="display: block;"><i class="fas fa-city fafont"></i></div>
           <span>Sipariş</span>
-        </div>       
+        </div>   
+        <div class="mainsem" (click)="menugoster('5')" *ngIf="mainMenuShow('Süreç')">
+          <div style="display: block;"><i class="fas fa-clock fafont"></i></div>
+          <span>Onay</span>
+        </div>    
         <div class="mainsem" (click)="menugoster('4')" *ngIf="mainMenuShow('Rapor Yönetim')">
           <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
           <span>Rapor</span>
@@ -89,6 +93,16 @@
               <li (click)="addNewTab(6)" [ngClass]="getCSSClassesSub(6)" *ngIf="childMenuShow('YT0011')"><a href="#">● Pozisyon Tanım</a></li>  
             </ul> 
         </li>  
+        <li class="mainrightsem submenutop baslikmenu" *ngIf="submainMenuShow('Onay Süreçleri')">
+          <a href="#" class="mastermenu" (click)="menuEx[37].Exapnd = !menuEx[37].Exapnd" [attr.aria-expanded]="!menuEx[37].Exapnd" aria-controls="navbarContent">
+            <i class="fas fa-users"></i> Onay Süreçleri</a>
+          <ul class="nav collapse submenusem" [ngbCollapse]="!menuEx[37].Exapnd"> 
+            <li (click)="addNewTab(8)" [ngClass]="getCSSClassesSub(8)" *ngIf="childMenuShow('YT0014')"><a href="#">● Onay Kategori Tanım</a></li>  
+            <li (click)="addNewTab(9)" [ngClass]="getCSSClassesSub(9)" *ngIf="childMenuShow('YT0015')"><a href="#">● Onay Kategori Detay Tanım</a></li>  
+            <li (click)="addNewTab(10)" [ngClass]="getCSSClassesSub(10)" *ngIf="childMenuShow('YT0016')"><a href="#">● Onay Kural Tanım</a></li>  
+            <li (click)="addNewTab(11)" [ngClass]="getCSSClassesSub(11)" *ngIf="childMenuShow('YT0017')"><a href="#">● Onay Süreç Tanım</a></li>  
+          </ul> 
+        </li> 
     </ul>
     </aside>    
 
@@ -100,9 +114,9 @@
 
     <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='3'">
       <ul class="mainright-ul"> 
-        <li [ngClass]="getCSSClasses(7)" (click)="addNewTab(7)" *ngIf="childMenuShow('YT0006')"><a href="#"><i class="fas fa-newspaper"></i> Özel Sipariş</a></li>  
-        <li [ngClass]="getCSSClasses(8)" (click)="addNewTab(8)" *ngIf="childMenuShow('YT0012')"><a href="#"><i class="fas fa-newspaper"></i> Depo Transferi</a></li>  
-        <li [ngClass]="getCSSClasses(9)" (click)="addNewTab(9)" *ngIf="childMenuShow('YT0012')"><a href="#"><i class="fas fa-newspaper"></i> Satın Alma Talep</a></li>  
+        <li [ngClass]="getCSSClasses(7)" (click)="addNewTab(7)" *ngIf="childMenuShow('YT0012')"><a href="#"><i class="fas fa-newspaper"></i> Özel Sipariş</a></li>  
+        <li [ngClass]="getCSSClasses(12)" (click)="addNewTab(12)" *ngIf="childMenuShow('YT0018')"><a href="#"><i class="fas fa-newspaper"></i> Satın Alma Talep</a></li>  
+        <li [ngClass]="getCSSClasses(13)" (click)="addNewTab(13)" *ngIf="childMenuShow('YT0019')"><a href="#"><i class="fas fa-newspaper"></i> Depo Transferi</a></li>  
         
         </ul>
     </aside>
@@ -111,6 +125,13 @@
       <ul class="mainright-ul"> 
         <li [ngClass]="getCSSClasses(10)" (click)="addNewTab(10)" *ngIf="childMenuShow('YT0013')"><a href="#"><i class="fas fa-newspaper"></i> Rapor Araçları</a></li> 
         <li [ngClass]="getCSSClasses(11)" (click)="addNewTab(11)" *ngIf="childMenuShow('YT0014')"><a href="#"><i class="fas fa-newspaper"></i> Raporlarım</a></li> 
+        </ul>
+    </aside>
+
+    <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='5'">
+      <ul class="mainright-ul"> 
+        <li [ngClass]="getCSSClasses(14)" (click)="addNewTab(14)" *ngIf="childMenuShow('YT0020')"><a href="#"><i class="fas fa-newspaper"></i> Bekleyen Onay</a></li>  
+        <li [ngClass]="getCSSClasses(15)" (click)="addNewTab(15)" *ngIf="childMenuShow('YT0021')"><a href="#"><i class="fas fa-newspaper"></i> Onay Geçmiş</a></li>  
         </ul>
     </aside>
     

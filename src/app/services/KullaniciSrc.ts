@@ -603,7 +603,7 @@ export class KullaniciModel {
   KullaniciYetki:KullaniciYetki[]=[];
   DefaultSirket:number=0;
   Sirket: string[]=[]; 
-  Depo: number[]=[]; 
+  Depo: string[]=[]; 
   AktifSirket:string="";
   KullaniciIzinli:number=0;
   IzinBitisTarih:any;
@@ -617,6 +617,11 @@ export class KullaniciModel {
   VekilKullanici:string="";
   KullaniciTipId:number=0;
   KullaniciTip:string="";
+  CalistigiSirketKod:string="";
+  CalistigiSirket:string="";
+  CalistigiSubeKod:string="";
+  CalistigiSube:string="";
+
  }
 
  export  class OnayHesapModel {

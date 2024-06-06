@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import moment from 'moment';
 import { map } from 'rxjs/operators';
 import { IslemTipi, Result, ReturnValues, ReturnValuesList } from './GenelSrc';
 import { KullaniciSrcService } from './KullaniciSrc';
@@ -167,7 +168,7 @@ async IrsaliyeOlustur(List:SaticiSipKontrolModel[],CariKodu:string,SiparisTarih:
   return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
 }
 
-async  OzelSiparisOluttur(baslik:ConnOzelSiparis,satir:OzelSiparisKalem[],Tip:IslemTipi):Promise<ReturnValues>  {
+async  OzelSiparisOluttur(baslik:OzelSiparisMaster,satir:OzelSiparisKalem[],Tip:IslemTipi):Promise<ReturnValues>  {
   const headers = new HttpHeaders(
     {
       'Content-Type': 'application/json',
@@ -190,7 +191,7 @@ async  OzelSiparisOluttur(baslik:ConnOzelSiparis,satir:OzelSiparisKalem[],Tip:Is
   var sonuc = JSON.parse(JSON.stringify(result))['Model'];
   return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
  } 
- async OzelSiparisFormYazdir(Talep:ConnOzelSiparis,raporid:number):Promise<ReturnValues>  {
+ async OzelSiparisFormYazdir(Talep:OzelSiparisMaster,raporid:number):Promise<ReturnValues>  {
   const headers = new HttpHeaders(
     {
       'Content-Type': 'application/json',
@@ -209,20 +210,99 @@ async  OzelSiparisOluttur(baslik:ConnOzelSiparis,satir:OzelSiparisKalem[],Tip:Is
 
   var result = await this.http.post<any>(this.semUrl+"/SatinAlma/TalepFormYazdir", body, options).toPromise();
 
-  var sonuc = JSON.parse(JSON.stringify(result))['Model'];
-  return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+  }
+
+  async  OzelSiparisSatirGuncelle(Kalem:OzelSiparisKalem):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+
+      let options = { headers: headers };
+
+      const body =  JSON.stringify({ 
+        "Kalem": Kalem,
+        "Token": this.kullsrc.token
+      });
+   
+      var result = await this.http.post<any>(this.semUrl+"/SatinAlma/OzelSiparisSatirGuncelle", body,options).toPromise();
+
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+   }
+
+async GetOzelSiparisDetay(Id:number)
+  { 
+       let url=this.semUrl+"/SatinAlma/GetOzelSiparisDetay?Id="+Id+"&Token="+ this.kullsrc.token; 
+        return await this.http.get<Result<OzelSiparisKalem[]>>(url).pipe( map((res:any)=> res));
+  }
+
+  async GetOzelSiparisList(Id:number,durum:string="",baslangic:Date,bitis:Date,Kontrol:boolean)
+  { 
+       let url=this.semUrl+"/SatinAlma/GetOzelSiparisList?Id="+Id+"&Durum="+durum+"&Token="+ this.kullsrc.token+"&Kontrol="+ Kontrol+"&Baslangic="+moment(baslangic).format("yyyy-MM-DD")+"&Bitis="+moment(bitis).format("yyyy-MM-DD"); 
+        return await this.http.get<Result<OzelSiparisMaster[]>>(url).pipe( map((res:any)=> res));
+  }
+
 }
 
+export  class DepoTransferModel {
+  Id: number=0;
+  Tarih: any;  
+  TalepTarih: any;  
+  StokKodu: string="";  
+  StokAdi: string="";    
+  Miktar: number=0;
+  OnayId: number=0;
+  DepoKodu: string="";  
+  DepoAdi: string="";  
+  Aciklama: string="";  
+  SatirGuid: string="";  
+  SapTalepNo: number=0;
+  SapTeklifNo: number=0;
+  SapSiparisNo: number=0;
+  SapSiparisSatirNo: number=0;
+  StokNakliId: number=0;
+  DurumId: number=0;
+  Durum: string="";
+  KarsiDepoOnaylayanId: number=0;
+  KarsiDepoOnaylayan: string=""; 
+  KarsiDepoOnayTarih: any;
+  KarsiDepoOnayMiktar: number=0;
+  KarsiDepoAciklama: string="";  
+  TeslimAlTarih: any;
+  TeslimAlanId: number=0;
+  TeslimAlan: string="";
+  TeslimAlMiktar: number=0;
+  Aktif: boolean=false;  
+  ErpSirket: string="";
+  EkleyenId:number=0; 
+  Ekleyen:string="";
+  GuncelleyenId:number=0;
+  Guncelleyen:string="";
+  EkTarih:any; 
+  GuncelTarih:any;  
+  validkey:string="";
+  BelgeBase64:string="";
+  Files:number=0;
+  Base64List:ItemsFile[]=[];
+  BelgeAdi:string="";
+  BelgeUzanti:string="";
+  BirimId:number=0;
+  Birim:string="";
+} 
 
-
-}
 
 export class OzelSiparisKalem {  
   Id:number=0;
   TalepId:number=0;
   OnayId:number=0;
-  StokKodu: string="";
-  StokAdi: string="";
+  UrunKodu: string="";
+  UrunAdi: string="";
   Aciklama: string="";
   DepoKodu: string="";
   DepoAdi: string=""; 
@@ -306,12 +386,12 @@ export class OzelSiparisKalem {
   DuranVarlikUrunKodu:string="";
   DuranVarlikUrunAdi:string="";
 }  
-export  class ConnOzelSiparis {
+export  class OzelSiparisMaster {
   Id: number=0;
   Tarih: any;  
   SiparisTarih: any;  
   TeslimTarih: any;  
-  TeslimSaati: string="";  
+  TeslimSaati: any;  
   UrunKodu: string="";  
   UrunAdi: string="";  
   Birim: string="";  

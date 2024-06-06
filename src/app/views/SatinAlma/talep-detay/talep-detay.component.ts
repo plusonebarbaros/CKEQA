@@ -8,41 +8,40 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import moment from 'moment';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subject, ReplaySubject, takeUntil } from 'rxjs';
-import { StokGrupModel, GenelApi, EkranMesaj, IslemTipi, SehirModel, IlceModel } from 'src/app/services/GenelSrc';
+import { StokGrupModel, GenelApi, EkranMesaj, IslemTipi } from 'src/app/services/GenelSrc';
 import { KullaniciYetki, ConDepoYetki, KullaniciModel, KullaniciSrcService } from 'src/app/services/KullaniciSrc';
 import { NotifyService } from 'src/app/services/notify';
 import { ConnOlcuBirim, SabitservService } from 'src/app/services/SabitSrc';
-import { Items, Customer, ConnTalepIhtDurum, TalepsrcService, TalepMaster, ItemsFile } from 'src/app/services/SatinAlmaSrc';
-import { OzelSiparisMaster, OzelSiparisKalem, SiparisService } from 'src/app/services/SiparisSrc';
+import { TalepMaster, TalepDetail, Items, Customer, ConnTalepIhtDurum, TalepsrcService, ItemsFile } from 'src/app/services/SatinAlmaSrc';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
 
 @Component({
-  selector: 'app-ozel-siparis-detay',
-  templateUrl: './ozel-siparis-detay.component.html',
-  styleUrls: ['./ozel-siparis-detay.component.scss'],
+  selector: 'app-talep-detay',
+  templateUrl: './talep-detay.component.html',
+  styleUrls: ['./talep-detay.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers:[
     {provide:DatePipe},
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
   ]
 })
-export class OzelSiparisDetayComponent implements OnInit {
-  @ViewChild('gridTalepDetay', { static: false }) gridTalepDetay!: DxDataGridComponent;
+export class TalepDetayComponent implements OnInit {
+  @ViewChild('gridTalepDetay', { static: false }) grid!: DxDataGridComponent;
   @BlockUI() blockUI!: NgBlockUI;
   @Input() data:any;  
   yetki:KullaniciYetki; 
   lookupDataSource = {};
   date:any; 
-  master: OzelSiparisMaster;
-  talepdetay:OzelSiparisKalem[]=[]; 
-  kalemsecimlist:OzelSiparisKalem[]=[]; 
+  talepmaster: TalepMaster;
+  talepdetay:TalepDetail[]=[]; 
+  kalemsecimlist:TalepDetail[]=[]; 
   public userBranch:  any;
   public depolist: ConDepoYetki[]=[]; 
   kalemlist:Items[]=[]; 
   kalemkeyword:string=""; 
   silgoster:boolean=false;
   evrekyuklegoster:boolean=false;
-  secilidata:OzelSiparisKalem[]=[];
+  secilidata:TalepDetail[]=[];
   allMode: string="";
   checkBoxesMode: string="";
   selectedItemKeys: any[] = [];
@@ -54,31 +53,15 @@ export class OzelSiparisDetayComponent implements OnInit {
   talepid:number=0;
   Kontrol:boolean=false;
   stokgruplist: StokGrupModel[]=[]; 
-  secilikalem:OzelSiparisKalem;
+  secilikalem:TalepDetail;
   loguser:KullaniciModel;  
   olcubirimlist: ConnOlcuBirim[]=[];  
   talepihtdurumlist: ConnTalepIhtDurum[]=[]; 
-  sehirlist: SehirModel[]=[];  
-  ilcelist: IlceModel[]=[];   
-  teslimilcelist: IlceModel[]=[];   
-  
+
   protected _onDestroy = new Subject<void>();
 
   public formStokGrup: FormControl = new FormControl();
   public filterStokGrup: ReplaySubject<StokGrupModel[]> = new ReplaySubject<StokGrupModel[]>(1);
-  
-  public formSehir: FormControl = new FormControl();
-  public filterSehir: ReplaySubject<SehirModel[]> = new ReplaySubject<SehirModel[]>(1);
-
-  public formilce: FormControl = new FormControl();
-  public filterilcer: ReplaySubject<IlceModel[]> = new ReplaySubject<IlceModel[]>(1);
-
-  public formilceTeslim: FormControl = new FormControl();
-  public filterilcerTeslim: ReplaySubject<IlceModel[]> = new ReplaySubject<IlceModel[]>(1);
-
-
-  public formSube: FormControl = new FormControl();
-  public filterSube: ReplaySubject<ConDepoYetki[]> = new ReplaySubject<ConDepoYetki[]>(1);
 
 
   constructor(
@@ -86,7 +69,6 @@ export class OzelSiparisDetayComponent implements OnInit {
     private genelsrv:GenelApi,
     private alertify:NotifyService,
     private talepsrc:TalepsrcService,
-    private siparissrc:SiparisService,
     private kullanicisrc:KullaniciSrcService,
     private modalService: NgbModal,
     private confirmationDialogService: CofirmsrcService,
@@ -96,14 +78,14 @@ export class OzelSiparisDetayComponent implements OnInit {
     this.kalemkeyword="";
     this.allMode = 'allPages';
     this.checkBoxesMode = 'always';
+    this.yetki=new  KullaniciYetki();
     this.secilifirma=new Customer();
-    this.master = new OzelSiparisMaster();
-    this.yetki = this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0012")[0];
+    this.talepmaster = new TalepMaster();
    }   
 
    async TalepDetayGetir() {
     this.blockUI.start(EkranMesaj.Listele);
-       (await this.siparissrc.GetOzelSiparisDetay(this.master.Id)).subscribe(
+       (await this.talepsrc.getTalepDetayList(this.talepmaster.Id)).subscribe(
         data=>{
           this.blockUI.stop(); 
           if(!data.Success){
@@ -117,8 +99,8 @@ export class OzelSiparisDetayComponent implements OnInit {
 
   ngOnInit() {
     this.loguser = JSON.parse(sessionStorage.getItem('data')??"") as KullaniciModel;
-    const now = new Date();
 
+     this.yetki = this.data?.yetki; 
      this.Kontrol = this.data?.Kontrol ?? false;  
      let talepeden = this.loguser.AdSoyad;
      this.talepid =this.data._talepid;
@@ -126,98 +108,21 @@ export class OzelSiparisDetayComponent implements OnInit {
       this.GetKullaniciDepoYetki();
       this.GetStokGrup();
       this.GetStokOlcuBirim();
+      this.GetTalepIhtiyacDurum();
 
       this.formStokGrup.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterStokGrupList();});  
 
-      if(this.kullanicisrc.sehirlist!=null && this.kullanicisrc.sehirlist.length>0){
-        this.sehirlist  = this.kullanicisrc.sehirlist;
-        this.filterSehir.next(this.sehirlist.slice());
-      } 
-      this.formSehir.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterSehirList();});  
-      this.formilce.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterIlceList();});  
-      this.formilceTeslim.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterIlceTeslimList();});  
-      this.formSube.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterSubeList();});  
-
-
     if(this.talepid!=null && this.talepid>0){ 
-      this.GetOzelSiparisList(); 
+      this.TalepListele(); 
     }else  { 
-      this.master=new OzelSiparisMaster();
-      this.master.DurumId=0;
-      this.master.ErpSirket = this.loguser.AktifSirket;
-      this.master.Tarih=moment(new Date()).format("yyyy-MM-DD");
-      this.master.Ekleyen=talepeden; 
-      this.master.SehirKod="34"; 
-      this.master.TeslimSehirKod="34"; 
-      this.master.TeslimSaati = (now.getHours())+":00";
-      this.GetSehirListele(this.master.SehirKod,true);
-      this.GetTeslimSehirListele(this.master.TeslimSehirKod,true);
+      this.talepmaster=new TalepMaster();
+      this.talepmaster.AlimYapildi="H";
+      this.talepmaster.TalepTuru="T"; 
+      this.talepmaster.SapSirketId = this.loguser.AktifSirket;
+      this.talepmaster.Tarih=moment(new Date()).format("yyyy-MM-DD");
+      this.talepmaster.Ekleyen=talepeden; 
     }
   }
-
-  protected filterSubeList() {
-    if (!this.depolist) {
-      return;
-    } 
-    let search = this.formSube.value+"";
-    if (!search) {
-      this.filterSube.next(this.depolist.slice());
-      return;
-    } else {
-      search = search.toUpperCase();
-    } 
-    this.filterSube.next(
-      this.depolist.filter(item => item?.DepoAdi.toUpperCase().indexOf(search) > -1)
-    );
-  } 
-
-  protected filterSehirList() {
-    if (!this.sehirlist) {
-      return;
-    } 
-    let search = this.formSehir.value+"";
-    if (!search) {
-      this.filterSehir.next(this.sehirlist.slice());
-      return;
-    } else {
-      search = search.toUpperCase();
-    } 
-    this.filterSehir.next(
-      this.sehirlist.filter(item => (item?.Name??"").toUpperCase().indexOf(search) > -1)
-    );
-  } 
-
-  protected filterIlceList() {
-    if (!this.ilcelist) {
-      return;
-    } 
-    let search = this.formilce.value+"";
-    if (!search) {
-      this.filterilcer.next(this.ilcelist.slice());
-      return;
-    } else {
-      search = search.toUpperCase();
-    } 
-    this.filterilcer.next(
-      this.ilcelist.filter(item => item?.IlceAdi.toUpperCase().indexOf(search) > -1)
-    );
-  } 
-
-  protected filterIlceTeslimList() {
-    if (!this.teslimilcelist) {
-      return;
-    } 
-    let search = this.formilceTeslim.value+"";
-    if (!search) {
-      this.filterilcerTeslim.next(this.teslimilcelist.slice());
-      return;
-    } else {
-      search = search.toUpperCase();
-    } 
-    this.filterilcerTeslim.next(
-      this.teslimilcelist.filter(item => item?.IlceAdi.toUpperCase().indexOf(search) > -1)
-    );
-  } 
 
   async GetStokOlcuBirim()  {
     this.blockUI.start(EkranMesaj.Listele);
@@ -231,7 +136,8 @@ export class OzelSiparisDetayComponent implements OnInit {
           this.olcubirimlist=(data.List as ConnOlcuBirim[]).filter((x)=>x.Aktif);
         }
       )         
-  } 
+  }    
+
 
   ngOnDestroy(): void {
      this._onDestroy.next();
@@ -267,6 +173,7 @@ export class OzelSiparisDetayComponent implements OnInit {
       this.filterStokGrup.next(this.stokgruplist.slice());
    })  
   }
+
   
   defGrup(event: any) {
     this.StokGrupId = 0;
@@ -282,13 +189,24 @@ export class OzelSiparisDetayComponent implements OnInit {
         return;
       }
       this.depolist=data.List;  
-      this.filterSube.next(this.depolist.slice());
    })  
   }
 
-  async GetOzelSiparisList()  {
+  async GetTalepIhtiyacDurum() {
+    this.blockUI.start("Depo Yetki Okunuyor...");
+    (await this.talepsrc.GetTalepIhtiyacDurum()).subscribe((data)=>{  
+      this.blockUI.stop();  
+      if(!data.Success){
+        this.alertify.warning(data.Message);
+        return;
+      }
+      this.talepihtdurumlist=data.List;  
+   })  
+  }
+
+  async TalepListele()  {
     this.blockUI.start(EkranMesaj.Listele);
-      (await this.siparissrc.GetOzelSiparisList(this.talepid,"A",new Date(),new Date(),this.Kontrol)).subscribe(
+      (await this.talepsrc.getTalepList(this.talepid,"A",new Date(),new Date(),this.Kontrol)).subscribe(
         data=>{
           this.blockUI.stop(); 
           if(!data.Success){
@@ -300,79 +218,31 @@ export class OzelSiparisDetayComponent implements OnInit {
             return;
           }
           
-          this.master=data.List[0];    
+          this.talepmaster=data.List[0];    
           this.TalepDetayGetir();
-
-          this.GetSehirListele(this.master.SehirKod,this.master.SehirKod==""?true:false);
-          this.GetTeslimSehirListele(this.master.TeslimSehirKod,this.master.TeslimSehirKod==""?true:false);
-    
         }
       )     
   } 
    
   async kaydet(tumu:boolean){
-    if(this.master.MusteriAdi=="" || this.master.MusteriAdi==null){
-      this.alertify.warning("Müşteri Adı Alanı Zorunludur");
-      return;
-    }
-    if(this.master.Gsm=="" || this.master.Gsm==null){
-      this.alertify.warning("Müşteri Cep Telefon Alanı Zorunludur");
-      return;
-    }
-    if(this.master.Adres=="" || this.master.Adres==null){
-      this.alertify.warning("Müşteri Adres Alanı Zorunludur");
-      return;
-    }
-    if(this.master.SehirKod=="" || this.master.SehirKod==null){
-      this.alertify.warning("Müşteri Şehir Alanı Zorunludur");
-      return;
-    }
-    if(this.master.IlceKod<=0){
-      this.alertify.warning("Müşteri İlçe Alanı Zorunludur!");
-      return;
-    } 
-    if(this.master.TeslimatSubeId=="" || this.master.TeslimatSubeId==null){
-      this.alertify.warning("Teslimat Şube Seçimi Zorunludur");
-      return;
-    }
-    if(this.master.TeslimatKisi=="" || this.master.TeslimatKisi==null){
-      this.alertify.warning("Teslimat Kişi Alanı Zorunludur");
-      return;
-    }
-    if(this.master.TeslimatGsm=="" || this.master.TeslimatGsm==null){
-      this.alertify.warning("Teslimat Cep Telefon Alanı Zorunludur");
-      return;
-    }
-    if(this.master.TeslimTarih=="" || this.master.TeslimTarih==null){
-      this.alertify.warning("Teslimat Tarih Alanı Zorunludur");
-      return;
-    }
-    if(this.master.TeslimatAdres=="" || this.master.TeslimatAdres==null){
-      this.alertify.warning("Teslimat Adres Alanı Zorunludur");
-      return;
-    }
-    if(this.master.TeslimSehirKod=="" || this.master.TeslimSehirKod==null){
-      this.alertify.warning("Teslimat Şehir Alanı Zorunludur");
-      return;
-    }
-    if(this.master.TeslimIlceKod<=0){
-      this.alertify.warning("Teslimat İlçe Alanı Zorunludur!");
-      return;
-    } 
-     
-    if(this.talepdetay.length<=0){
+    if(this.kalemsecimlist.length<=0){
       this.alertify.warning("Malzeme Eklenmeden Kayıt İşlemi Yapılamaz!");
       return;
-    }  
+    } 
+
+    if(this.talepmaster.AlimYapildi=="E" && this.talepmaster.FirmaKodu==""){
+      this.alertify.warning("Alım Yapıldı İşlemlerinde Firma Seçimi Zorunludur!");
+      return;
+    } 
      this.blockUI.start("Kayıt Başladı...");
-        var sonuc = await this.siparissrc.OzelSiparisOluttur(this.master,this.talepdetay,this.master.Id>0?IslemTipi.Guncelle:IslemTipi.Ekle);
+        var sonuc = await this.talepsrc.SatinAlmaTalepOlustur(this.talepmaster,this.kalemsecimlist,this.talepmaster.Id>0?IslemTipi.Guncelle:IslemTipi.Ekle);
        if(sonuc.Success==true){
           this.alertify.success("Talep Oluşturuldu!") ;
           this.kalemsecimlist=[];
 
-          if(this.master.Id<=0){
-            this.master.Id=sonuc.Id;
-            this.master.validkey=sonuc.ValidKey;
+          if(this.talepmaster.Id<=0){
+            this.talepmaster.Id=sonuc.Id;
+            this.talepmaster.validkey=sonuc.ValidKey;
           } 
 
           this.TalepDetayGetir();
@@ -390,10 +260,16 @@ export class OzelSiparisDetayComponent implements OnInit {
   }
 
   kalemEklemod(content:any){  
-    this.kalemlist=[];
-    this.kalemkeyword=""; 
-    this.StokGrupId=0;
-    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
+    if(this.talepmaster.Aciklama==""|| this.talepmaster.Aciklama==undefined){
+      this.alertify.warning("Talep Nedeni Alanı Zorunludur!");
+      return;
+    }
+    else{
+      this.kalemlist=[];
+      this.kalemkeyword=""; 
+      this.StokGrupId=0;
+      this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
+    }
   }  
   
   async kalemAra(ev:any){ 
@@ -404,7 +280,7 @@ export class OzelSiparisDetayComponent implements OnInit {
 
     if (ev.keyCode === 13 && this.kalemkeyword!="") {
       this.blockUI.start(EkranMesaj.Listele);
-      var sonuc = await this.genelsrv.GetStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"","",this.StokGrupId);
+      var sonuc = await this.genelsrv.GetStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.talepmaster.TalepTuru,this.StokGrupId);
       this.blockUI.stop(); 
       if(sonuc.Success){
         this.kalemlist=sonuc.List;
@@ -417,7 +293,7 @@ export class OzelSiparisDetayComponent implements OnInit {
 
   async kalemAraDef(){
     this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.genelsrv.GetStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"","",this.StokGrupId);
+    var sonuc = await this.genelsrv.GetStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.talepmaster.TalepTuru,this.StokGrupId);
     this.blockUI.stop(); 
     if(sonuc.Success){
       this.kalemlist=sonuc.List;
@@ -452,22 +328,22 @@ export class OzelSiparisDetayComponent implements OnInit {
 
     list.forEach(item=> {
      if(item.DepoKodu=="" || item.DepoKodu==null){
-      this.alertify.warning("Miktar Girilen Satırlarda Şube Seçimi Zorunludur! => " + item.ItemName );
+      this.alertify.warning("Miktar Girilen Satırlarda Depo Seçimi Zorunludur! => " + item.ItemName );
       devam=false;
       return;
      }
      if(item.BirimId<=0){
-      this.alertify.warning("Miktar Girilen Satırlarda Birim Seçimi Zorunludur! => " + item.ItemName );
+      this.alertify.warning("Miktar Girilen Satırlarda Depo Seçimi Zorunludur! => " + item.ItemName );
       devam=false;
       return;
      }
      if(item.BirimTutar<=0 || item.BirimTutar==undefined || item.BirimTutar==null){
-      this.alertify.warning("Birim Tutar Sıfırdan Büyük Olmalıdır! => " + item.ItemName );
+      this.alertify.warning("Tahmini Tutar Sıfırdan Büyük Olmalıdır! => " + item.ItemName );
       devam=false;
       return;
      }
      if(item.Aciklama=="" || item.Aciklama==null || item.Aciklama==undefined){
-      this.alertify.warning("Hizmet/Açıklama Alanı Zorunludur! => " + item.ItemName );
+      this.alertify.warning("Açıklama Alanı Zorunludur! => " + item.ItemName );
       devam=false;
       return;
      }
@@ -475,16 +351,15 @@ export class OzelSiparisDetayComponent implements OnInit {
 
     if(devam){
       list.forEach(item=> {  
-        let td=new OzelSiparisKalem();
-        td.Id=0;
+        let td=new TalepDetail();
         td.Miktar=item.Miktar; 
-        td.UrunKodu=item.ItemCode;
-        td.UrunAdi=item.ItemName;
+        td.StokKodu=item.ItemCode;
+        td.StokAdi=item.ItemName;
         td.DepoKodu=item.DepoKodu; 
         td.DepoStok=0; 
         td.Aciklama=item.Aciklama;
         td.SatirGuid = this.genelsrv.GuidGenerator();
-        td.SapSirketId=this.master.ErpSirket;    
+        td.SapSirketId=this.talepmaster.SapSirketId;    
         td.BirimTutar=item.BirimTutar;     
         td.ToplamTutar=item.BirimTutar * item.Miktar;     
         td.BelgeBase64=item.BelgeBase64;     
@@ -495,10 +370,9 @@ export class OzelSiparisDetayComponent implements OnInit {
         td.Files=item.Files;  
         td.Base64List=item.Base64List;  
         td.TalepDurumId=item.TalepDurumId;  
-        this.talepdetay.push(td);
+        this.kalemsecimlist.push(td);
       }); 
-      // this.kaydet(false); 
-      this.modalService.dismissAll();
+      this.kaydet(false); 
     }
   }
 
@@ -523,7 +397,7 @@ export class OzelSiparisDetayComponent implements OnInit {
   async CellDegisti(e:any){ 
     e.data.ToplamTutar  = e.data.BirimTutar * e.data.Miktar;  
     this.blockUI.start("Kayıt Başladı...");
-    var sonuc = await this.siparissrc.OzelSiparisSatirGuncelle(e.data);
+    var sonuc = await this.talepsrc.TalepSatirGuncelle(e.data);
     if(sonuc.Success==true){  
         this.TalepDetayGetir();
     } 
@@ -536,14 +410,14 @@ export class OzelSiparisDetayComponent implements OnInit {
 
 tekraronaygoster:boolean=false;
 silgosterChanged(e:any){
-  let silinecekler  = this.gridTalepDetay.instance.getSelectedRowsData();
+  let silinecekler  = this.grid.instance.getSelectedRowsData();
   this.selectedItemKeys = e.selectedRowKeys;
   this.tekraronaygoster=false;
 
   if (silinecekler!=null && silinecekler.length==1){
     this.silgoster=true;
     this.evrekyuklegoster=true;
-    this.secilikalem = silinecekler[0] as OzelSiparisKalem;
+    this.secilikalem = silinecekler[0] as TalepDetail;
     this.secilidata = silinecekler; 
 
     if(this.secilikalem.DurumId===3){
@@ -553,13 +427,13 @@ silgosterChanged(e:any){
   else if (silinecekler!=null && silinecekler.length>1){
     this.silgoster=true;
     this.evrekyuklegoster=false;
-    this.secilikalem =new OzelSiparisKalem();
+    this.secilikalem =new TalepDetail();
     this.secilidata = silinecekler; 
   }
   else {
     this.silgoster=false;
     this.evrekyuklegoster=false;
-    this.secilikalem =new OzelSiparisKalem();
+    this.secilikalem =new TalepDetail();
     this.secilidata=[];
    }
 }
@@ -571,8 +445,8 @@ firmaSec(content:any){
 } 
 
 firmaSecimYap(){ 
-  // this.master.FirmaKodu=this.secilifirma.FirmaKodu;   
-  // this.master.FirmaAdi=this.secilifirma.FirmaAdi;    
+  this.talepmaster.FirmaKodu=this.secilifirma.FirmaKodu;   
+  this.talepmaster.FirmaAdi=this.secilifirma.FirmaAdi;    
 
   document.getElementById("finhspkapat")?.click();  
 }
@@ -585,8 +459,8 @@ onFirmaChg(e:any){
 }
 
 firmaTemizle(){
-  // this.master.FirmaKodu="";  
-  // this.master.FirmaAdi="";  
+  this.talepmaster.FirmaKodu="";  
+  this.talepmaster.FirmaAdi="";  
   }
 
  async firmaAra(ev:any){ 
@@ -613,7 +487,7 @@ firmaTemizle(){
     this.firmalist=[];
  }
 
-  onaytakip(content:any,data:OzelSiparisKalem){
+  onaytakip(content:any,data:TalepDetail){
     if(data.OnayId<=0){
       this.alertify.warning("Onay Bilgisi Okunamadı!");
       return;
@@ -625,7 +499,7 @@ firmaTemizle(){
 
   async formYazdir(content:any){
     var devam=true;
-    if(this.master==null || this.master.Id<=0){
+    if(this.talepmaster==null || this.talepmaster.Id<=0){
       this.alertify.warning("Seçim Yapılmadı!");
       devam=false;
       return;
@@ -633,7 +507,7 @@ firmaTemizle(){
 
     if (devam){
       this.blockUI.start(EkranMesaj.Listele); 
-      var sonuc = await this.siparissrc.OzelSiparisFormYazdir(this.master,2);
+      var sonuc = await this.talepsrc.TalepFormYazdir(this.talepmaster,2);
         if(sonuc.Success==true){ 
           this.pdfdata = this.sanitizer.bypassSecurityTrustResourceUrl('data:application/pdf;base64,' + sonuc.Message);
          this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' });  
@@ -688,7 +562,7 @@ firmaTemizle(){
     {
       if(confirmed.sonuc==true)  {
         this.blockUI.start(EkranMesaj.Kaydet);
-        var sonuc = await this.siparissrc.OzelSiparisOluttur(this.master,this.secilidata,IslemTipi.KalemSil);
+        var sonuc = await this.talepsrc.SatinAlmaTalepOlustur(this.talepmaster,this.secilidata,IslemTipi.KalemSil);
         if(sonuc.Success==true){
             this.alertify.success(EkranMesaj.KayitTamamlandi);  
             this.TalepDetayGetir();  
@@ -702,7 +576,43 @@ firmaTemizle(){
     }); 
   }
 
-  tarihceDetay(content:any,data:OzelSiparisKalem){
+  TekrarOnayAciklama:string="";
+  tekraronayMod(content:any){
+    this.TekrarOnayAciklama="";
+    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss40', backdrop: 'static' });  
+  }
+
+  tekraronay(){
+    if(this.secilikalem==null || this.secilikalem.Id<=0){
+      this.alertify.warning("Listeden Seçim Yapınız!") 
+      return;
+    }
+    if(this.TekrarOnayAciklama==null || this.TekrarOnayAciklama==""){
+      this.alertify.warning("Açıklama Alanı Zorunludur!") 
+      return;
+    } 
+  
+    this.confirmationDialogService.confirm('Tekrar Onay','Seçili Kalem Tekrar Onaya Gönderilecek, Devam Edilsin mi?')
+    .then(async (confirmed:any) => 
+    {
+      if(confirmed.sonuc==true)  {
+        this.blockUI.start(EkranMesaj.Kaydet);
+        var sonuc = await this.talepsrc.SatinAlmaTalepTekrarOnay(this.secilikalem,this.TekrarOnayAciklama);
+        if(sonuc.Success==true){
+            this.alertify.success(EkranMesaj.KayitTamamlandi);  
+            this.modalService.dismissAll();
+            this.TalepDetayGetir();  
+          } else{
+            this.alertify.warning(sonuc.Message);
+          }
+          this.blockUI.stop();  
+      }
+    })
+    .catch(() => { 
+    }); 
+  }
+
+  tarihceDetay(content:any,data:TalepDetail){
     this.secilikalem=data;
     this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss45', backdrop: 'static' });   
   }  
@@ -716,29 +626,5 @@ firmaTemizle(){
        if(e.column.dataField === "Aciklama") e.cellElement.classList.add("datagiriscolor");
     }
   }
-
-  onSehirChg(e:any){
-    this.GetSehirListele(e.value,true);
-  } 
-
-  GetSehirListele(e:any,reset:boolean){
-    this.ilcelist=[];
-    if(reset)this.master.IlceKod=0;
-    this.ilcelist = this.kullanicisrc.ilcelist.filter((x)=>x.IlId==e);
-    this.filterilcer.next(this.ilcelist.slice());
-  }
-
-  GetTeslimSehirListele(e:any,reset:boolean){
-    this.teslimilcelist=[];
-    if(reset)this.master.IlceKod=0;
-    this.teslimilcelist = this.kullanicisrc.ilcelist.filter((x)=>x.IlId==e);
-    this.filterilcerTeslim.next(this.teslimilcelist.slice());
-  }
-
-  onSehirTeslimChg(e:any){
-    this.teslimilcelist=[];
-    this.teslimilcelist = this.kullanicisrc.ilcelist.filter((x)=>x.IlId==e.value);
-    this.filterilcerTeslim.next(this.teslimilcelist.slice());
-  } 
 
 }

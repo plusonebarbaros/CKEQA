@@ -1,0 +1,359 @@
+
+<div class="content">
+    <mat-tab-group  [selectedIndex]="0" (selectedTabChange)="tabsec($event)" animationDuration="0ms">
+      <mat-tab label="Onay Süreci" >
+          <nav class="menu-navigation-icons">
+              <a href="#" class="menu-silver" (click)="DataLoad()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+              <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="surecekle(usermodal,1)"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a> 
+              <a href="#" class="menu-red" *ngIf="this.surecsilgoster && yetki.Sil" (click)="surecsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a> 
+          </nav>
+          <div style="clear:both"></div>
+          <dx-data-grid class="devgrid30" #gridOnay1
+          [dataSource]="onaysureclist"
+          [showBorders]="true"
+          [showColumnLines]="false"
+          [showRowLines]="true" 
+          [rowAlternationEnabled]="true"
+          [focusedRowEnabled]="true"
+          [columnAutoWidth]="true"
+          [allowColumnResizing]="true"
+          keyExpr="Id" 
+          columnResizingMode = "widget" 
+          [allowColumnReordering]="true" 
+          (onRowUpdated)="CellDegisti($event)"  
+          (onSelectionChanged)="onaySurecSilChg($event)"
+          > 
+          <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+          <dxo-load-panel [enabled]="true"></dxo-load-panel>
+          <dxo-editing mode="cell"[allowUpdating]="true" ></dxo-editing>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-selection
+          [selectAllMode]="allMode"
+          [showCheckBoxesMode]="checkBoxesMode"
+          mode="multiple"
+      ></dxo-selection>
+  
+          <dxi-column dataField="Id" caption="Id" [style.width.%]="10" alignment="center" [visible]="false" [allowEditing]="false"  aligment="center"></dxi-column>          
+          <dxi-column dataField="Sira" caption="Sıra" [width]="75" alignment="center" aligment="center"></dxi-column>      
+          <dxi-column dataField="TipStr" caption="Tip" [style.width.%]="10" [allowEditing]="false" aligment="center"></dxi-column>             
+          <dxi-column dataField="AdSoyad" caption="Sorumlu" [style.width.%]="10" [allowEditing]="false"></dxi-column> 
+          <dxi-column dataField="Birim" caption="Birim" [style.width.%]="10" [allowEditing]="false"></dxi-column> 
+          <dxi-column dataField="CiftOnayVarmi" caption="Çift Onay" cellTemplate="cellCiftOnayVarmi" [width]="100" alignment="center"></dxi-column>
+          <div *dxTemplate="let cell of 'cellCiftOnayVarmi'">
+              <span *ngIf="cell.value===1" class="badge pill-medium badge-success">Evet</span>
+              <span *ngIf="cell.value===0" class="badge pill-medium badge-danger">Hayır</span>
+          </div>
+          <dxi-column caption="Alt Limit €" dataField="AltLimit" [style.width.%]="10" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+          <dxi-column caption="Alt Operator" dataField="AltOperator" [width]="75" aligment="center">         
+              <dxo-lookup [dataSource]="operatorlist" ></dxo-lookup>
+          </dxi-column>
+          <dxi-column caption="Üst Limit €" dataField="UstLimit" [style.width.%]="10" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+          <dxi-column caption="Üst Operator" dataField="UstOperator" [width]="75" aligment="center">         
+            <dxo-lookup [dataSource]="operatorlist" ></dxo-lookup>
+          </dxi-column>
+  
+          </dx-data-grid> 
+      </mat-tab>
+       <mat-tab label="Onay Dışı">
+          <nav class="menu-navigation-icons">
+              <a href="#" class="menu-silver" (click)="DataLoad()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+              <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="surecekle(usermodal,2)"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a> 
+              <a href="#" *ngIf="this.onaydisisilgoster && yetki.Sil" class="menu-red"  (click)="onaydisisil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a> 
+  
+          </nav>
+          <div style="clear:both"></div>
+          <dx-data-grid class="devgrid30" #gridOnay2
+          [dataSource]="onaydisilist"
+          [showBorders]="true"
+          [showColumnLines]="false"
+          [showRowLines]="true" 
+          [rowAlternationEnabled]="true"
+          [focusedRowEnabled]="true"
+          [columnAutoWidth]="true"
+          [allowColumnResizing]="true"
+          keyExpr="Id" 
+          columnResizingMode = "widget" 
+          [allowColumnReordering]="true"  
+          (onSelectionChanged)="onayDisiSilChg($event)"
+          > 
+          <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+          <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-selection
+              [selectAllMode]="allMode"
+              [showCheckBoxesMode]="checkBoxesMode"
+              mode="multiple"
+          ></dxo-selection>
+  
+         <dxi-column dataField="Id" caption="Id" [style.width.%]="10" alignment="center" [visible]="false" [allowEditing]="false"  aligment="center"></dxi-column>          
+          <dxi-column dataField="AdSoyad" caption="Sorumlu" [style.width.%]="10" [allowEditing]="false"></dxi-column> 
+  
+  
+           </dx-data-grid> 
+      </mat-tab>
+      <mat-tab label="Yönlendirme">
+          <nav class="menu-navigation-icons">
+              <a href="#" class="menu-silver" (click)="DataLoad()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+              <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="surecekle(usermodal,3)"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a> 
+              <a href="#" *ngIf="this.yonlendirsilgoster && yetki.Sil" class="menu-red"  (click)="yonlendirsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a> 
+          </nav>
+          <div style="clear:both"></div>
+          <dx-data-grid class="devgrid30" #gridOnay3
+          [dataSource]="onayyonlendirmelist"
+          [showBorders]="true"
+          [showColumnLines]="false"
+          [showRowLines]="true" 
+          [rowAlternationEnabled]="true"
+          [focusedRowEnabled]="true"
+          [columnAutoWidth]="true"
+          [allowColumnResizing]="true"
+          keyExpr="Id" 
+          columnResizingMode = "widget" 
+          [allowColumnReordering]="true" 
+          (onSelectionChanged)="onayYonlendirSilChg($event)" 
+          > 
+          <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+          <dxo-load-panel [enabled]="true"></dxo-load-panel>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-selection
+              [selectAllMode]="allMode"
+              [showCheckBoxesMode]="checkBoxesMode"
+              mode="multiple"
+          ></dxo-selection>
+  
+          <dxi-column dataField="Id" caption="Id" [style.width.%]="10" alignment="center" [visible]="false" [allowEditing]="false"  aligment="center"></dxi-column>          
+          <dxi-column dataField="AdSoyad" caption="Sorumlu" [style.width.%]="10" [allowEditing]="false"></dxi-column> 
+    
+          </dx-data-grid> 
+      </mat-tab>
+  </mat-tab-group>  
+  
+  <div style="margin-bottom: 10px;"></div>
+  
+  
+  <div  style="float: left;width: 49%!important;margin-right: 10px;">
+  <nav class="menu-navigation-icons">
+      <a href="#" class="menu-silver" (click)="DataLoad()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+      <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="onaysurekuralekle(onaysureckrlmod)"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a> 
+      <a href="#" class="menu-red" *ngIf="this.kuralsilgoster && yetki.Sil" (click)="kuralsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a> 
+  </nav>
+  <div style="clear:both"></div>
+      <label for="">Onay Kuralları</label>
+      <dx-data-grid class="devgrid30" #gridOnay4
+      [dataSource]="onaysureckurallist"
+      [showBorders]="true"
+      [showColumnLines]="false"
+      [showRowLines]="true" 
+      [rowAlternationEnabled]="true"
+      [focusedRowEnabled]="true"
+      [columnAutoWidth]="true"
+      [allowColumnResizing]="true"
+      keyExpr="Id" 
+      columnResizingMode = "widget" 
+      [allowColumnReordering]="true" 
+      (onSelectionChanged)="onayKuralSilChg($event)"  
+      > 
+      <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>
+      <dxo-selection
+      [selectAllMode]="allMode"
+      [showCheckBoxesMode]="checkBoxesMode"
+      mode="multiple"
+  ></dxo-selection>
+  
+  <dxi-column [style.width.%]="10" caption="Tanım" dataField="KuralTanim" ></dxi-column>   
+  <dxi-column [style.width.%]="10" caption="Tablo" dataField="Tablo" alignment="center"></dxi-column>   
+  <dxi-column [style.width.%]="10" caption="Alan" dataField="Alan" alignment="center"></dxi-column>   
+  <dxi-column [style.width.%]="10" caption="Değer" dataField="Deger" alignment="center"></dxi-column>   
+  
+  
+  </dx-data-grid> 
+  </div>
+  
+  <div  style="float: left;width: 49%!important;">
+  <nav class="menu-navigation-icons">
+      <a href="#" class="menu-silver" (click)="DataLoad()" ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+      <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="onayciftmodal(onayciftkuralmod)"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a> 
+      <a href="#" class="menu-red" *ngIf="this.ciftonaysilgoster && yetki.Sil" (click)="ciftonaysil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a> 
+  </nav>
+  <div style="clear:both"></div>
+      <label for="">Çift Onay</label>
+      <dx-data-grid class="devgrid30" #gridOnay5
+      [dataSource]="ciftonaykurallist"
+      [showBorders]="true"
+      [showColumnLines]="false"
+      [showRowLines]="true" 
+      [rowAlternationEnabled]="true"
+      [focusedRowEnabled]="true"
+      [columnAutoWidth]="true"
+      [allowColumnResizing]="true"
+      keyExpr="Id" 
+      columnResizingMode = "widget" 
+      [allowColumnReordering]="true"  
+      (onSelectionChanged)="onayCiftSilChg($event)" 
+      > 
+      <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-header-filter [allowSearch]="true"></dxo-header-filter>  
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>
+      <dxo-selection
+      [selectAllMode]="allMode"
+      [showCheckBoxesMode]="checkBoxesMode"
+      mode="multiple"
+  ></dxo-selection>
+  
+  <dxi-column dataField="Id" caption="Id" [style.width.%]="10" alignment="center" [visible]="false" [allowEditing]="false"  aligment="center"></dxi-column>          
+  <dxi-column dataField="Sira" caption="Sıra" [width]="75" alignment="center" [allowEditing]="false"  aligment="center"></dxi-column>      
+  <dxi-column dataField="KuralStr" caption="Kural" [style.width.%]="10" [allowEditing]="false"  aligment="center"> </dxi-column>             
+  
+  
+      </dx-data-grid> 
+  </div> 
+  </div>
+  
+  
+  <ng-template #onayciftkuralmod let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Onay Kullanıcı Seçim</h4> 
+    </div>
+    <div class="modal-body">
+      <div> 
+        <select class="browser-default custom-select" [(ngModel)]="OnayCiftKural" name="OnayCiftKural" [style.width.%]="100">
+          <option value="1">Ve</option>
+          <option value="2">Veya</option> 
+        </select>
+      </div>
+  
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
+      <button type="button" class="btn btn-success" (click)="onayciftkuralekle()">Kaydet</button>
+    </div>
+  </ng-template> 
+  
+  <ng-template #onaysureckrlmod let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Onay Süreç Kural Tanım</h4> 
+    </div>
+    <div class="modal-body"> 
+        <div class="row">
+          <mat-form-field appearance="outline" [style.width.%]="100" >
+            <mat-label>Kural</mat-label>
+            <mat-select [(ngModel)]="secilikural.KuralId" name="KuralId">
+              <mat-option *ngFor="let kr of onaykurallist" [value]="kr.Id">
+                {{kr.KuralTanim}} - {{kr.Tablo}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> 
+        </div>  
+        <div class="row">
+            <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Değer</mat-label>
+                <input matInput placeholder="Deger" [(ngModel)]="secilikural.Deger" type="text" autocomplete="off">
+            </mat-form-field>  
+        </div>  
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
+      <button type="button" class="btn btn-success" (click)="sureckuralkaydet()">Kaydet</button>
+    </div>
+  </ng-template>
+  
+  <ng-template #usermodal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Onay Kullanıcı Seçim</h4> 
+    </div>
+    <div class="modal-body">
+      <div> 
+        <select class="browser-default custom-select" [(ngModel)]="onaytip" name="onaytip" (change)="onaytipdegisti()">
+          <option value="K">Kullanıcı</option>
+          <option [hidden]="onaybolum!=1" value="B">Pozisyon</option>
+          <option [hidden]="onaybolum!=1" value="D1">Departman</option> 
+          <option [hidden]="onaybolum!=1" value="D3">Diğer</option>
+          <option [hidden]="onaybolum!=1" value="M">Manuel</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 10px;"></div>
+  
+      <dx-data-grid class="devgrid30"  #dataGridRef2
+      [dataSource]="onaysecimlist"
+      [showBorders]="true"
+      [showRowLines]="true" 
+      [showColumnLines]="false"
+      [showRowLines]="true" 
+      [rowAlternationEnabled]="true"
+      [focusedRowEnabled]="true"
+      [columnAutoWidth]="true"
+      [allowColumnResizing]="true"
+      keyExpr="Id" 
+      columnResizingMode = "widget" 
+      [allowColumnReordering]="true"  
+      (onSelectionChanged)="onSelectionChanged($event)"
+      > 
+      <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>
+      <dxo-selection mode="single"></dxo-selection>
+      <dxo-scrolling 
+        mode="virtual"
+        showScrollbar="'always'"
+        useNative="false"
+        scrollByThumb="true" >
+      </dxo-scrolling> 
+      <dxo-paging [pageSize]="30"> </dxo-paging>
+      <dxo-pager
+          [visible]="true"
+          displayMode="'compact'"
+          [showPageSizeSelector]="false"
+          [showInfo]="true"
+          [showNavigationButtons]="true">
+      </dxo-pager>
+      <dxo-selection
+          [selectAllMode]="allMode"
+          [showCheckBoxesMode]="checkBoxesMode"
+          mode="multiple"
+      ></dxo-selection>
+  
+       <dxi-column 
+              dataField="Id"  
+              caption="Id" [width]="15+'%'" alignment="center" [visible]="false"> 
+          </dxi-column>   
+  
+       <dxi-column  
+       dataField="Name"  
+       caption="Ad" [width]="35+'%'" >
+       </dxi-column>         
+  
+      <dxi-column  
+      dataField="Ek1"  
+      caption="Ek1" [width]="30+'%'" >
+      </dxi-column>    
+  
+      
+      <dxi-column  
+      dataField="Ek2"  
+      caption="Ek2" [width]="30+'%'" >
+      </dxi-column>    
+      
+      </dx-data-grid>  
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Vazgeç</button>
+      <button type="button" class="btn btn-success" (click)="onaykullanicisec()">Seçim Yap</button>
+    </div>
+  </ng-template>

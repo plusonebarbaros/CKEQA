@@ -25,7 +25,6 @@ import { LoadingComponent } from './loading/loading.component';
 import { GenelApi, EkranMesaj, MenuExapand, IlceModel, SehirModel, UlkeModel } from './services/GenelSrc';
 import { KullaniciModel, KullaniciSrcService, FilterMod, KullaniciYetki, KulSirketYetki, User } from './services/KullaniciSrc';
 import { StokAramaComponent } from './views/Stok/stok-arama/stok-arama.component';
-import { RafBulmaComponent } from './views/Stok/raf-bulma/raf-bulma.component';
 import { SiparisAktarmaComponent } from './views/Siparis/siparis-aktarma/siparis-aktarma.component';
 import { KullaniciComponent } from './views/Yonetim/kullanici/kullanici.component';
 import { GrupYetkiComponent } from './views/Yonetim/grup-yetki/grup-yetki.component';
@@ -33,6 +32,14 @@ import { KullaniciPozisyonComponent } from './views/Yonetim/kullanici-pozisyon/k
 import { KullaniciDepartmanComponent } from './views/Yonetim/kullanici-departman/kullanici-departman.component';
 import { IrsaliyeAktarmaComponent } from './views/Siparis/irsaliye-aktarma/irsaliye-aktarma.component';
 import { OzelSiparisComponent } from './views/Siparis/ozel-siparis/ozel-siparis.component';
+import { OnayKategoriDetayComponent } from './views/Onay/onay-kategori-detay/onay-kategori-detay.component';
+import { OnayKategoriComponent } from './views/Onay/onay-kategori/onay-kategori.component';
+import { OnayKuralComponent } from './views/Onay/onay-kural/onay-kural.component';
+import { OnayTanimComponent } from './views/Onay/onay-tanim/onay-tanim.component';
+import { TalepComponent } from './views/SatinAlma/talep/talep.component';
+import { TransferComponent } from './views/SatinAlma/transfer/transfer.component';
+import { BekleyenOnayComponent } from './views/Onay/bekleyen-onay/bekleyen-onay.component';
+import { OnayGecmisComponent } from './views/Onay/onay-gecmis/onay-gecmis.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -180,6 +187,14 @@ export class AppComponent implements OnInit,AfterViewInit {
     else if(tabid==5)this.tabService.addTab(new Tab(KullaniciDepartmanComponent, "Departman Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0010")[0]},tabid));
     else if(tabid==6)this.tabService.addTab(new Tab(KullaniciPozisyonComponent, "Pozisyon Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0011")[0]},tabid));
     else if(tabid==7)this.tabService.addTab(new Tab(OzelSiparisComponent, "Özel Sipariş", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0012")[0]},tabid));
+    else if(tabid==8)this.tabService.addTab(new Tab(OnayKategoriComponent, "Onay Kategori Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0014")[0]},tabid));
+    else if(tabid==9)this.tabService.addTab(new Tab(OnayKategoriDetayComponent, "Onay Kategori Detay Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0015")[0]},tabid));
+    else if(tabid==10)this.tabService.addTab(new Tab(OnayKuralComponent, "Onay Kural Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0016")[0]},tabid));
+    else if(tabid==11)this.tabService.addTab(new Tab(OnayTanimComponent, "Onay Süreç Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0017")[0]},tabid));
+    else if(tabid==12)this.tabService.addTab(new Tab(TalepComponent, "Satın Alma Talep", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0018")[0]},tabid));
+    else if(tabid==13)this.tabService.addTab(new Tab(TransferComponent, "Depo Transfer", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0019")[0]},tabid));
+    else if(tabid==14)this.tabService.addTab(new Tab(BekleyenOnayComponent, "Bekleyen Onaylar", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0020")[0]},tabid));
+    else if(tabid==15)this.tabService.addTab(new Tab(OnayGecmisComponent, "Onay Geçmiş", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0021")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }

@@ -1,92 +1,91 @@
  
 
     <div class="modal-body"> 
-        <div class="row">
-     
-         <input  name="Dosya Seçiniz" title="Dosya Seçiniz" type="file" id="onszbelgeupl" multiple class="form-control" (change)="uploadFile($event)" [style.width.%]="100"/>
-     
-         <!-- <mat-form-field appearance="outline" [style.width.%]="34" style="margin-top: 2px;">
-           <mat-label>Belge Tipi</mat-label>
-               <mat-select [(ngModel)]="BelgeTipId" name="BelgeTipId" >
-                 <mat-option *ngFor="let secsube of belgetiplist" [value]="secsube.Id">
-                   {{secsube.Tanim}}
-                 </mat-option>
-               </mat-select>
-             </mat-form-field>  -->
-         
-       </div>
-       <div style="clear:both;margin-bottom:15px!important"></div>  
- 
-           <dx-data-grid  
-       class="gridBelgeGList" class="devgrid30"
-       [dataSource]="belgelist"
-       [showBorders]="true"
-       [remoteOperations]="true"
-       [showColumnLines]="false"
-       [showRowLines]="true" 
-       [rowAlternationEnabled]="true"
-       [focusedRowEnabled]="true"
-       [columnAutoWidth]="true"
-       [allowColumnResizing]="true"
-       keyExpr="Id" 
-       columnResizingMode = "widget" 
-       [allowColumnReordering]="true" 
-       > 
-       <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
-       <dxo-filter-row [visible]="true"></dxo-filter-row>
-       <dxo-header-filter [visible]="true"></dxo-header-filter>
-       <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
-       <dxo-paging [enabled]="false"></dxo-paging>
-       <dxo-load-panel [enabled]="true"></dxo-load-panel>   
-       
-       <dxi-column dataField="Id"  [visible]="false" caption="Id" [width]="15+'%'"></dxi-column>  
- 
-       <dxi-column dataField="EvrakTipi" caption="Evrak Tipi" cellTemplate="cellEvrakTipi" [style.width.%]="10" alignment="center"></dxi-column>
-       <div *dxTemplate="let cell of 'cellEvrakTipi'"> 
-           <span class="badge pill-medium badge-info">{{cell.value}}</span>
-       </div>           
+      <div class="row">
    
-       <dxi-column dataField="BelgeAdi"  caption="Belge Adi" [width]="60+'%'"></dxi-column>
-        
-       <dxi-column dataField="KayitYapan" caption="Yükleyen" [width]="20+'%'"></dxi-column>   
-       <dxi-column dataField="KayitTarih" caption="Tarih" [width]="20+'%'" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+       <input  name="Dosya Seçiniz" title="Dosya Seçiniz" type="file" id="onszbelgeupl" multiple class="form-control" (change)="uploadFile($event)" [style.width.%]="100"/>
+   
+       <!-- <mat-form-field appearance="outline" [style.width.%]="34" style="margin-top: 2px;">
+         <mat-label>Belge Tipi</mat-label>
+             <mat-select [(ngModel)]="BelgeTipId" name="BelgeTipId" >
+               <mat-option *ngFor="let secsube of belgetiplist" [value]="secsube.Id">
+                 {{secsube.Tanim}}
+               </mat-option>
+             </mat-select>
+           </mat-form-field>  -->
        
-       <dxi-column caption="" cellTemplate="cellGoster" dataField="Indir" [width]="10+'%'" alignment="center" [allowFiltering]="false" [allowSorting]="false"></dxi-column>
-       <div *dxTemplate="let cc of 'cellGoster'">
-           <i *ngIf="!cc.value" style="cursor:pointer" class="fas fa-search" (click)="btnbelgegoster(0,cc,belgemodal)"></i>
-       </div> 
- 
-       <dxi-column caption="" cellTemplate="cellIndir" [width]="10+'%'" alignment="center" [allowFiltering]="false" [allowSorting]="false"></dxi-column>
-       <div *dxTemplate="let cc of 'cellIndir'">
-           <i style="cursor:pointer" class="fas fa-download" (click)="btnbelgegoster(1,cc,belgemodal)"></i>
-       </div>   
- 
-       <dxi-column caption="" cellTemplate="cellSilGoster" dataField="Sil" [width]="10+'%'" alignment="center" [allowFiltering]="false" [allowSorting]="false"></dxi-column>
-       <div *dxTemplate="let cc of 'cellSilGoster'">
-           <i style="cursor:pointer" class="fas fa-remove" (click)="btnbelgesil(cc)"></i>
-       </div> 
- 
- 
-       </dx-data-grid>        
      </div>
-     <div class="modal-footer"> 
-       <button type="button" class="btn btn-success" (click)="belgeYukle()">Dosya Yükle</button>
-     </div>
-  
- <ng-template #belgemodal let-modal>
-     <div class="modal-header">
-       <h4 class="modal-title" >Belge Önizleme</h4> 
-     </div>
-     <div style="max-height:100%!important; overflow-y: scroll">
+     <div style="clear:both;margin-bottom:15px!important"></div>  
+
+         <dx-data-grid  
+     class="gridBelgeGList" class="devgrid30"
+     [dataSource]="belgelist"
+     [showBorders]="true"
+     [remoteOperations]="true"
+     [showColumnLines]="false"
+     [showRowLines]="true" 
+     [rowAlternationEnabled]="true"
+     [focusedRowEnabled]="true"
+     [columnAutoWidth]="true"
+     [allowColumnResizing]="true"
+     keyExpr="Id" 
+     columnResizingMode = "widget" 
+     [allowColumnReordering]="true" 
+     > 
+     <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+     <dxo-filter-row [visible]="true"></dxo-filter-row>
+     <dxo-header-filter [visible]="true"></dxo-header-filter>
+     <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+     <dxo-paging [enabled]="false"></dxo-paging>
+     <dxo-load-panel [enabled]="true"></dxo-load-panel>   
      
-     <div class="modal-body" >
-        <div class="myIframe">
-         <iframe [src]="pdfdata" ></iframe>
-     </div>
-     </div>
-   </div>
-     <div class="modal-footer">
-       <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button> 
-     </div>
- </ng-template>      
+     <dxi-column dataField="Id"  [visible]="false" caption="Id" [width]="15+'%'"></dxi-column>  
+
+     <dxi-column dataField="EvrakTipi" caption="Evrak Tipi" cellTemplate="cellEvrakTipi" [style.width.%]="10" alignment="center"></dxi-column>
+     <div *dxTemplate="let cell of 'cellEvrakTipi'"> 
+         <span class="badge pill-medium badge-info">{{cell.value}}</span>
+     </div>           
  
+     <dxi-column dataField="BelgeAdi"  caption="Belge Adi" [width]="60+'%'"></dxi-column>
+      
+     <dxi-column dataField="KayitYapan" caption="Yükleyen" [width]="20+'%'"></dxi-column>   
+     <dxi-column dataField="KayitTarih" caption="Tarih" [width]="20+'%'" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
+     
+     <dxi-column caption="" cellTemplate="cellGoster" dataField="Indir" [width]="10+'%'" alignment="center" [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+     <div *dxTemplate="let cc of 'cellGoster'">
+         <i *ngIf="!cc.value" style="cursor:pointer" class="fas fa-search" (click)="btnbelgegoster(0,cc,belgemodal)"></i>
+     </div> 
+
+     <dxi-column caption="" cellTemplate="cellIndir" [width]="10+'%'" alignment="center" [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+     <div *dxTemplate="let cc of 'cellIndir'">
+         <i style="cursor:pointer" class="fas fa-download" (click)="btnbelgegoster(1,cc,belgemodal)"></i>
+     </div>   
+
+     <dxi-column caption="" cellTemplate="cellSilGoster" dataField="Sil" [width]="10+'%'" alignment="center" [allowFiltering]="false" [allowSorting]="false"></dxi-column>
+     <div *dxTemplate="let cc of 'cellSilGoster'">
+         <i style="cursor:pointer" class="fas fa-remove" (click)="btnbelgesil(cc)"></i>
+     </div> 
+
+
+     </dx-data-grid>        
+   </div>
+   <div class="modal-footer"> 
+     <button type="button" class="btn btn-success" (click)="belgeYukle()">Dosya Yükle</button>
+   </div>
+
+<ng-template #belgemodal let-modal>
+   <div class="modal-header">
+     <h4 class="modal-title" >Belge Önizleme</h4> 
+   </div>
+   <div style="max-height:100%!important; overflow-y: scroll">
+   
+   <div class="modal-body" >
+      <div class="myIframe">
+       <iframe [src]="pdfdata" ></iframe>
+   </div>
+   </div>
+ </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button> 
+   </div>
+</ng-template>      

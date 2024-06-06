@@ -4,10 +4,10 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
 import { DomSanitizer } from "@angular/platform-browser";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
-import { BelgeModel, GenelApi, EkranMesaj } from "src/app/Services/GenelSrc";
-import { NotifyService } from "src/app/Services/notify";
-import { ConnBelgeTip, SabitservService } from "src/app/Services/SabitSrc";
-import { CofirmsrcService } from "src/app/Utils/confirm-dialog/cofirmsrc.service";
+import { BelgeModel, GenelApi, EkranMesaj } from "src/app/services/GenelSrc";
+import { NotifyService } from "src/app/services/notify";
+import { ConnBelgeTip, SabitservService } from "src/app/services/SabitSrc";
+import { CofirmsrcService } from "src/app/utils/confirm-dialog/cofirmsrc.service";
 
 @Component({
   selector: 'app-belge-goruntule',

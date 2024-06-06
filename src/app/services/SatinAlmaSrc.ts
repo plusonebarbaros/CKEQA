@@ -631,7 +631,7 @@ export class TalepsrcService {
 
     var sonuc = JSON.parse(JSON.stringify(result))['Model'];
     return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
-   } 
+   }  
 
 }
 
@@ -1160,7 +1160,7 @@ export class ItemsFile {
   } 
  
   export class Items {
-    Id: number=0;
+    DocEntry: number=0;
     ItemCode: string="";
     ItemName: string="";
     ItmsGrpCod: number=0;
@@ -1185,7 +1185,6 @@ export class ItemsFile {
     BirimId:number=0;
     Birim:string="";
     Files:number=0;
-    DocEntry:number=0; 
     TalepDurumId:number=1; 
     Base64List:ItemsFile[]=[];
     } 

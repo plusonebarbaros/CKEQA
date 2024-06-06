@@ -102,6 +102,32 @@ export class GenelApi {
     return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
   }
 
+  async GetTransferStokList(itemcode:string,kacsatir:number,keyword:string,DepoKodu:string):Promise<ReturnValuesList<Items>>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+      let options = { headers: headers };
+  
+      const body =  JSON.stringify({ 
+        "ItemCode":  itemcode,    
+        "KacSatir":  kacsatir,    
+        "KeyWord":  keyword,    
+        "DepoKodu":  DepoKodu,     
+        "Token":this.kullsrc.token, 
+      });
+  
+    var result = await this.http.post<any>(this.semUrl+"/Stok/GetTransferStokList", body, options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result)); 
+  
+    return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
+  }
+
   async GetStokGrup(SapSirket:string,ListelemTip:boolean)
   { 
     let url=this.semUrl+"/Stok/GetStokGrup?Token="+ this.kullsrc.token+"&SapSirket="+ SapSirket+"&ListelemTip="+ ListelemTip; 

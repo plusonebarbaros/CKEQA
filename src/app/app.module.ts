@@ -54,7 +54,6 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { NgxMaskModule } from "ngx-mask";
 import { DxProgressBarModule } from "devextreme-angular";
 import { StokAramaComponent } from './views/Stok/stok-arama/stok-arama.component';
-import { RafBulmaComponent } from './views/Stok/raf-bulma/raf-bulma.component';
 import { SiparisAktarmaComponent } from './views/Siparis/siparis-aktarma/siparis-aktarma.component';
 import { MesajGosterComponent } from './views/Genel/mesaj-goster/mesaj-goster.component';
 import { KullaniciComponent } from './views/Yonetim/kullanici/kullanici.component';
@@ -67,6 +66,20 @@ import { IrsaliyeAktarmaComponent } from './views/Siparis/irsaliye-aktarma/irsal
 import { OzelSiparisComponent } from './views/Siparis/ozel-siparis/ozel-siparis.component';
 import { OzelSiparisDetayComponent } from './views/Siparis/ozel-siparis-detay/ozel-siparis-detay.component';
 import { SistemParametreComponent } from './views/Yonetim/sistem-parametre/sistem-parametre.component';
+import { OnayKategoriComponent } from './views/Onay/onay-kategori/onay-kategori.component';
+import { OnayKategoriDetayComponent } from './views/Onay/onay-kategori-detay/onay-kategori-detay.component';
+import { OnayKuralComponent } from './views/Onay/onay-kural/onay-kural.component';
+import { OnayTanimComponent } from './views/Onay/onay-tanim/onay-tanim.component';
+import { OnayTanimDetayComponent } from './views/Onay/onay-tanim-detay/onay-tanim-detay.component';
+import { TalepComponent } from './views/SatinAlma/talep/talep.component';
+import { TalepDetayComponent } from './views/SatinAlma/talep-detay/talep-detay.component';
+import { TransferComponent } from './views/SatinAlma/transfer/transfer.component';
+import { TransferOnayComponent } from './views/SatinAlma/transfer-onay/transfer-onay.component';
+import { TalepTarihceComponent } from './views/Genel/talep-tarihce/talep-tarihce.component';
+import { OnayDurumKontrolComponent } from './views/Genel/onay-durum-kontrol/onay-durum-kontrol.component';
+import { BelgeGoruntuleComponent } from "./views/Genel/belge-goruntule/belge-goruntule.component";
+import { BekleyenOnayComponent } from './views/Onay/bekleyen-onay/bekleyen-onay.component';
+import { OnayGecmisComponent } from './views/Onay/onay-gecmis/onay-gecmis.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -81,7 +94,6 @@ locale(navigator.language);
     FilterPipe,
     ConfirmDialogComponent,
     StokAramaComponent,
-    RafBulmaComponent,
     SiparisAktarmaComponent,
     MesajGosterComponent,
     KullaniciComponent,
@@ -94,7 +106,20 @@ locale(navigator.language);
     OzelSiparisComponent,
     OzelSiparisDetayComponent,
     SistemParametreComponent,
-      
+    OnayKategoriComponent,
+    OnayKategoriDetayComponent,
+    OnayKuralComponent,
+    OnayTanimComponent,
+    OnayTanimDetayComponent,
+    TalepComponent,
+    TalepDetayComponent,
+    TransferComponent,
+    TransferOnayComponent,
+    TalepTarihceComponent,
+    OnayDurumKontrolComponent,
+    BelgeGoruntuleComponent,
+    BekleyenOnayComponent,
+    OnayGecmisComponent
       ],
   imports: [
     BrowserModule,

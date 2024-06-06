@@ -1,0 +1,28 @@
+<dx-data-grid style="height: 31vh! important"
+[dataSource]="datalist"
+[showBorders]="true"
+[showColumnLines]="false"
+[showRowLines]="true" 
+[rowAlternationEnabled]="true"
+[focusedRowEnabled]="true" 
+[allowColumnResizing]="true"
+keyExpr="Sira"  
+>  
+ 
+<dxi-column [style.width.%]="5" caption="Sıra" dataField="Sira" alignment="center"></dxi-column> 
+<dxi-column [style.width.%]="25" caption="Talep Eden" dataField="Ekleyen" ></dxi-column> 
+<dxi-column [style.width.%]="25" caption="Onaylayacak" dataField="Onaylayacak" ></dxi-column>  
+
+<dxi-column dataField="DurumId" caption="Onay Durum" cellTemplate="cellOnayDurum" [style.width.%]="20" alignment="center"></dxi-column>
+<div *dxTemplate="let cc of 'cellOnayDurum'">
+    <div *ngIf="cc.value==3"><span style="color: #00e400;">Onaylandı</span></div>
+    <div *ngIf="cc.value==4"><span style="color: red;">Reddetti</span></div>
+    <div *ngIf="cc.value==0 || cc.value==1"><span>Bekliyor</span></div>
+    <div *ngIf="cc.value==2"><span>Onaylayacak</span></div>
+</div>
+
+<dxi-column [style.width.%]="25" caption="İşlem Yapan" dataField="Onaylayan" ></dxi-column>   
+<dxi-column [style.width.%]="25" caption="Onay Tarih" dataField="OnayTarih" dataType="date"></dxi-column>   
+<dxi-column [style.width.%]="25" caption="Ret Açıklama" dataField="RetAciklama" ></dxi-column> 
+
+</dx-data-grid>  

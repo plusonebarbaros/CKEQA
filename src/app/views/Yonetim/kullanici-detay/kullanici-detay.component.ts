@@ -59,7 +59,7 @@ export class KullaniciDetayComponent implements OnInit {
   sirketlist: SapSirket[]=[]; 
   SapSirket:string=""; 
   kulkategoriyetkilist:KategoriYetkiModel[]=[];
-  depolist: DepoModel[]=[];   
+  depolist: DepoModel[]=[];    
 
   public autoGrupYetki: FormControl = new FormControl();
   public filterGrupYetki: ReplaySubject<YetkiGrup[]> = new ReplaySubject<YetkiGrup[]>(1);
@@ -76,6 +76,8 @@ export class KullaniciDetayComponent implements OnInit {
   public formDepo: FormControl = new FormControl();
   public filterDepo: ReplaySubject<DepoModel[]> = new ReplaySubject<DepoModel[]>(1);
 
+  public formCalistigiSube: FormControl = new FormControl();
+  public filterCalistigiSube: ReplaySubject<DepoModel[]> = new ReplaySubject<DepoModel[]>(1);
 
   protected _onDestroy = new Subject<void>();
 
@@ -90,8 +92,8 @@ export class KullaniciDetayComponent implements OnInit {
     this.allMode = 'allPages';
     this.checkBoxesMode = 'always';
     this.seciliuser=new KullaniciModel; 
-    this.yetki=new  KullaniciYetki();
     this.secilikullanici=new KullaniciModel();
+    this.yetki=this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0007")[0];
   }
 
   ngOnDestroy(): void {
@@ -131,6 +133,7 @@ export class KullaniciDetayComponent implements OnInit {
     this.autoDepartman.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterDepartmanList();});  
     this.autoPozisyon.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterPozisyonList();});  
     this.formDepo.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterDepoList();});  
+    this.formCalistigiSube.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterCalistigiSubeList();});  
 
   }
 
@@ -145,8 +148,25 @@ export class KullaniciDetayComponent implements OnInit {
         }
         this.depolist=data.List;   
         this.filterDepo.next(this.depolist.slice());
+        this.filterCalistigiSube.next(this.depolist.slice());
      }
    )
+  }
+
+  protected filterCalistigiSubeList() {
+    if (!this.depolist) {
+      return;
+    } 
+    let search = this.formCalistigiSube.value+"";
+    if (!search) {
+      this.filterCalistigiSube.next(this.depolist.slice());
+      return;
+    } else {
+      search = search.toUpperCase();
+    } 
+    this.filterCalistigiSube.next(
+      this.depolist.filter(item => (item?.WhsName??"").toUpperCase().indexOf(search) > -1)
+    );
   }
 
   protected filterDepoList() {
@@ -337,6 +357,14 @@ export class KullaniciDetayComponent implements OnInit {
     }
     if(this.seciliuser.Sirket==null || this.seciliuser.Sirket==undefined || this.seciliuser.Sirket.length<=0){
       this.alertify.warning("Şirket Seçimi Zorunludur!");
+      return;
+    }
+    if(this.seciliuser.Depo==null || this.seciliuser.Depo==undefined || this.seciliuser.Depo.length<=0){
+      this.alertify.warning("Yetkili Mağaza Seçimi Zorunludur!");
+      return;
+    }
+    if(this.seciliuser.CalistigiSubeKod=="" || this.seciliuser.CalistigiSubeKod==undefined){
+      this.alertify.warning("Çalıştığı Mağaza Seçimi Zorunludur!");
       return;
     }
     

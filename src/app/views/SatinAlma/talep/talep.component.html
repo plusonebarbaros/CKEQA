@@ -24,7 +24,7 @@
         </div>
         <div class="modal-footer">
             <input type="button" class="btn btn-default" (click)="drawer.toggle()" value="Kapat" />
-            <input type="button" class="btn btn-info" (click)="GetOzelSiparisList()" value="Listele" />
+            <input type="button" class="btn btn-info" (click)="TalepListele()" value="Listele" />
         </div>
     </mat-drawer>
    
@@ -33,17 +33,17 @@
 <div class="content">
     <nav class="menu-navigation-icons">
         <a href="#" (click)="drawer.toggle()" class="menu-silver" ><i class="fas fa-filter"></i><span>Filtre</span></a> 
-        <a href="#" class="menu-silver" (click)="GetOzelSiparisList()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a href="#" class="menu-silver" (click)="TalepListele()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
         <a href="#" *ngIf="yetki.Ekle" class="menu-blue" (click)="yeniEkle()"><i class="fas fa-plus-circle"></i><span>Yeni Ekle</span></a>
         <a *ngIf="this.silgoster && yetki.Sil" href="#" class="menu-red" (click)="kayitsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a>
         
-        <a href="#" (click)="this.gridOzelSiparis.instance.showColumnChooser()" style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
-        <a href="#" (click)="this.gridOzelSiparis.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+        <a href="#" (click)="this.gridTalepMaster.instance.showColumnChooser()" style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
+        <a href="#" (click)="this.gridTalepMaster.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
 
     </nav>
     <div style="clear:both"></div>
     
-    <dx-data-grid class="devgrid74"  #gridOzelSiparis
+    <dx-data-grid class="devgrid74"  #gridTalepMaster
     [dataSource]="taleplist"
     [showBorders]="true"
     [showColumnLines]="false"
@@ -89,10 +89,21 @@
     </div>
 
     <dxi-column [style.width.%]="10" caption="Tarih" dataField="Tarih" dataType="date" format="dd.MM.yyyy" alignment="center"></dxi-column> 
-    <dxi-column [style.width.%]="10" caption="Teslimat Tarih" dataField="TeslimTarih" dataType="date" format="dd.MM.yyyy" alignment="center"></dxi-column> 
-    <dxi-column [style.width.%]="10" caption="Teslimat Saat" dataField="TeslimSaati" alignment="center"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Sap Şirket" dataField="SapSirketId" alignment="center" [visible]="false"></dxi-column>
  
-    <dxi-column dataField="Durum" caption="Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" ></dxi-column>
+    <dxi-column dataField="TalepTuru" caption="Talep Türü" cellTemplate="cellTalepTuru" [style.width.%]="10" alignment="center" ></dxi-column>
+    <div *dxTemplate="let cell of 'cellTalepTuru'"> 
+        <span *ngIf="cell.data.TalepTuru==='T'" class="badge pill-medium bg-info">Talep</span>
+        <span *ngIf="cell.data.TalepTuru==='H'" class="badge pill-medium bg-warning">Hizmet</span>     
+    </div> 
+
+    <dxi-column dataField="AlimYapildi" caption="Alım Yapıldı" cellTemplate="cellAlimYapildi" [style.width.%]="10" alignment="center" ></dxi-column>
+    <div *dxTemplate="let cell of 'cellAlimYapildi'"> 
+        <span *ngIf="cell.data.AlimYapildi==='E'" class="badge pill-medium bg-info">Evet</span>
+        <span *ngIf="cell.data.AlimYapildi==='H'" class="badge pill-medium bg-secondary">Hayır</span>     
+    </div> 
+ 
+    <dxi-column dataField="DurumId" caption="Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" ></dxi-column>
     <div *dxTemplate="let cell of 'cellDurum'"> 
         <span *ngIf="cell.data.DurumId===0" class="badge pill-medium bg-secondary">Yeni Talep</span>
         <span *ngIf="cell.data.DurumId===1" class="badge pill-medium bg-info">Onay Bekliyor</span>    
@@ -101,15 +112,8 @@
         <span *ngIf="cell.data.DurumId===4" class="badge pill-medium bg-warning">İptal</span>    
     </div> 
 
-    <dxi-column caption="Müşteri Adı" dataField="MusteriAdi" [allowSearch]="true" [width]="200"></dxi-column>    
-    <dxi-column caption="Açıklama" dataField="Aciklama" [allowSearch]="true" [width]="200"></dxi-column>
-    <dxi-column caption="Pasta Üstü Yazı" dataField="PastaUstuYazi" [allowSearch]="true" [width]="200"></dxi-column>
-    <dxi-column caption="Adres" dataField="Adres" [allowSearch]="true" [width]="200"></dxi-column>
-    <dxi-column [style.width.%]="10" caption="Sipariş Veren" dataField="SiparisVerenKisi" [allowSearch]="true" ></dxi-column>
-    <dxi-column [style.width.%]="10" caption="Sipariş Veren Cep" dataField="Gsm" [allowSearch]="true" ></dxi-column>
-    <dxi-column [style.width.%]="10" caption="Teslimat Kişi" dataField="TeslimatKisi" [allowSearch]="true" ></dxi-column>
-    <dxi-column [style.width.%]="10" caption="Teslimat Kişi Cep" dataField="TeslimatGsm" [allowSearch]="true" ></dxi-column>
-    <dxi-column [style.width.%]="10" caption="Şirket" dataField="ErpSirket" alignment="center" [visible]="false"></dxi-column>
+    <dxi-column [style.width.%]="10" caption="Firma" dataField="FirmaAdi" [allowSearch]="true" [width]="200"></dxi-column>    
+    <dxi-column [style.width.%]="20" caption="Açıklama" dataField="Aciklama" [allowSearch]="true" [width]="200"></dxi-column>
 
     <dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
     <dxi-column [style.width.%]="10" caption="Kayıt" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
