@@ -7,31 +7,32 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import moment from 'moment';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subject, ReplaySubject, takeUntil } from 'rxjs';
-import { EkranMesaj, GenelApi, IslemTipi, StokGrupModel } from 'src/app/services/GenelSrc';
-import { KullaniciYetki, FilterMod, ConDepoYetki, KullaniciSrcService, KullaniciModel } from 'src/app/services/KullaniciSrc';
+import { StokGrupModel, GenelApi, EkranMesaj, IslemTipi } from 'src/app/services/GenelSrc';
+import { KullaniciYetki, FilterMod, ConDepoYetki, KullaniciModel, KullaniciSrcService } from 'src/app/services/KullaniciSrc';
 import { NotifyService } from 'src/app/services/notify';
-import { ConnOlcuBirim, SabitservService } from 'src/app/services/SabitSrc';
-import { ConnTalepIhtDurum, Items, ItemsFile, TalepsrcService } from 'src/app/services/SatinAlmaSrc';
-import { DepoTransferModel, SiparisService } from 'src/app/services/SiparisSrc';
+import { ConnFireTipTanimModel, ConnOlcuBirim, SabitservService } from 'src/app/services/SabitSrc';
+import { Items, ConnTalepIhtDurum, TalepsrcService, ItemsFile } from 'src/app/services/SatinAlmaSrc';
+import { SiparisService } from 'src/app/services/SiparisSrc';
+import { FireYonetimModel, StokService } from 'src/app/services/StokSrc';
 import { TabService } from 'src/app/services/tab.service';
 import { Tab } from 'src/app/services/tabs-mod';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
-import { TalepDetayComponent } from '../talep-detay/talep-detay.component';
+import { TalepDetayComponent } from '../../SatinAlma/talep-detay/talep-detay.component';
 
 @Component({
-  selector: 'app-transfer',
-  templateUrl: './transfer.component.html',
-  styleUrls: ['./transfer.component.scss'],
+  selector: 'app-fire-yonetim',
+  templateUrl: './fire-yonetim.component.html',
+  styleUrls: ['./fire-yonetim.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers:[
     {provide:DatePipe},
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
   ]
 })
-export class TransferComponent implements OnInit {
-  @ViewChild('gridDepoTransfer', { static: false }) grid!: DxDataGridComponent;
+export class FireYonetimComponent implements OnInit {
+  @ViewChild('gridFireCikis', { static: false }) grid!: DxDataGridComponent;
   @BlockUI() blockUI!: NgBlockUI;
-  taleplist: DepoTransferModel[]=[]; 
+  taleplist: FireYonetimModel[]=[]; 
   selectedItemKeys: any[] = [];
   silgoster:boolean=false;
   teslimgoster:boolean=false;
@@ -39,46 +40,52 @@ export class TransferComponent implements OnInit {
   retgoster:boolean=false;
   allMode: string="";
   checkBoxesMode: string="";
-  secilidata:DepoTransferModel[]=[];
+  secilidata:FireYonetimModel[]=[];
   @Input() data:any;     
   yetki:KullaniciYetki; 
   filter!:FilterMod; 
   evrekyuklegoster:boolean=false;
-  secilikalem:DepoTransferModel;
+  secilikalem:FireYonetimModel;
   onayid:number=0;
   kalemlist:Items[]=[]; 
-  kalemsecimlist:DepoTransferModel[]=[]; 
+  kalemsecimlist:FireYonetimModel[]=[]; 
   olcubirimlist: ConnOlcuBirim[]=[];  
   talepihtdurumlist: ConnTalepIhtDurum[]=[]; 
   stokgruplist: StokGrupModel[]=[]; 
   depolist: ConDepoYetki[]=[]; 
   kalemkeyword:string=""; 
-  MagazaKod:string=""; 
   TalepAciklama:string=""; 
   TalepTarih:any; 
   loguser:KullaniciModel;  
   onayaciklama:string="";
-  
+  firetiplist: ConnFireTipTanimModel[]=[];    
+  FireTipiId:number=0;
+
   protected _onDestroy = new Subject<void>();
 
   public formDepo: FormControl = new FormControl();
   public filterDepo: ReplaySubject<ConDepoYetki[]> = new ReplaySubject<ConDepoYetki[]>(1);
 
+  public formFire: FormControl = new FormControl();
+  public filterFire: ReplaySubject<ConnFireTipTanimModel[]> = new ReplaySubject<ConnFireTipTanimModel[]>(1);
+
+
   constructor(
     private tabService: TabService,
     private talepsrc:TalepsrcService,
     private alertify:NotifyService,
-    private confirmationDialogService: CofirmsrcService,
+    private confirm: CofirmsrcService,
     private modalService: NgbModal,
     private genelsrv:GenelApi,
     private kullanicisrc:KullaniciSrcService,
     private sabitsrc:SabitservService,
-    private siparissrc:SiparisService
+    private siparissrc:SiparisService,
+    private stoksrc:StokService
     ) {  
       this.allMode = 'allPages';
       this.checkBoxesMode = 'always';
       this.yetki=new  KullaniciYetki(); 
-      this.secilikalem=new  DepoTransferModel(); 
+      this.secilikalem=new  FireYonetimModel(); 
     }
 
   ngOnInit() {
@@ -91,10 +98,42 @@ export class TransferComponent implements OnInit {
     this.GetKullaniciDepoYetki();
     this.GetStokOlcuBirim();
     this.GetTalepIhtiyacDurum();
+    this.GetFireTipTanim();
 
-    this.TalepListele();    
-    this.formDepo.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterDepoList();});  
+    this.GetFireList();    
+    this.formDepo.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterDepoList();});
+    this.formFire.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterFireList();});
+  }
 
+  async GetFireTipTanim()  {
+    this.blockUI.start(EkranMesaj.Listele);
+      (await this.sabitsrc.GetFireTipTanim(0)).subscribe(
+        data=>{
+          this.blockUI.stop(); 
+          if(!data.Success){
+            this.alertify.warning(data.Message);
+            return;
+          }
+          this.firetiplist=data.List;
+          this.filterFire.next(this.firetiplist.slice());
+        }
+      )         
+  }
+
+  protected filterFireList() {
+    if (!this.firetiplist) {
+      return;
+    } 
+    let search = this.formFire.value+"";
+    if (!search) {
+      this.filterFire.next(this.firetiplist.slice());
+      return;
+    } else {
+      search = search.toUpperCase();
+    } 
+    this.filterFire.next(
+      this.firetiplist.filter(item => (item?.Tanim??"").toUpperCase().indexOf(search) > -1)
+    );
   }
   
   protected filterDepoList() {
@@ -175,9 +214,9 @@ talepDetay(talep:any){
     this.tabService.addTab(new Tab(TalepDetayComponent, "Yeni Talep", { parent: "AppComponent",_talepid:0,yetki:this.yetki },0));
   }
 
-  async TalepListele()  {
+  async GetFireList()  {
     this.blockUI.start(EkranMesaj.Listele);
-      (await this.siparissrc.GetDepoTransfer(0,"A",this.filter.Baslangic,this.filter.Bitis,false)).subscribe(
+      (await this.stoksrc.GetFireList(0,this.filter.Baslangic,this.filter.Bitis)).subscribe(
         data=>{
           this.blockUI.stop(); 
           if(!data.Success){
@@ -212,11 +251,11 @@ talepDetay(talep:any){
     this.blockUI.start("Kayıt Başladı...");
     var sonuc = await this.talepsrc.TalepSatirGuncelle(e.data);
     if(sonuc.Success==true){  
-        this.TalepListele();
+        this.GetFireList();
     } 
     else{
       this.alertify.warning(sonuc.Message);
-      this.TalepListele();
+      this.GetFireList();
     } 
     this.blockUI.stop(); 
 }
@@ -235,24 +274,16 @@ silgosterChanged(e:any){
   if (silinecekler!=null && silinecekler.length==1){
     this.silgoster=true;
     this.evrekyuklegoster=true;
-    this.secilikalem = silinecekler[0] as DepoTransferModel;
-    this.secilidata = silinecekler; 
-
-    if(this.secilikalem.DurumId===0 && this.secilikalem.KarsiDepoOnayDurumId===0 && this.secilikalem.KarsiDepoKodu==this.loguser.CalistigiSubeKod){
-      this.transfergoster=true;
-      this.retgoster=true;
-    }
-    if(this.secilikalem.DurumId===0 && this.secilikalem.KarsiDepoOnayDurumId===1 && this.secilikalem.TalepDepoKodu==this.loguser.CalistigiSubeKod){
-      this.teslimgoster=true;      
-    }
+    this.secilikalem = silinecekler[0] as FireYonetimModel;
+    this.secilidata = silinecekler;
   }
   else if (silinecekler!=null && silinecekler.length>1){
     this.silgoster=true;
-    this.secilikalem =new DepoTransferModel();
+    this.secilikalem =new FireYonetimModel();
     this.secilidata = silinecekler; 
   }
   else {
-    this.secilikalem =new DepoTransferModel();
+    this.secilikalem =new FireYonetimModel();
     this.secilidata=[];
    }
 }
@@ -283,7 +314,7 @@ silgosterChanged(e:any){
     // }); 
 } 
 
-onaytakip(content:any,data:DepoTransferModel){
+onaytakip(content:any,data:FireYonetimModel){
   if(data.OnayId<=0){
     this.alertify.warning("Onay Bilgisi Okunamadı!");
     return;
@@ -301,9 +332,8 @@ listeyeekle(){
     devam=false;
     return;
   }
-
-  if(this.MagazaKod=="" || this.MagazaKod==null){
-    this.alertify.warning("Talep Edilecek Mağaza Seçimi Zorunludur!");
+  if(this.FireTipiId <=0){
+    this.alertify.warning("Fire Tip Seçiniz!");
     devam=false;
     return;
   }
@@ -317,51 +347,52 @@ listeyeekle(){
   }  
 
   var list = this.kalemlist.filter(item=> item.Miktar>0);
-  // list.forEach(item=> {   
-  //  if(item.Miktar>item.Bakiye)
-  //  this.alertify.warning("Talep Edilen Miktar Depo Bakiyesinden Fazla Olamaz! => " + item.ItemName );
-  //   devam=false;
-  //   return;
-  // });     
+  list.forEach(item=> {   
+      if(item.Aciklama=="" || item.Aciklama==undefined || item.Aciklama==null) {
+        this.alertify.warning("Açıklama Alanı Zorunludur! => " + item.ItemName );
+        devam=false;
+        return;
+      }
+    }
+  );     
 
   if(devam){
     list.forEach(item=> {  
-      let td=new DepoTransferModel();
-      td.TalepTarih=this.TalepTarih; 
+      let td=new FireYonetimModel();
+      td.Tarih=this.TalepTarih; 
       td.Miktar=item.Miktar; 
       td.StokKodu=item.ItemCode;
       td.StokAdi=item.ItemName;
-      td.TalepDepoKodu=this.loguser.CalistigiSubeKod; 
-      td.KarsiDepoKodu=this.MagazaKod; 
+      td.DepoKodu=this.loguser.CalistigiSubeKod; 
       td.Aciklama=item.Aciklama;
-      td.SatirGuid = this.genelsrv.GuidGenerator();
+      td.semkey = this.genelsrv.GuidGenerator();
       td.BelgeBase64=item.BelgeBase64;     
       td.BelgeAdi=item.BelgeAdi;     
       td.BelgeUzanti=item.BelgeUzanti;   
       td.Birim=item.Birim;   
       td.BirimId=item.BirimId; 
       td.Files=item.Files;  
-      td.TalepDurumId=item.TalepDurumId;  
+      td.FireTipId=this.FireTipiId;  
       td.Base64List=item.Base64List;  
       this.kalemsecimlist.push(td);
     }); 
-    this.kaydet(false); 
+    this.kaydet(); 
   }
 }
 
-async kaydet(tumu:boolean){
+async kaydet(){
   if(this.kalemsecimlist.length<=0){
     this.alertify.warning("Malzeme Eklenmeden Kayıt İşlemi Yapılamaz!");
     return;
   } 
 
    this.blockUI.start("Kayıt Başladı...");
-      var sonuc = await this.siparissrc.DepoTransferOlustur(undefined,this.kalemsecimlist,IslemTipi.Ekle);
+      var sonuc = await this.stoksrc.FireTuketim(this.kalemsecimlist,this.TalepAciklama,IslemTipi.Ekle);
      if(sonuc.Success==true){
-        this.alertify.success("Talep Oluşturuldu!") ;
+        this.alertify.success("İşlem Tamamlandı!") ;
         this.kalemsecimlist=[];       
         this.modalService.dismissAll();
-        this.TalepListele();
+        this.GetFireList();
         this.kalemlist.forEach((x)=>{ 
           x.Miktar = 0; 
         })    
@@ -421,6 +452,7 @@ kalemEklemod(content:any){
     this.kalemkeyword=""; 
     this.TalepAciklama="";
     this.TalepTarih = moment(new Date).format("yyyy-MM-DD"); 
+    this.kalemAraDef();
     this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
 }  
 
@@ -432,7 +464,7 @@ async kalemAra(ev:any){
 
   if (ev.keyCode === 13 && this.kalemkeyword!="") {
     this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.genelsrv.GetTransferStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.MagazaKod);
+    var sonuc = await this.genelsrv.GetTransferStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.loguser.CalistigiSubeKod);
     this.blockUI.stop(); 
     if(sonuc.Success){
       this.kalemlist=sonuc.List;
@@ -445,7 +477,7 @@ async kalemAra(ev:any){
 
 async kalemAraDef(){
   this.blockUI.start(EkranMesaj.Listele);
-  var sonuc = await this.genelsrv.GetTransferStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.MagazaKod);
+  var sonuc = await this.genelsrv.GetTransferStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.loguser.CalistigiSubeKod);
   this.blockUI.stop(); 
   if(sonuc.Success){
     this.kalemlist=sonuc.List;
@@ -460,114 +492,9 @@ aramaTemizle(){
   this.kalemlist=[];
 }
 
-defGrup(event: any) {
-  this.MagazaKod = "";
+defFire(event: any) {
+  this.FireTipiId = 0;
   event.stopPropagation();
 }
-
-transferMod(content:any){
-  this.secilikalem.KarsiDepoAciklama="";
-  this.secilikalem.KarsiDepoOnayMiktar=this.secilikalem.Miktar; 
-  this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss35', backdrop: 'static' });  
-
-}
-transferBaslat(){
-  if(this.secilikalem==null|| this.secilikalem==undefined){
-    this.alertify.warning("Satır Seçiniz!");
-    return;
-  }
-  else{   
-    this.confirmationDialogService.confirm('Onay', 'Seçili Kalem İçin Transfer İşlemi Başlatılacak, Devam Edilsin mi?')
-    .then(async (confirmed:any) => 
-    {
-      if(confirmed.sonuc==true)  {
-        this.blockUI.start(EkranMesaj.Kaydet);
-        var sonuc = await this.siparissrc.DepoTransferBaslat(this.secilikalem,1,"");
-       if(sonuc.Success==true){
-        this.alertify.success("İşlem Tamamlandı!");
-        this.TalepListele();
-        this.modalService.dismissAll();
-        this.transfergoster=false;
-       } else{
-      this.alertify.warning(sonuc.Message);
-       }
-        this.blockUI.stop(); 
-      }
-    })
-    .catch((err) => {
-      this.alertify.warning("Hata Oluştu! "+err);
-    });
-  } 
-}
-
-TeslimMod(content:any){
-  this.secilikalem.TeslimAlAciklama="";
-  this.secilikalem.TeslimAlMiktar=this.secilikalem.KarsiDepoOnayMiktar; 
-  this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss35', backdrop: 'static' });  
-}
-teslimBaslat(){
-  if(this.secilikalem==null|| this.secilikalem==undefined){
-    this.alertify.warning("Satır Seçiniz!");
-    return;
-  }
-  else{   
-    this.confirmationDialogService.confirm('Onay', 'Seçili Kalem İçin Teslim Alma İşlemi Başlatılacak, Devam Edilsin mi?')
-    .then(async (confirmed:any) => 
-    {
-      if(confirmed.sonuc==true)  {
-        this.blockUI.start(EkranMesaj.Kaydet);
-        var sonuc = await this.siparissrc.DepoTeslimAl(this.secilikalem,1,"");
-       if(sonuc.Success==true){
-        this.alertify.success("İşlem Tamamlandı!");
-        this.TalepListele();
-        this.modalService.dismissAll();
-        this.teslimgoster=false;
-       } else{
-      this.alertify.warning(sonuc.Message);
-       }
-        this.blockUI.stop(); 
-      }
-    })
-    .catch((err) => {
-      this.alertify.warning("Hata Oluştu! "+err);
-    });
-  } 
-}
-
-
-retTalepMod(content:any){   
-  this.onayaciklama=""; 
-  this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss35', backdrop: 'static' });  
-}
-
-retBaslat(){
-  if(this.onayaciklama==""|| this.onayaciklama==undefined){
-    this.alertify.warning("Ret İşleminde Açıklama Alanı Zorunludur!");
-    return;
-  }
-  else{
-   
-    // this.confirmationDialogService.confirm('Ret', 'Seçili Kalemler Reddedilecek, Devam Edilsin mi?')
-    // .then(async (confirmed:any) => 
-    // {
-    //   if(confirmed.sonuc==true)  {
-    //     this.blockUI.start(EkranMesaj.Kaydet);
-    //     var sonuc = await this.onaysrc.OnaylaV2(onaylist,false,this.retaciklama);
-    //    if(sonuc.Success==true){
-    //     this.alertify.success("Seçili Talepler Reddedildi!");
-    //     this.BekleyenOnaylar();
-    //     this.modalService.dismissAll();
-    //    } else{
-    //   this.alertify.warning(sonuc.Message);
-    //    }
-    //     this.blockUI.stop(); 
-    //   }
-    // })
-    // .catch((err) => {
-    //   this.alertify.warning("Hata Oluştu! "+err);
-    // });
-  } 
-}
- 
 
 }

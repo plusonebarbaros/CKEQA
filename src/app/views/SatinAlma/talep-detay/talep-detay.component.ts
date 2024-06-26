@@ -260,16 +260,15 @@ export class TalepDetayComponent implements OnInit {
   }
 
   kalemEklemod(content:any){  
-    if(this.talepmaster.Aciklama==""|| this.talepmaster.Aciklama==undefined){
-      this.alertify.warning("Talep Nedeni Alanı Zorunludur!");
-      return;
-    }
-    else{
-      this.kalemlist=[];
-      this.kalemkeyword=""; 
-      this.StokGrupId=0;
-      this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
-    }
+    // if(this.talepmaster.Aciklama==""|| this.talepmaster.Aciklama==undefined){
+    //   this.alertify.warning("Talep Nedeni Alanı Zorunludur!");
+    //   return;
+    // }
+    
+    this.kalemlist=[];
+    this.kalemkeyword=""; 
+    this.StokGrupId=0;
+    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
   }  
   
   async kalemAra(ev:any){ 
@@ -331,22 +330,7 @@ export class TalepDetayComponent implements OnInit {
       this.alertify.warning("Miktar Girilen Satırlarda Depo Seçimi Zorunludur! => " + item.ItemName );
       devam=false;
       return;
-     }
-     if(item.BirimId<=0){
-      this.alertify.warning("Miktar Girilen Satırlarda Depo Seçimi Zorunludur! => " + item.ItemName );
-      devam=false;
-      return;
-     }
-     if(item.BirimTutar<=0 || item.BirimTutar==undefined || item.BirimTutar==null){
-      this.alertify.warning("Tahmini Tutar Sıfırdan Büyük Olmalıdır! => " + item.ItemName );
-      devam=false;
-      return;
-     }
-     if(item.Aciklama=="" || item.Aciklama==null || item.Aciklama==undefined){
-      this.alertify.warning("Açıklama Alanı Zorunludur! => " + item.ItemName );
-      devam=false;
-      return;
-     }
+     } 
     });     
 
     if(devam){

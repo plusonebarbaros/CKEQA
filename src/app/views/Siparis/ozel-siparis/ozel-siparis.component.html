@@ -95,16 +95,21 @@
     <dxi-column dataField="Durum" caption="Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" ></dxi-column>
     <div *dxTemplate="let cell of 'cellDurum'"> 
         <span *ngIf="cell.data.DurumId===0" class="badge pill-medium bg-secondary">Yeni Talep</span>
-        <span *ngIf="cell.data.DurumId===1" class="badge pill-medium bg-info">Onay Bekliyor</span>    
-        <span *ngIf="cell.data.DurumId===2" class="badge pill-medium bg-success">Tamamlandı</span>    
-        <span *ngIf="cell.data.DurumId===3" class="badge pill-medium bg-danger">Reddedildi</span>    
-        <span *ngIf="cell.data.DurumId===4" class="badge pill-medium bg-warning">İptal</span>    
+        <span *ngIf="cell.data.DurumId===1" class="badge pill-medium bg-info">Sipariş Oluşturulmadı</span>    
+        <span *ngIf="cell.data.DurumId===2" class="badge pill-medium bg-success">Sipariş Oluşturuldu</span>    
+        <span *ngIf="cell.data.DurumId===3" class="badge pill-medium bg-success">Tamamlandı</span>    
+        <span *ngIf="cell.data.DurumId===4" class="badge pill-medium bg-danger">Reddedildi</span>    
+        <span *ngIf="cell.data.DurumId===5" class="badge pill-medium bg-warning">İptal</span>    
     </div> 
 
     <dxi-column caption="Müşteri Adı" dataField="MusteriAdi" [allowSearch]="true" [width]="200"></dxi-column>    
     <dxi-column caption="Açıklama" dataField="Aciklama" [allowSearch]="true" [width]="200"></dxi-column>
     <dxi-column caption="Pasta Üstü Yazı" dataField="PastaUstuYazi" [allowSearch]="true" [width]="200"></dxi-column>
     <dxi-column caption="Adres" dataField="Adres" [allowSearch]="true" [width]="200"></dxi-column>
+    <dxi-column [style.width.%]="10" caption="Şehir" dataField="Sehir" [allowSearch]="true" ></dxi-column>
+    <dxi-column [style.width.%]="10" caption="İlçe" dataField="Ilce" [allowSearch]="true" ></dxi-column>
+    <dxi-column [style.width.%]="10" caption="Teslim Şehir" dataField="TeslimSehir" [allowSearch]="true" ></dxi-column>
+    <dxi-column [style.width.%]="10" caption="Teslim İLçe" dataField="TeslimIlce" [allowSearch]="true" ></dxi-column>
     <dxi-column [style.width.%]="10" caption="Sipariş Veren" dataField="SiparisVerenKisi" [allowSearch]="true" ></dxi-column>
     <dxi-column [style.width.%]="10" caption="Sipariş Veren Cep" dataField="Gsm" [allowSearch]="true" ></dxi-column>
     <dxi-column [style.width.%]="10" caption="Teslimat Kişi" dataField="TeslimatKisi" [allowSearch]="true" ></dxi-column>

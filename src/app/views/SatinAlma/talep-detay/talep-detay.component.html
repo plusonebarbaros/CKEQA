@@ -86,7 +86,7 @@
        <span *ngIf="cell.data.DurumId===4" style="cursor: pointer;" class="badge pill-medium bg-warning" (click)="onaytakip(onaytakipmod,cell.data)">İptal</span>    
        <span *ngIf="cell.data.DurumId===5" style="cursor: pointer;" class="badge pill-medium bg-secondary" (click)="onaytakip(onaytakipmod,cell.data)">Depo Kontrolünde</span>
      </div> 
-    
+     
     <dxi-column dataField="StokKodu" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
     <dxi-column dataField="StokAdi" caption="Stok Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
     
@@ -104,8 +104,7 @@
     <dxi-column dataField="Miktar" [style.width.%]="10"  caption="İhtiyaç Miktar" alignment="right" dataType="number" format="#,##0.00"> </dxi-column> 
     <dxi-column dataField="OnaylananMiktar" [style.width.%]="10" caption="Onaylanan Miktar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00" ></dxi-column> 
     <dxi-column dataField="TalepMiktar" [style.width.%]="10" caption="Talep Miktar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
-    <dxi-column dataField="BirimTutar" [style.width.%]="10" caption="Birim Tutar"  [allowEditing]="true" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
-    <dxi-column dataField="ToplamTutar" [style.width.%]="10" caption="Toplam Tutar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+    <dxi-column dataField="TransferMiktar" [style.width.%]="10" caption="Transfer Miktar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
     
     <dxi-column
       dataField="BirimId"
@@ -135,6 +134,7 @@
      <dxi-column dataField="SapTalepNo" caption="Sap Talep No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
     <dxi-column dataField="SapTeklifNo" caption="Sap Teklif No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
     <dxi-column dataField="SapSiparisNo" caption="Sap Sipariş No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
+    <dxi-column dataField="StokNakliId" caption="Stok Nakli No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
      
     <dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
     <dxi-column [style.width.%]="10" caption="Kayıt Tarih" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 

@@ -220,6 +220,52 @@ async GetKullDepartman(Id:number)
    return await this.http.get<Result<ConnKulDepartmanModel>>(url).pipe( map((res:any)=> res));
 } 
 
+async FireTipTanimEkle(post:ConnFireTipTanimModel,tip:IslemTipi):Promise<ReturnValues>  {
+  const headers = new HttpHeaders(
+    {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Headers': 'Content-Type',
+   }
+  ); 
+
+  let options = { headers: headers };
+  
+  const body =  JSON.stringify({ 
+    "Data":  post,  
+    "Token":this.kullsrc.token, 
+    "Tip":tip, 
+  });
+
+  var result = await this.http.post<any>(this.semUrl+"/Tanim/FireTipTanimEkle", body, options).toPromise();
+
+  var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+  return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+}
+
+async GetFireTipTanim(Id:number)
+{ 
+   let url=this.semUrl+"/Tanim/GetFireTipTanim?Id="+Id+"&Token="+ this.kullsrc.token; 
+   return await this.http.get<Result<ConnFireTipTanimModel>>(url).pipe( map((res:any)=> res));
+} 
+
+
+
+}
+
+export class ConnFireTipTanimModel {    
+  Id:number=0;   
+  Tanim:string="";
+  HesapKodu:string="";
+  HesapAdi:string="";
+  
+  EkleyenId:number=0; 
+  Ekleyen:string="";
+  GuncelleyenId:number=0;
+  Guncelleyen:string="";
+  EkTarih:Date=new Date();
+  GuncelTarih:Date=new Date(); 
+  Aktif:boolean=false;
 }
 
 export class ConnKulDepartmanModel {    

@@ -248,6 +248,133 @@ async GetOzelSiparisDetay(Id:number)
         return await this.http.get<Result<OzelSiparisMaster[]>>(url).pipe( map((res:any)=> res));
   }
 
+  async  DepoTransferOlustur(Data:DepoTransferModel | undefined,Satir:DepoTransferModel[] | [],Tip:IslemTipi):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+      let options = { headers: headers };
+  
+      const body =  JSON.stringify({ 
+        "Data":  Data,
+        "Satir":  Satir,
+        "Tip":  Tip,
+        "Token":this.kullsrc.token
+      });
+   
+      var result = await this.http.post<any>(this.semUrl+"/SatinAlma/DepoTransferOlustur", body,options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+   } 
+
+   async GetDepoTransfer(Id:number,durum:string="",baslangic:Date,bitis:Date,Kontrol:boolean)
+  { 
+       let url=this.semUrl+"/SatinAlma/GetDepoTransfer?Id="+Id+"&Durum="+durum+"&Token="+ this.kullsrc.token+"&Kontrol="+ Kontrol+"&Baslangic="+moment(baslangic).format("yyyy-MM-DD")+"&Bitis="+moment(bitis).format("yyyy-MM-DD"); 
+        return await this.http.get<Result<DepoTransferModel[]>>(url).pipe( map((res:any)=> res));
+  }
+
+  async  DepoTransferBaslat(Data:DepoTransferModel,OnayDurumId:number,Aciklama:string):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+      let options = { headers: headers };
+  
+      const body =  JSON.stringify({ 
+        "Data":  Data,
+        "OnayDurumId":  OnayDurumId,
+        "Aciklama":  Aciklama,
+        "Token":this.kullsrc.token
+      });
+   
+      var result = await this.http.post<any>(this.semUrl+"/SatinAlma/DepoTransferBaslat", body,options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+   } 
+
+   async  DepoTeslimAl(Data:DepoTransferModel,OnayDurumId:number,Aciklama:string):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+      let options = { headers: headers };
+  
+      const body =  JSON.stringify({ 
+        "Data":  Data,
+        "OnayDurumId":  OnayDurumId,
+        "Aciklama":  Aciklama,
+        "Token":this.kullsrc.token
+      });
+   
+      var result = await this.http.post<any>(this.semUrl+"/SatinAlma/DepoTeslimAl", body,options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+   } 
+
+   async  OzelSiparisOlustur(TalepId:number):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+      let options = { headers: headers };
+  
+      const body =  JSON.stringify({ 
+        "TalepId":  TalepId,
+        "Token":this.kullsrc.token
+      });
+   
+      var result = await this.http.post<any>(this.semUrl+"/SatinAlma/SiparisOlustur", body,options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+   }
+
+   async OzelSiparisTeslim(TalepId:number):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }); 
+  
+      let options = { headers: headers };
+  
+      const body =  JSON.stringify({ 
+        "TalepId":  TalepId,
+        "Token":this.kullsrc.token
+      });
+   
+      var result = await this.http.post<any>(this.semUrl+"/SatinAlma/OzelSiparisTeslim", body,options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+   } 
+
+   async GetOzelSiparisFirst(Filtre1:string="",Filtre2:string="")
+  { 
+       let url=this.semUrl+"/SatinAlma/GetOzelSiparisFirst?Filtre1="+Filtre1+"&Filtre2="+Filtre2+"&Token="+ this.kullsrc.token; 
+        return await this.http.get<Result<OzelSiparisMaster[]>>(url).pipe( map((res:any)=> res));
+  }
+
 }
 
 export  class DepoTransferModel {
@@ -258,8 +385,12 @@ export  class DepoTransferModel {
   StokAdi: string="";    
   Miktar: number=0;
   OnayId: number=0;
-  DepoKodu: string="";  
-  DepoAdi: string="";  
+  TalepDepoKodu: string="";  
+  TalepDepoAdi: string="";  
+  KarsiDepoKodu: string="";  
+  KarsiDepoAdi: string="";  
+  TalepDurumId: number=0;
+
   Aciklama: string="";  
   SatirGuid: string="";  
   SapTalepNo: number=0;
@@ -294,6 +425,10 @@ export  class DepoTransferModel {
   BelgeUzanti:string="";
   BirimId:number=0;
   Birim:string="";
+  TeslimAlAciklama:string="";
+  KarsiDepoOnayDurumId:number=0;
+  TeslimDepoOnayDurumId:number=0;
+  SeriLot:string="";
 } 
 
 
@@ -385,6 +520,8 @@ export class OzelSiparisKalem {
   DuranVarlikSiparisId:number=0;
   DuranVarlikUrunKodu:string="";
   DuranVarlikUrunAdi:string="";
+
+  Fiyat:number=0;
 }  
 export  class OzelSiparisMaster {
   Id: number=0;
@@ -441,6 +578,7 @@ export  class OzelSiparisMaster {
   TeslimSehir: string=""; 
   TeslimIlceKod: number=0;
   TeslimIlce: string="";
+  SapSiparisNo: number=0;
 } 
 
 

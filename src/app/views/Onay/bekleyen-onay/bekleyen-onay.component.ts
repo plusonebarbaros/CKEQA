@@ -13,6 +13,7 @@ import { TabService } from 'src/app/services/tab.service';
 import { Tab } from 'src/app/services/tabs-mod';
 import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service';
 import { TalepDetayComponent } from '../../SatinAlma/talep-detay/talep-detay.component';
+import { OzelSiparisDetayComponent } from '../../Siparis/ozel-siparis-detay/ozel-siparis-detay.component';
 
 @Component({
   selector: 'app-bekleyen-onay',
@@ -29,6 +30,8 @@ export class BekleyenOnayComponent implements OnInit {
   @Input() data:any;
   @ViewChild('taleponaygrid', { static: false }) taleponaygrid!: DxDataGridComponent;
   @ViewChild('teklifonaygrid', { static: false }) teklifonaygrid!: DxDataGridComponent;
+  @ViewChild('ozelsiparisgrid', { static: false }) ozelsiparisgrid!: DxDataGridComponent;
+  @ViewChild('firecikisgrid', { static: false }) firecikisgrid!: DxDataGridComponent;
   
   yetki:KullaniciYetki;
   miktaryetki:KullaniciYetki;
@@ -37,6 +40,8 @@ export class BekleyenOnayComponent implements OnInit {
   retgoster:boolean=false;
   taleponaydetay:DtsOnaySurecMasterModel[]=[]; 
   teklifonaylist:DtsOnaySurecMasterModel[]=[]; 
+  ozelsiparislist:DtsOnaySurecMasterModel[]=[]; 
+  firecikislist:DtsOnaySurecMasterModel[]=[]; 
 
   checkBoxesMode: string="";
   allMode: string="";
@@ -64,9 +69,9 @@ constructor(
   ) {  
     this.allMode = 'allPages';
     this.checkBoxesMode = 'always';
-    this.yetki=new  KullaniciYetki();
-    this.miktaryetki=new  KullaniciYetki();
-    this.kalemdegistir=new  KullaniciYetki();
+    this.yetki = this.kullanicisrc.userperm?.filter(p=>p.YetkiKodu=="YT0020")[0]; 
+    this.miktaryetki = this.kullanicisrc.userperm?.filter(p=>p.YetkiKodu=="YT0022")[0]; 
+    this.kalemdegistir = this.kullanicisrc.userperm?.filter(p=>p.YetkiKodu=="YT0023")[0]; 
     this.secilikalem = new Items(); 
     this.secilenuser=new DtsOnayTanimDetayModel();
   }
@@ -74,9 +79,6 @@ constructor(
   ngOnInit(): void {   
     this.loguser = JSON.parse(sessionStorage.getItem('data')??"") as KullaniciModel;
 
-    this.yetki = this.kullanicisrc.userperm?.filter(p=>p.YetkiKodu=="YT0020")[0]; 
-    this.miktaryetki = this.kullanicisrc.userperm?.filter(p=>p.YetkiKodu=="YT0022")[0]; 
-    this.kalemdegistir = this.kullanicisrc.userperm?.filter(p=>p.YetkiKodu=="YT0023")[0]; 
     this.BekleyenOnaylar();   
     this.ekranYenile(); 
   }
@@ -124,8 +126,10 @@ async talepOnayla(){
   else{
     var onaylist:DtsOnaySurecMasterModel[]=[];
     var talep = this.taleponaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+    var fire = this.firecikisgrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
 
     if(talep.length>0)onaylist = talep;
+    if(fire.length>0)onaylist = fire;
 
     if(onaylist.length>0){
       this.confirmationDialogService.confirm('Onayla', 'Seçili Kalemler Onaylanacak, Devam Edilsin mi?')
@@ -169,8 +173,10 @@ retBaslat(){
   else{
     var onaylist:DtsOnaySurecMasterModel[]=[];
     var talep = this.taleponaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+    var fire = this.firecikisgrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
 
     if(talep.length>0)onaylist = talep;
+    if(fire.length>0)onaylist = fire;
   
     this.confirmationDialogService.confirm('Ret', 'Seçili Kalemler Reddedilecek, Devam Edilsin mi?')
     .then(async (confirmed:any) => 
@@ -292,9 +298,11 @@ onayAciklamaModal(content:any){
 onayAciklama(){
   var onaylist:DtsOnaySurecMasterModel[]=[];
   var talep = this.taleponaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
- 
+  var fire = this.firecikisgrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+
   if(talep.length>0)onaylist = talep;
-  
+  if(fire.length>0)onaylist = fire;
+
   this.confirmationDialogService.confirm('Onay Açıklama', 'Seçili Kalemler İçin Açıklama Girilecek, Devam Edilsin mi?')
   .then(async (confirmed:any) => 
   {
@@ -329,8 +337,11 @@ async GetOnayBekleyenList() {
 
     this.taleponaydetay = onaylist.filter((x) => x.EkranId==1 || x.EkranId==2);
     this.teklifonaylist = onaylist.filter((x) => x.EkranId==3);
+    this.ozelsiparislist = onaylist.filter((x) => x.EkranId==4);
+    this.firecikislist = onaylist.filter((x) => x.EkranId==6);
     this.taleponaygrid.instance.clearSelection();
     this.teklifonaygrid.instance.clearSelection();      
+    this.ozelsiparisgrid.instance.clearSelection();      
    }
  ) 
 }
@@ -365,10 +376,16 @@ async kulkalemAra(ev:any){
 kullsecimyap(){   
   var onaylist:DtsOnaySurecMasterModel[]=[];
   if(this.secilitab==1){
+    onaylist = this.ozelsiparisgrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+  }
+  if(this.secilitab==2){
     onaylist = this.taleponaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
   }
-  else if(this.secilitab==2){
+  else if(this.secilitab==3){
     onaylist = this.teklifonaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+  }
+  else if(this.secilitab==4){
+    onaylist = this.firecikisgrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
   }
 
   if(onaylist.length<=0){
@@ -411,11 +428,17 @@ onKullSelectionChg(e:any){
 
 secilitab:number=1;
 tabsec(e:any){ 
-  if(e.tab.textLabel=="Talep Onayları"){
+  if(e.tab.textLabel=="Özel Sipari"){
     this.secilitab=1;
   }
-  else if(e.tab.textLabel=="Teklif Onayları"){
+  else if(e.tab.textLabel=="Talep Onayları"){
     this.secilitab=2;
+  }
+  else if(e.tab.textLabel=="Teklif Onayları"){
+    this.secilitab=3;
+  }
+  else if(e.tab.textLabel=="Fire Çıkış Onayları"){
+    this.secilitab=4;
   }
 } 
 
@@ -424,10 +447,16 @@ yonlendirMod(content:any){
   this.yonlendirgerigelsin=true;
   let talep:DtsOnaySurecMasterModel[]=[];
   if(this.secilitab==1){
-      talep = this.taleponaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+      talep = this.ozelsiparisgrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
   }
   else if(this.secilitab==2){
+    talep = this.taleponaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+  }
+  else if(this.secilitab==3){
     talep = this.teklifonaygrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
+  }
+  else if(this.secilitab==4){
+    talep = this.firecikisgrid.instance.getSelectedRowsData() as DtsOnaySurecMasterModel[];  
   }
 
   if(talep.length<=0){
@@ -478,8 +507,11 @@ belgeYukleModal(content:any){
 
 
 silgosterChanged(e:any,secekranid:0){
-  let silinecekler  =  secekranid==0 ? this.taleponaygrid.instance.getSelectedRowsData() :
-                       secekranid==1 ? this.teklifonaygrid.instance.getSelectedRowsData() : [];
+  let silinecekler  =  secekranid==0 ? this.ozelsiparisgrid.instance.getSelectedRowsData() :
+                       secekranid==1 ? this.taleponaygrid.instance.getSelectedRowsData() :
+                       secekranid==2 ? this.teklifonaygrid.instance.getSelectedRowsData() :
+                       secekranid==3 ? this.firecikisgrid.instance.getSelectedRowsData() :
+                        [];
 
   if (silinecekler!=null && silinecekler.length==1){
     this.evrekyuklegoster=true;
@@ -509,4 +541,89 @@ TeklifTalepDetay(talep:any){
   yetki.Sil=false;
  this.tabService.addTab(new Tab(TalepDetayComponent, "Talep Detay - "+ talep.Miktar5 , { parent: "AppComponent", _talepid:talep.Miktar5,yetki:yetki,Kontrol:true },0));
 }
+
+ozelSipDetay(talep:any){ 
+  var yetki = new KullaniciYetki;
+  yetki.Export = true;
+  yetki.Ekle=false;
+  yetki.Guncelle=false;
+  yetki.Sil=false;
+ this.tabService.addTab(new Tab(OzelSiparisDetayComponent, "Özel Sipariş Detay - "+ talep.BelgeId , { parent: "AppComponent", _talepid:talep.BelgeId,yetki:yetki,Kontrol:true },0));
+}
+
+ozelsiponaygonder(e:any,bolum:string){ 
+  this.onaybolum=bolum;
+
+  let onaysecimlist  = this.ozelsiparisgrid.instance.getSelectedRowsData();
+  if (onaysecimlist!=null && onaysecimlist.length>0){
+
+    if(onaysecimlist.length>20){
+      this.alertify.warning("20 Kalemden Fazla Onay Verilemez!");
+    }
+
+    this.onaygoster=true;
+    this.retgoster=true;
+    if(onaysecimlist.length==1)this.kalemdegistirgoster=true;
+    else this.kalemdegistirgoster=false;
+  }
+  else {
+    this.onaygoster=false;
+    this.retgoster=false;  
+    this.kalemdegistirgoster=false;
+  }   
+}
+
+overrideOnValueChanged(e:any) { 
+}
+
+async TalepCellDegisti(e:any){ 
+  var data = e.data as DtsOnaySurecMasterModel;
+  if(data.Miktar3>data.Miktar4){
+    this.alertify.warning("Transfer Miktarı Depo Bakiyesinden Fazla Olamaz!");
+    e.data.Miktar3=0;
+    e.data.Miktar=e.data.Miktar2;
+  }
+  
+  if(data.Miktar3>0 && data.Miktar3<=data.Miktar4){
+    e.data.Miktar=e.data.Miktar-e.data.Miktar3;
+    if(e.data.Miktar<0){
+      this.alertify.warning("Transfer Miktarı Talep Miktarından Fazla Olamaz!");
+      e.data.Miktar3=0;
+      e.data.Miktar=e.data.Miktar2;
+    }
+  }
+  
+  if(data.Miktar3==null || data.Miktar3==undefined || data.Miktar3<=0){
+    e.data.Miktar3=0;
+  }
+
+  if(data.Miktar3>e.data.Miktar2){
+    this.alertify.warning("Transfer Miktarı Talep Miktarından Fazla Olamaz!");
+    e.data.Miktar3=0;
+    e.data.Miktar=e.data.Miktar2;
+  }
+}
+
+fireonayGoster(e:any,bolum:string){ 
+  this.onaybolum=bolum;
+
+  let onaysecimlist  = this.firecikisgrid.instance.getSelectedRowsData();
+  if (onaysecimlist!=null && onaysecimlist.length>0){
+
+    if(onaysecimlist.length>20){
+      this.alertify.warning("20 Kalemden Fazla Onay Verilemez!");
+    }
+
+    this.onaygoster=true;
+    this.retgoster=true;
+    if(onaysecimlist.length==1)this.kalemdegistirgoster=true;
+    else this.kalemdegistirgoster=false;
+  }
+  else {
+    this.onaygoster=false;
+    this.retgoster=false;  
+    this.kalemdegistirgoster=false;
+  }   
+}
+
 }

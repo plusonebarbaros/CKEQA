@@ -1043,6 +1043,8 @@ export class TalepDetail {
   DuranVarlikSiparisId:number=0;
   DuranVarlikUrunKodu:string="";
   DuranVarlikUrunAdi:string="";
+
+  TransferMiktar:number=0;
 }  
 export class Customer { 
     Code: number=0;
@@ -1167,6 +1169,7 @@ export class ItemsFile {
     ItmsGrpNam: string="";
     Bakiye: number=0;
     DepoKodu:string="";
+    DepoAdi:string="";
     Miktar:number=0;
     Aciklama:string="";
     StokDepo:string="";
@@ -1187,5 +1190,6 @@ export class ItemsFile {
     Files:number=0;
     TalepDurumId:number=1; 
     Base64List:ItemsFile[]=[];
+    SeriLot:string="";
     } 
    

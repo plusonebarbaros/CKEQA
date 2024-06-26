@@ -80,6 +80,10 @@ import { OnayDurumKontrolComponent } from './views/Genel/onay-durum-kontrol/onay
 import { BelgeGoruntuleComponent } from "./views/Genel/belge-goruntule/belge-goruntule.component";
 import { BekleyenOnayComponent } from './views/Onay/bekleyen-onay/bekleyen-onay.component';
 import { OnayGecmisComponent } from './views/Onay/onay-gecmis/onay-gecmis.component';
+import { FireYonetimComponent } from './views/Stok/fire-yonetim/fire-yonetim.component';
+import { SayimYonetimComponent } from './views/Stok/sayim-yonetim/sayim-yonetim.component';
+import { SayimDetayComponent } from './views/Stok/sayim-detay/sayim-detay.component';
+import { FireTipTanimComponent } from './views/Yonetim/fire-tip-tanim/fire-tip-tanim.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -119,7 +123,11 @@ locale(navigator.language);
     OnayDurumKontrolComponent,
     BelgeGoruntuleComponent,
     BekleyenOnayComponent,
-    OnayGecmisComponent
+    OnayGecmisComponent,
+    FireYonetimComponent,
+    SayimYonetimComponent,
+    SayimDetayComponent,
+    FireTipTanimComponent
       ],
   imports: [
     BrowserModule,
@@ -164,7 +172,7 @@ locale(navigator.language);
     DxProgressBarModule,
     DxChartModule,
     MatFormFieldModule,
-
+    NgxMaskModule.forRoot(),
 
       ],
   providers: [

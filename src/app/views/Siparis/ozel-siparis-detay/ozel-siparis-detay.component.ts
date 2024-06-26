@@ -31,6 +31,8 @@ export class OzelSiparisDetayComponent implements OnInit {
   @BlockUI() blockUI!: NgBlockUI;
   @Input() data:any;  
   yetki:KullaniciYetki; 
+  sipyetki:KullaniciYetki; 
+  teslimyetki:KullaniciYetki; 
   lookupDataSource = {};
   date:any; 
   master: OzelSiparisMaster;
@@ -61,6 +63,7 @@ export class OzelSiparisDetayComponent implements OnInit {
   sehirlist: SehirModel[]=[];  
   ilcelist: IlceModel[]=[];   
   teslimilcelist: IlceModel[]=[];   
+  musteribilgi:OzelSiparisMaster;
   
   protected _onDestroy = new Subject<void>();
 
@@ -98,7 +101,10 @@ export class OzelSiparisDetayComponent implements OnInit {
     this.checkBoxesMode = 'always';
     this.secilifirma=new Customer();
     this.master = new OzelSiparisMaster();
+    this.musteribilgi = new OzelSiparisMaster();
     this.yetki = this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0012")[0];
+    this.sipyetki  = this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0024")[0];
+    this.teslimyetki = this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0025")[0];
    }   
 
    async TalepDetayGetir() {
@@ -146,10 +152,12 @@ export class OzelSiparisDetayComponent implements OnInit {
       this.master.DurumId=0;
       this.master.ErpSirket = this.loguser.AktifSirket;
       this.master.Tarih=moment(new Date()).format("yyyy-MM-DD");
+      this.master.TeslimTarih=moment(new Date()).format("yyyy-MM-DD");
       this.master.Ekleyen=talepeden; 
       this.master.SehirKod="34"; 
       this.master.TeslimSehirKod="34"; 
       this.master.TeslimSaati = (now.getHours())+":00";
+      this.master.TeslimatSubeId = this.loguser.CalistigiSubeKod;
       this.GetSehirListele(this.master.SehirKod,true);
       this.GetTeslimSehirListele(this.master.TeslimSehirKod,true);
     }
@@ -373,6 +381,7 @@ export class OzelSiparisDetayComponent implements OnInit {
           if(this.master.Id<=0){
             this.master.Id=sonuc.Id;
             this.master.validkey=sonuc.ValidKey;
+            this.master.DurumId=1;
           } 
 
           this.TalepDetayGetir();
@@ -460,17 +469,7 @@ export class OzelSiparisDetayComponent implements OnInit {
       this.alertify.warning("Miktar Girilen Satırlarda Birim Seçimi Zorunludur! => " + item.ItemName );
       devam=false;
       return;
-     }
-     if(item.BirimTutar<=0 || item.BirimTutar==undefined || item.BirimTutar==null){
-      this.alertify.warning("Birim Tutar Sıfırdan Büyük Olmalıdır! => " + item.ItemName );
-      devam=false;
-      return;
-     }
-     if(item.Aciklama=="" || item.Aciklama==null || item.Aciklama==undefined){
-      this.alertify.warning("Hizmet/Açıklama Alanı Zorunludur! => " + item.ItemName );
-      devam=false;
-      return;
-     }
+     }     
     });     
 
     if(devam){
@@ -485,7 +484,7 @@ export class OzelSiparisDetayComponent implements OnInit {
         td.Aciklama=item.Aciklama;
         td.SatirGuid = this.genelsrv.GuidGenerator();
         td.SapSirketId=this.master.ErpSirket;    
-        td.BirimTutar=item.BirimTutar;     
+        td.Fiyat=item.BirimTutar;     
         td.ToplamTutar=item.BirimTutar * item.Miktar;     
         td.BelgeBase64=item.BelgeBase64;     
         td.BelgeAdi=item.BelgeAdi;     
@@ -740,5 +739,124 @@ firmaTemizle(){
     this.teslimilcelist = this.kullanicisrc.ilcelist.filter((x)=>x.IlId==e.value);
     this.filterilcerTeslim.next(this.teslimilcelist.slice());
   } 
+
+  async siparisolustur(){    
+    if(this.master.Id <= 0){
+      this.alertify.warning("Seçim Yapılmadı!") 
+      return;
+    } 
+    if(this.master.SapSiparisNo > 0){
+      this.alertify.warning("Sipariş Oluşan Taleplerde İşlem Yapılamaz!") 
+      return;
+    } 
+  
+    this.confirmationDialogService.confirm('Sipariş','SAP Siparişi Oluşturulacak, Devam Edilsin mi?')
+    .then(async (confirmed:any) => 
+    {
+      if(confirmed.sonuc==true)  {
+        this.blockUI.start(EkranMesaj.Kaydet);
+        var sonuc = await this.siparissrc.OzelSiparisOlustur(this.master.Id);
+        if(sonuc.Success==true){
+            this.alertify.success(EkranMesaj.KayitTamamlandi); 
+            this.master.SapSiparisNo=sonuc.Id;
+            this.master.DurumId=2;
+            this.TalepDetayGetir();
+          } else{
+            this.alertify.warning(sonuc.Message);
+          }
+          this.blockUI.stop();  
+      }
+    })
+    .catch(() => { 
+    }); 
+  }
+
+  async teslimEt(){    
+    if(this.master.Id <= 0){
+      this.alertify.warning("Seçim Yapılmadı!") 
+      return;
+    } 
+    if(this.master.SapSiparisNo <= 0){
+      this.alertify.warning("Sipariş Oluşan Taleplerde İşlem Yapılabilir!") 
+      return;
+    } 
+  
+    this.confirmationDialogService.confirm('Sipariş','Sipariş Teslim Edildi Olarak Güncellenecek, Devam Edilsin mi?')
+    .then(async (confirmed:any) => 
+    {
+      if(confirmed.sonuc==true)  {
+        this.blockUI.start(EkranMesaj.Kaydet);
+        var sonuc = await this.siparissrc.OzelSiparisTeslim(this.master.Id);
+        if(sonuc.Success==true){
+            this.alertify.success("İşlem Tamamlandı"); 
+            this.master.DurumId=3;
+            this.TalepDetayGetir();
+          } else{
+            this.alertify.warning(sonuc.Message);
+          }
+          this.blockUI.stop();  
+      }
+    })
+    .catch(() => { 
+    }); 
+  }
+
+
+  musteriSorgula(tip:string){
+    if(tip=="Tckn"){
+      if(this.master.Tckn.length==11){
+        this.GetOzelSiparisFirst(tip,this.master.Tckn);
+      }
+      else this.alertify.warning("Tckn 11 Karakter Olmalıdır!"); 
+    }
+    if(tip=="Vkn"){
+      if(this.master.VergiNo.length==10){
+        this.GetOzelSiparisFirst(tip,this.master.VergiNo);
+      }
+      else this.alertify.warning("Vergi No 10 Karakter Olmalıdır!"); 
+    }
+  }
+
+  async GetOzelSiparisFirst(f1:string,f2:string)  {
+    this.blockUI.start(EkranMesaj.Listele);
+      (await this.siparissrc.GetOzelSiparisFirst(f1,f2)).subscribe(
+        data=>{
+          this.blockUI.stop();
+          if(!data.Success){
+            this.alertify.warning(data.Message);
+            return;
+          }
+
+          if(data.List==null || data.List.length<=0){
+            this.alertify.warning("Girilen Bilgilere Göre Kayıt Bulunadı!"); 
+            return;
+          }
+          else {
+            this.musteribilgi=data.List[0] as OzelSiparisMaster;
+            this.master.MusteriAdi = this.musteribilgi.MusteriAdi;
+            this.master.SiparisVerenKisi = this.musteribilgi.SiparisVerenKisi;
+            this.master.Gsm = this.musteribilgi.Gsm;
+            this.master.Telefon1 = this.musteribilgi.Telefon1;
+            this.master.Email = this.musteribilgi.Email;
+            this.master.VergiDairesi = this.musteribilgi.VergiDairesi;
+            this.master.VergiNo = this.musteribilgi.VergiNo;
+            this.master.Tckn = this.musteribilgi.Tckn;
+            this.master.Adres = this.musteribilgi.Adres;
+            this.master.SehirKod = this.musteribilgi.SehirKod;            
+            
+            this.ilcelist=[];
+            this.ilcelist = this.kullanicisrc.ilcelist.filter((x)=>x.IlId==this.master.SehirKod);
+            this.filterilcer.next(this.ilcelist.slice());
+
+            this.master.IlceKod = this.musteribilgi.IlceKod;
+          }
+        }
+      )
+  }
+
+  musteriTemizle(tip:string){
+    if(tip=="Tckn")this.master.Tckn="";
+    if(tip=="Vkn")this.master.VergiNo="";
+  }
 
 }
