@@ -1161,7 +1161,7 @@ export class ItemsFile {
   BelgeUzanti:string="";
   } 
  
-  export class Items {
+  export class Items {    
     DocEntry: number=0;
     ItemCode: string="";
     ItemName: string="";
@@ -1178,7 +1178,8 @@ export class ItemsFile {
     StokSubeAdi:string="";
     semkey:string="";
     BirimTutar:number=0;
-    ToplamTutar:number=0;
+    IskontoOran:number=0; 
+    ToplamTutar:number=0; 
     StokFiyat1:number=0;
     OrtFiyat:number=0;
     SonFiyat:number=0;

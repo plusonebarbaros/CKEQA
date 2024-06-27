@@ -468,6 +468,9 @@ export class OzelSiparisKalem {
   TahminiTutar:number=0;
   BirimTutar:number=0;
   ToplamTutar:number=0;
+  IskontoOran:number=0;
+  Iskonto:number=0;
+  GenelToplam:number=0;
   KdvOran:string="";
   validkey:string="";
   AlimYapildi:string="";
@@ -579,6 +582,12 @@ export  class OzelSiparisMaster {
   TeslimIlceKod: number=0;
   TeslimIlce: string="";
   SapSiparisNo: number=0;
+  FaturaKesilecekmi: boolean=false;
+  AdreseTeslim: boolean=false;
+  TeslimTipId: number=0;
+  TeslimTip: string="";
+  TeslimatUcreti: number=0;
+  OmniSipNo: string="";  
 } 
 
 

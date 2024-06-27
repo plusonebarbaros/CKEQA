@@ -60,6 +60,7 @@ export class FireYonetimComponent implements OnInit {
   onayaciklama:string="";
   firetiplist: ConnFireTipTanimModel[]=[];    
   FireTipiId:number=0;
+  MagazaKod:string="";
 
   protected _onDestroy = new Subject<void>();
 
@@ -174,7 +175,7 @@ export class FireYonetimComponent implements OnInit {
         this.alertify.warning(data.Message);
         return;
       }
-      this.depolist=(data.List as ConDepoYetki[]).filter((x)=> x.DepoKodu!=this.loguser.CalistigiSubeKod);  
+      this.depolist=(data.List as ConDepoYetki[]);
       this.filterDepo.next(this.depolist.slice());
    })  
   }
@@ -337,6 +338,11 @@ listeyeekle(){
     devam=false;
     return;
   }
+  if(this.MagazaKod=="" || this.MagazaKod==null ||this.MagazaKod==undefined){
+    this.alertify.warning("Çıkış Yapılacak Mağaza Seçiniz!");
+    devam=false;
+    return;
+  }
 
   this.kalemlist.forEach(item=> { item.Miktar = parseFloat( (item.Miktar??0).toString().replace(",","."))});
 
@@ -363,7 +369,7 @@ listeyeekle(){
       td.Miktar=item.Miktar; 
       td.StokKodu=item.ItemCode;
       td.StokAdi=item.ItemName;
-      td.DepoKodu=this.loguser.CalistigiSubeKod; 
+      td.DepoKodu=this.MagazaKod; 
       td.Aciklama=item.Aciklama;
       td.semkey = this.genelsrv.GuidGenerator();
       td.BelgeBase64=item.BelgeBase64;     
@@ -451,8 +457,10 @@ kalemEklemod(content:any){
     this.kalemlist=[];
     this.kalemkeyword=""; 
     this.TalepAciklama="";
-    this.TalepTarih = moment(new Date).format("yyyy-MM-DD"); 
+    this.MagazaKod = this.loguser.CalistigiSubeKod;
+    this.FireTipiId = 0;
     this.kalemAraDef();
+    this.TalepTarih = moment(new Date).format("yyyy-MM-DD"); 
     this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
 }  
 
@@ -464,7 +472,7 @@ async kalemAra(ev:any){
 
   if (ev.keyCode === 13 && this.kalemkeyword!="") {
     this.blockUI.start(EkranMesaj.Listele);
-    var sonuc = await this.genelsrv.GetTransferStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.loguser.CalistigiSubeKod);
+    var sonuc = await this.genelsrv.GetTransferStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.MagazaKod);
     this.blockUI.stop(); 
     if(sonuc.Success){
       this.kalemlist=sonuc.List;
@@ -477,7 +485,7 @@ async kalemAra(ev:any){
 
 async kalemAraDef(){
   this.blockUI.start(EkranMesaj.Listele);
-  var sonuc = await this.genelsrv.GetTransferStokList("", 50, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.loguser.CalistigiSubeKod);
+  var sonuc = await this.genelsrv.GetTransferStokList("", 1000, this.kalemkeyword?.toLocaleUpperCase('tr')??"",this.MagazaKod);
   this.blockUI.stop(); 
   if(sonuc.Success){
     this.kalemlist=sonuc.List;
@@ -494,6 +502,11 @@ aramaTemizle(){
 
 defFire(event: any) {
   this.FireTipiId = 0;
+  event.stopPropagation();
+}
+
+defGrup(event: any) {
+  this.MagazaKod = "";
   event.stopPropagation();
 }
 

@@ -233,16 +233,7 @@
        
         <dxi-column placeholder="Miktar Giriniz..." dataField="Miktar" caption="Miktar" [style.width.%]="10" alignment="center" format="#,##0.####" onfocus="this.select()"></dxi-column>    
       
-        <dxi-column
-        dataField="BirimId"
-        caption="Birim"
-        [style.width.%]="10" alignment="center">         
-        <dxo-lookup
-            [dataSource]="olcubirimlist"
-            displayExpr="Adi"
-            valueExpr="Id">
-        </dxo-lookup>
-        </dxi-column>
+        <dxi-column dataField="Birim" caption="Birim" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
         
         <dxi-column dataField="BirimTutar" [style.width.%]="10" caption="Birim Tutar"  [allowEditing]="true" alignment="center" dataType="number" format="#,##0.00" onfocus="this.select()"></dxi-column> 
       

@@ -109,7 +109,25 @@
     <div class="modal-body">
       <div class="row">
         <div class="input-group">
-  
+          
+            <mat-form-field appearance="outline" [style.width.%]="20">
+              <mat-label>Çıkış Yapılacak Mağaza</mat-label>
+                <mat-select  #singleSelect [(ngModel)]="MagazaKod" (ngModelChange)="kalemAraDef()">
+                  <mat-option>
+                    <ngx-mat-select-search [formControl]="formDepo"  
+                    placeholderLabel="Ara..."
+                    noEntriesFoundLabel="Kayıt Bulunamadı...">
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let gr of filterDepo | async" [value]="gr.DepoKodu" >
+                    {{gr.DepoAdi}}
+                  </mat-option>
+                </mat-select>
+                <button mat-button matSuffix *ngIf="MagazaKod!=''" mat-icon-button (click)="defGrup($event)">
+                  <mat-icon>close</mat-icon>
+              </button>
+          </mat-form-field> 
+
             <mat-form-field appearance="outline" [style.width.%]="20">
                 <mat-label>Fire Tipi</mat-label>
                   <mat-select  #singleSelect [(ngModel)]="FireTipiId">
@@ -193,17 +211,6 @@
       <dxi-column dataField="Bakiye" caption="Bakiye" [style.width.%]="10" alignment="center" format="#,##0.####" [allowEditing]="false"></dxi-column>    
       <dxi-column placeholder="Miktar Giriniz..." dataField="Miktar" caption="Çıkış Miktar" [style.width.%]="10" alignment="center" format="#,##0.####" onfocus="this.select()"></dxi-column>    
     
-      <dxi-column
-      dataField="BirimId"
-      caption="Birim"
-      [style.width.%]="10" alignment="center">         
-      <dxo-lookup
-          [dataSource]="olcubirimlist"
-          displayExpr="Adi"
-          valueExpr="Id">
-      </dxo-lookup>
-      </dxi-column>
-      
       <dxi-column  
       dataField="Aciklama"  
       caption="Açıklama"  

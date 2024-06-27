@@ -367,6 +367,12 @@ export class OzelSiparisDetayComponent implements OnInit {
       this.alertify.warning("Teslimat İlçe Alanı Zorunludur!");
       return;
     } 
+    if(this.master.FaturaKesilecekmi){
+      if(this.master.Tckn=="" && this.master.VergiNo==""){
+        this.alertify.warning("Fatura Kesilecek Parametresi Seçili İse Tc Kimlik Numarası veya Vergi Numarası Girişi Zorunludur!");
+        return;
+      } 
+    }
      
     if(this.talepdetay.length<=0){
       this.alertify.warning("Malzeme Eklenmeden Kayıt İşlemi Yapılamaz!");
@@ -485,7 +491,8 @@ export class OzelSiparisDetayComponent implements OnInit {
         td.SatirGuid = this.genelsrv.GuidGenerator();
         td.SapSirketId=this.master.ErpSirket;    
         td.Fiyat=item.BirimTutar;     
-        td.ToplamTutar=item.BirimTutar * item.Miktar;     
+        td.ToplamTutar=item.ToplamTutar;     
+        td.IskontoOran=item.IskontoOran;     
         td.BelgeBase64=item.BelgeBase64;     
         td.BelgeAdi=item.BelgeAdi;     
         td.BelgeUzanti=item.BelgeUzanti;   
@@ -709,10 +716,11 @@ firmaTemizle(){
   onCellPreparedKalem (e:any) {
     if (e.rowType == "data") {
        if(e.column.dataField === "Miktar") e.cellElement.classList.add("datagiriscolor");
-       if(e.column.dataField === "BirimId") e.cellElement.classList.add("datagiriscolor");
        if(e.column.dataField === "BirimTutar") e.cellElement.classList.add("datagiriscolor");
-       if(e.column.dataField === "DepoKodu") e.cellElement.classList.add("datagiriscolor");
+       if(e.column.dataField === "IskontoOran") e.cellElement.classList.add("datagiriscolor");
        if(e.column.dataField === "Aciklama") e.cellElement.classList.add("datagiriscolor");
+       if(e.column.dataField === "ToplamTutar") e.cellElement.classList.add("datagiriscolor");
+       if(e.column.dataField === "Birim") e.cellElement.classList.add("datagiriscolor");
     }
   }
 
@@ -815,6 +823,12 @@ firmaTemizle(){
       }
       else this.alertify.warning("Vergi No 10 Karakter Olmalıdır!"); 
     }
+    if(tip=="Gsm"){
+      if(this.master.Gsm.length==10){
+        this.GetOzelSiparisFirst(tip,this.master.Gsm);
+      }
+      else this.alertify.warning("Cep Telefon 10 Karakter Olmalıdır!"); 
+    }
   }
 
   async GetOzelSiparisFirst(f1:string,f2:string)  {
@@ -857,6 +871,35 @@ firmaTemizle(){
   musteriTemizle(tip:string){
     if(tip=="Tckn")this.master.Tckn="";
     if(tip=="Vkn")this.master.VergiNo="";
+    if(tip=="Gsm")this.master.Gsm="";
   }
+
+  async KalemBilgiDegisti(e:any){ 
+    if(e==null || e.data ==null){
+      e.data.ToplamTutar=0;
+      e.data.GenelToplam=0;
+      return;
+    }
+    else{
+      if(e.data.IskontoOran<0 || e.data.IskontoOran>100){
+        this.alertify.warning("İskonto Oranı 0 ile 100 Arasında Olmalıdır!"); 
+        e.data.IskontoOran=0;
+      }
+
+      if(e.data.BirimTutar>0 && e.data.Miktar>0){
+        e.data.ToplamTutar  = e.data.BirimTutar * e.data.Miktar;
+        if(e.data.IskontoOran>0){
+          e.data.ToplamTutar -= (e.data.ToplamTutar * (e.data.IskontoOran/100));
+        }
+
+        e.data.Iskonto =  (e.data.BirimTutar * e.data.Miktar) - e.data.ToplamTutar;
+        e.data.GenelToplam = e.data.ToplamTutar;
+      } 
+      else {
+        e.data.ToplamTutar=0;
+        e.data.GenelToplam=0;
+      }
+    }    
+}
 
 }

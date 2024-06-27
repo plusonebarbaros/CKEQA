@@ -31,16 +31,24 @@
                 <mat-label>Siparişi Veren Kişi</mat-label>
                 <input matInput placeholder="Siparişi Veren Kişi" [(ngModel)]="master.SiparisVerenKisi" autocomplete="off">
             </mat-form-field>
-
-            <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Cep Telefon</mat-label>
-                <input matInput placeholder="Cep Telefon" [(ngModel)]="master.Gsm" autocomplete="off" mask="000 000 00 00">
+ 
+            <mat-form-field appearance="outline" [style.width.%]="25">
+              <mat-label>Cep Telefon</mat-label>
+                  <input matInput type="search" [(ngModel)]="master.Gsm" autocomplete="off" mask="000 000 00 00"> 
+    
+               <button mat-button matSuffix mat-icon-button (click)="musteriSorgula('Gsm')">
+                <mat-icon style="color: #007bff;font-weight: bold;">search</mat-icon>
+              </button>
+    
+              <button *ngIf="master.Gsm!=''" mat-button matSuffix mat-icon-button (click)="musteriTemizle('Gsm')">
+                <mat-icon style="color: red;font-weight: bold">cancel</mat-icon>
+              </button>   
             </mat-form-field>
 
             <mat-form-field appearance="outline" [style.width.%]="25" >
-                <mat-label>Telefon</mat-label>
-                <input matInput placeholder="Telefon" [(ngModel)]="master.Telefon1" autocomplete="off" mask="000 000 00 00">
-            </mat-form-field>            
+              <mat-label>Telefon</mat-label>
+              <input matInput placeholder="Telefon" [(ngModel)]="master.Telefon1" autocomplete="off" mask="000 000 00 00">
+          </mat-form-field> 
 
             <mat-form-field appearance="outline" [style.width.%]="25" >
                 <mat-label>Email</mat-label>
@@ -114,7 +122,31 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field> 
-          
+
+          <div class="row" style="margin-left: 5px!important;margin-top: 5px!important;float: left;"> 
+                <section class="switchfont" style="float:left">
+                  <mat-slide-toggle [(ngModel)]="master.FaturaKesilecekmi" [checked]="master.FaturaKesilecekmi">
+                  Fatura Kesilecek mi
+                    </mat-slide-toggle>
+                </section>
+
+                <section class="switchfont" style="float:left">
+                  <mat-slide-toggle [(ngModel)]="master.AdreseTeslim" [checked]="master.AdreseTeslim">
+                  Adrese Teslim
+                  </mat-slide-toggle>
+                </section>             
+          </div>          
+
+            <mat-form-field appearance="outline" [style.width.%]="15" *ngIf="master.AdreseTeslim">
+              <mat-label>Teslimat Ücreti</mat-label>
+              <input matInput placeholder="Teslimat Ücreti" [(ngModel)]="master.TeslimatUcreti" autocomplete="off" type="number" format="#,##0.####" onfocus="this.select()">
+            </mat-form-field> 
+
+            <mat-form-field appearance="outline" [style.width.%]="15" >
+              <mat-label>Omni Sipariş No</mat-label>
+              <input matInput placeholder="Omni Sipariş No" [(ngModel)]="master.OmniSipNo" autocomplete="off">
+            </mat-form-field>
+
         </div>
     </div>
      
@@ -254,6 +286,7 @@
     <dxi-column dataField="Miktar" [style.width.%]="10"  caption="Miktar" alignment="right" dataType="number" format="#,##0.00"> </dxi-column> 
     <dxi-column dataField="Fiyat" [style.width.%]="10" caption="Birim Tutar"  [allowEditing]="true" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
     <dxi-column dataField="IskontoOran" [style.width.%]="10" caption="İskonto %"  [allowEditing]="true" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
+    <dxi-column dataField="Iskonto" [style.width.%]="10" caption="İskonto Tutar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
     <dxi-column dataField="ToplamTutar" [style.width.%]="10" caption="Toplam Tutar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
     
     <dxi-column dataField="Birim" caption="Birim" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
@@ -339,6 +372,7 @@
         columnResizingMode = "widget" 
         [allowColumnReordering]="true"
         (onCellPrepared)="onCellPreparedKalem($event)"  
+        (onRowUpdated)="KalemBilgiDegisti($event)" 
         > 
         <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
@@ -367,7 +401,8 @@
         <dxi-column dataField="Birim" caption="Birim" [style.width.%]="10" [allowEditing]="false" alignment="center" ></dxi-column>
  
         <dxi-column dataField="BirimTutar" [style.width.%]="10" caption="Birim Tutar"  [allowEditing]="true" alignment="center" dataType="number" format="#,##0.00" onfocus="this.select()"></dxi-column> 
-        <dxi-column dataField="IskontoOran" [style.width.%]="10" caption="İskonto %"  [allowEditing]="true" alignment="center" dataType="number" format="#,##0.00" onfocus="this.select()"></dxi-column> 
+        <dxi-column dataField="IskontoOran" [style.width.%]="10" caption="İskonto %"  [allowEditing]="true" alignment="center" dataType="number" format="#,##0.00" onfocus="this.select()" [ariaValueMin]="0" [ariaValueMax]="100"></dxi-column> 
+        <dxi-column dataField="ToplamTutar" [style.width.%]="10" caption="Toplam Tutar"  [allowEditing]="false" alignment="center" dataType="number" format="#,##0.00" onfocus="this.select()"></dxi-column> 
 
         <!-- <dxi-column
         dataField="DepoKodu"

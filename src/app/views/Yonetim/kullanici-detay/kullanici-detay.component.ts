@@ -8,7 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DxDataGridComponent } from 'devextreme-angular';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { PrimParametreModel, GenelApi, EkranMesaj, IslemTipi, StokGrupModel } from 'src/app/services/GenelSrc';
+import { GenelApi, EkranMesaj, IslemTipi, StokGrupModel } from 'src/app/services/GenelSrc';
 import { KullaniciYetki, KullaniciModel, OnayHesapModel, SirketYetki, AcenteYetki, DepoYetki, YetkiGrup, KasaYetki, BankaYetki, DepoYetkiModel, MuhatapYetkiModel, SirketBirim, SapSirket, KategoriYetkiModel, KullaniciSrcService, MuhatapModel } from 'src/app/services/KullaniciSrc';
 import { NotifyService } from 'src/app/services/notify';
 import { DepoModel, SiparisService } from 'src/app/services/SiparisSrc';
@@ -55,7 +55,6 @@ export class KullaniciDetayComponent implements OnInit {
   kullanicilist:KullaniciModel[]=[];
   secilikullanici:KullaniciModel; 
   kalemkeyword:string=""; 
-  primparamtrelist: PrimParametreModel[]=[]; 
   sirketlist: SapSirket[]=[]; 
   SapSirket:string=""; 
   kulkategoriyetkilist:KategoriYetkiModel[]=[];
