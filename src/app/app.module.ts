@@ -84,6 +84,7 @@ import { FireYonetimComponent } from './views/Stok/fire-yonetim/fire-yonetim.com
 import { SayimYonetimComponent } from './views/Stok/sayim-yonetim/sayim-yonetim.component';
 import { SayimDetayComponent } from './views/Stok/sayim-detay/sayim-detay.component';
 import { FireTipTanimComponent } from './views/Yonetim/fire-tip-tanim/fire-tip-tanim.component';
+import { TalepKontrolListesiComponent } from './views/SatinAlma/talep-kontrol-listesi/talep-kontrol-listesi.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -127,7 +128,8 @@ locale(navigator.language);
     FireYonetimComponent,
     SayimYonetimComponent,
     SayimDetayComponent,
-    FireTipTanimComponent
+    FireTipTanimComponent,
+    TalepKontrolListesiComponent
       ],
   imports: [
     BrowserModule,
