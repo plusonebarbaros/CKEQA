@@ -211,6 +211,7 @@ export class OnayTanimDetayComponent implements OnInit {
           } else{
           this.alertify.warning(sonuc.Message);
           }
+          this.DataLoad();
         });
         this.blockUI.stop(); 
         this.modalService.dismissAll();  
@@ -218,6 +219,7 @@ export class OnayTanimDetayComponent implements OnInit {
     })
     .catch(() => {
     }); 
+  
   } 
 
   DataLoad(){

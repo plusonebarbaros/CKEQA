@@ -1045,6 +1045,7 @@ export class TalepDetail {
   DuranVarlikUrunAdi:string="";
 
   TransferMiktar:number=0;
+  GrupAdi:string="";
 }  
 export class Customer { 
     Code: number=0;

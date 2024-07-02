@@ -21,7 +21,7 @@
         
          <mat-form-field appearance="outline"   [style.width.%]="15" style="padding-right: 10px;">
            <mat-label>Talep Tarih</mat-label> 
-           <input matInput [matDatepicker]="dp" placeholder="Talep Tarihi"  [(ngModel)]="talepmaster.Tarih" >
+           <input matInput [matDatepicker]="dp" placeholder="Talep Tarihi"  [(ngModel)]="talepmaster.Tarih" (ngModelChange)="TarihChg($event)" >
          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
          <mat-datepicker #dp></mat-datepicker>
        </mat-form-field> 
@@ -182,7 +182,7 @@
         <div style="clear:both"></div>
         <hr/>
     
-        <dx-data-grid  class="devgrid30"
+        <dx-data-grid  class="devgrid50"
         [dataSource]="kalemlist"
         [showBorders]="true"
         [showRowLines]="true"

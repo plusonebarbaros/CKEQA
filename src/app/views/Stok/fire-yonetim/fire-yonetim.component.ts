@@ -461,7 +461,7 @@ kalemEklemod(content:any){
     this.FireTipiId = 0;
     this.kalemAraDef();
     this.TalepTarih = moment(new Date).format("yyyy-MM-DD"); 
-    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
+    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss95', backdrop: 'static' }); 
 }  
 
 async kalemAra(ev:any){ 

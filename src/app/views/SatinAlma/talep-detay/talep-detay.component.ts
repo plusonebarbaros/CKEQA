@@ -124,6 +124,10 @@ export class TalepDetayComponent implements OnInit {
     }
   }
 
+  TarihChg(e:any){
+    this.talepmaster.Tarih=moment(e._d).format("yyyy-MM-DD"); 
+  }
+
   async GetStokOlcuBirim()  {
     this.blockUI.start(EkranMesaj.Listele);
       (await this.sabitsrc.GetStokOlcuBirim(0)).subscribe(
@@ -268,7 +272,7 @@ export class TalepDetayComponent implements OnInit {
     this.kalemlist=[];
     this.kalemkeyword=""; 
     this.StokGrupId=0;
-    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
+    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss95', backdrop: 'static' }); 
   }  
   
   async kalemAra(ev:any){ 

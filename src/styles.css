@@ -1323,89 +1323,6 @@ overflow-y: auto;
 }  
 }
 
-.devgrid20{height:20vh! important; }  
-.devgrid21{height:21vh! important; }  
-.devgrid22{height:22vh! important; }  
-.devgrid23{height:23vh! important; }  
-.devgrid24{height:24vh! important; }  
-.devgrid25{height:25vh! important; }  
-.devgrid26{height:26vh! important; }  
-.devgrid27{height:27vh! important; }  
-.devgrid28{height:28vh! important; }  
-.devgrid29{height:29vh! important; }  
-.devgrid30{height:30vh! important; }  
-.devgrid31{height:31vh! important; }  
-.devgrid32{height:32vh! important; }  
-.devgrid33{height:33vh! important; }  
-.devgrid34{height:34vh! important; }  
-.devgrid35{height:35vh! important; }  
-.devgrid36{height:36vh! important; }  
-.devgrid37{height:37vh! important; }  
-.devgrid38{height:38vh! important; }  
-.devgrid39{height:39vh! important; }  
-.devgrid40{height:40vh! important; }  
-.devgrid41{height:41vh! important; }  
-.devgrid42{height:42vh! important; }  
-.devgrid43{height:43vh! important; }  
-.devgrid44{height:44vh! important; }  
-.devgrid45{height:45vh! important; }  
-.devgrid46{height:46vh! important; }  
-.devgrid47{height:47vh! important; }  
-.devgrid48{height:48vh! important; }  
-.devgrid49{height:49vh! important; }  
-.devgrid50{height:50vh! important; }  
-.devgrid51{height:51vh! important; }  
-.devgrid52{height:52vh! important; }  
-.devgrid53{height:53vh! important; }  
-.devgrid54{height:54vh! important; }  
-.devgrid55{height:55vh! important; }  
-.devgrid56{height:56vh! important; }  
-.devgrid57{height:57vh! important; }  
-.devgrid58{height:58vh! important; }  
-.devgrid59{height:59vh! important; }  
-.devgrid60{height:60vh! important; }  
-.devgrid61{height:61vh! important; }  
-.devgrid62{height:62vh! important; }  
-.devgrid63{height:63vh! important; }  
-.devgrid64{height:64vh! important; }  
-.devgrid65{height:65vh! important; }  
-.devgrid66{height:66vh! important; }  
-.devgrid67{height:67vh! important; }  
-.devgrid68{height:68vh! important; }  
-.devgrid69{height:69vh! important; }  
-.devgrid70{height:70vh! important; }  
-.devgrid71{height:71vh! important; }  
-.devgrid72{height:72vh! important; }  
-.devgrid73{height:73vh! important; }  
-.devgrid74{height:74vh! important; }  
-.devgrid75{height:75vh! important; }  
-.devgrid76{height:76vh! important; }  
-.devgrid77{height:77vh! important; }  
-.devgrid78{height:78vh! important; }  
-.devgrid79{height:79vh! important; }  
-.devgrid80{height:80vh! important; }  
-.devgrid81{height:81vh! important; }  
-.devgrid82{height:82vh! important; }  
-.devgrid83{height:83vh! important; }  
-.devgrid84{height:84vh! important; }  
-.devgrid85{height:85vh! important; }  
-.devgrid86{height:86vh! important; }  
-.devgrid87{height:87vh! important; }  
-.devgrid88{height:88vh! important; }  
-.devgrid89{height:89vh! important; }  
-.devgrid90{height:90vh! important; }  
-.devgrid91{height:91vh! important; }  
-.devgrid92{height:92vh! important; }  
-.devgrid93{height:93vh! important; }  
-.devgrid94{height:94vh! important; }  
-.devgrid95{height:95vh! important; }  
-.devgrid96{height:96vh! important; }  
-.devgrid97{height:97vh! important; }  
-.devgrid98{height:98vh! important; }  
-.devgrid99{height:99vh! important; }  
-.devgrid100{height:100vh! important; }  
-
-
 @media (min-width: 768px){
 body:not(.sidebar-mini-md) .content-wrapper, body:not(.sidebar-mini-md) .main-footer, body:not(.sidebar-mini-md) .main-header { 
   margin-left: 0px! important;
@@ -1430,26 +1347,7 @@ max-width: 65%!important;
 
 .gorursmedetaymodal .modal-dialog {
 max-width: 80%!important;
-} 
-
-.modalcss20 .modal-dialog {  max-width: 20%!important;} 
-.modalcss25 .modal-dialog {  max-width: 25%!important;} 
-.modalcss30 .modal-dialog {  max-width: 30%!important;} 
-.modalcss35 .modal-dialog {  max-width: 35%!important;} 
-.modalcss40 .modal-dialog {  max-width: 40%!important;} 
-.modalcss45 .modal-dialog {  max-width: 45%!important;} 
-.modalcss50 .modal-dialog {  max-width: 50%!important;} 
-.modalcss55 .modal-dialog {  max-width: 55%!important;} 
-.modalcss60 .modal-dialog {  max-width: 60%!important;} 
-.modalcss65 .modal-dialog {  max-width: 65%!important;} 
-.modalcss70 .modal-dialog {  max-width: 70%!important;} 
-.modalcss75 .modal-dialog {  max-width: 75%!important;} 
-.modalcss80 .modal-dialog {  max-width: 80%!important;} 
-.modalcss85 .modal-dialog {  max-width: 85%!important;} 
-.modalcss90 .modal-dialog {  max-width: 90%!important;} 
-.modalcss95 .modal-dialog {  max-width: 95%!important;} 
-.modalcss100 .modal-dialog {  max-width: 100%!important;} 
-
+}
 
 .badge{
 font-size: 85%!important;

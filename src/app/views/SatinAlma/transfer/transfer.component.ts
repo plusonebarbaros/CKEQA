@@ -421,7 +421,7 @@ kalemEklemod(content:any){
     this.kalemkeyword=""; 
     this.TalepAciklama="";
     this.TalepTarih = moment(new Date).format("yyyy-MM-DD"); 
-    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
+    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss95', backdrop: 'static' }); 
 }  
 
 async kalemAra(ev:any){ 

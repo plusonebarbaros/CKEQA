@@ -5,7 +5,7 @@
     <!-- <a href="#" class="menu-blue" (click)="onayAciklamaModal(onayaciklamamod)" *ngIf="this.onaygoster && yetki.Ekle" ><i class="fas fa-comment-alt"></i><span>Açıklama</span></a> -->
 
     <a href="#" class="menu-yellow" (click)="yonlendirMod(kullsecmodal)" *ngIf="this.onaygoster && yetki.Ekle" ><i class="fas fa-retweet"></i><span>Yönlendir</span></a>
-    <!-- <a href="#" class="menu-blue" (click)="kalemEklemod(modonaymlzdegistir)" *ngIf="this.kalemdegistirgoster && yetki.Ekle" ><i class="fas fa-exchange-alt"></i><span>Değiştir</span></a> -->
+    <a href="#" class="menu-blue" (click)="kalemEklemod(modonaymlzdegistir)" *ngIf="this.kalemdegistirgoster && yetki.Ekle" ><i class="fas fa-exchange-alt"></i><span>Değiştir</span></a>
     <a href="#" class="menu-red" (click)="retTalepMod(rettalepmodal)" *ngIf="this.retgoster && yetki.Ekle"><i class="fas fa-minus-circle"></i><span>Ret</span></a>
 
     <a href="#" (click)="belgeYukleModal(belgeyukle)" *ngIf="this.evrekyuklegoster" class="menu-red" style="width: 95px!important;"><i class="fas fa-file-upload"></i><span>Talep Belge</span></a>
@@ -88,8 +88,8 @@
                          dataField="EkTarih"  
                          caption="Tarih" dataType="date" format="dd.MM.yyyy" [width]="100" [allowEditing]="false">
                          <dxo-header-filter [allowSearch]="true" ></dxo-header-filter>
-                         </dxi-column>
-                
+                         </dxi-column> 
+
                         <dxi-column dataField="UrunKodu"  [width]="100" caption="Ürün Kodu" [allowEditing]="false"></dxi-column>
                 
                         <dxi-column dataField="UrunAdi" [width]="225" caption="Ürün Adı"  [allowEditing]="false"> </dxi-column>                 
@@ -180,6 +180,8 @@
          caption="Tarih" dataType="date" format="dd.MM.yyyy" [width]="100" [allowEditing]="false">
          <dxo-header-filter [allowSearch]="true" ></dxo-header-filter>
          </dxi-column>
+
+         <dxi-column dataField="Secim1" [width]="150" caption="Şubeye Teslim"  [allowEditing]="true"> </dxi-column>
 
         <dxi-column 
         dataField="UrunKodu"  [width]="100"
@@ -448,7 +450,7 @@
       </div>
       <div style="clear:both"></div>
       <hr/>
-      <dx-data-grid  class="devgrid25"
+      <dx-data-grid  class="devgrid50"
       [dataSource]="kalemlist"
       [showBorders]="true"
       [showRowLines]="true"

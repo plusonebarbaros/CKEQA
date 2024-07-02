@@ -138,14 +138,16 @@ async talepOnayla(){
         if(confirmed.sonuc==true)  {
           this.blockUI.start(EkranMesaj.Kaydet);
           var sonuc = await this.onaysrc.OnaylaV2(onaylist,true,this.onayaciklama);
-        if(sonuc.Success==true){
-          this.alertify.success("Seçili Kalemler Onaylandı!");
-          this.modalService.dismissAll();
-        } else{
-        this.alertify.warning(sonuc.Message);
-        }
-        this.blockUI.stop(); 
-        this.BekleyenOnaylar();
+            if(sonuc.Success==true){
+              this.alertify.success("Seçili Kalemler Onaylandı!");
+              this.modalService.dismissAll();
+              this.BekleyenOnaylar();
+            } 
+            else
+            {
+            this.alertify.warning(sonuc.Message);
+            }
+            this.blockUI.stop(); 
         }
       })
       .catch((err) => {
@@ -204,7 +206,7 @@ kalemEklemod(content:any){
   this.kalemlist=[];
   this.kalemkeyword=""; 
   this.secilikalem=new Items();
-  this.modalService.open(content, {  size: 'lg',windowClass: 'rettalepmodal', backdrop: 'static' });   
+  this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss50', backdrop: 'static' });   
 } 
 
 async kalemAra(ev:any){ 
@@ -278,7 +280,7 @@ satirSec(e:any){
 async ekranYenile(){ 
   this.interval =  setInterval(async ()=>{ 
     await this.BekleyenOnaylar();
-   },60000 * 8);
+   },60000 * 15);
  }
 
  talepDetay(talep:any){ 

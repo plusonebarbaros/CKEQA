@@ -408,7 +408,7 @@ export class OzelSiparisDetayComponent implements OnInit {
     this.kalemlist=[];
     this.kalemkeyword=""; 
     this.StokGrupId=0;
-    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss75', backdrop: 'static' }); 
+    this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss95', backdrop: 'static' }); 
   }  
   
   async kalemAra(ev:any){ 

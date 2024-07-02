@@ -44,6 +44,7 @@ import { FireYonetimComponent } from './views/Stok/fire-yonetim/fire-yonetim.com
 import { FireTipTanimComponent } from './views/Yonetim/fire-tip-tanim/fire-tip-tanim.component';
 import { SayimYonetimComponent } from './views/Stok/sayim-yonetim/sayim-yonetim.component';
 import { TalepKontrolListesiComponent } from './views/SatinAlma/talep-kontrol-listesi/talep-kontrol-listesi.component';
+import { SiparisTeslimAlComponent } from './views/SatinAlma/siparis-teslim-al/siparis-teslim-al.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -196,13 +197,14 @@ export class AppComponent implements OnInit,AfterViewInit {
     else if(tabid==10)this.tabService.addTab(new Tab(OnayKuralComponent, "Onay Kural Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0016")[0]},tabid));
     else if(tabid==11)this.tabService.addTab(new Tab(OnayTanimComponent, "Onay Süreç Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0017")[0]},tabid));
     else if(tabid==12)this.tabService.addTab(new Tab(TalepComponent, "Satın Alma Talep", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0018")[0]},tabid));
-    else if(tabid==13)this.tabService.addTab(new Tab(TransferComponent, "Depo Transfer", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0019")[0]},tabid));
+    else if(tabid==13)this.tabService.addTab(new Tab(TransferComponent, "Mağazalar Arası Transfer", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0019")[0]},tabid));
     else if(tabid==14)this.tabService.addTab(new Tab(BekleyenOnayComponent, "Bekleyen Onaylar", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0020")[0]},tabid));
     else if(tabid==15)this.tabService.addTab(new Tab(OnayGecmisComponent, "Onay Geçmiş", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0021")[0]},tabid));
     else if(tabid==16)this.tabService.addTab(new Tab(FireYonetimComponent, "Fire Yönetimi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0026")[0]},tabid));
     else if(tabid==17)this.tabService.addTab(new Tab(FireTipTanimComponent, "Fire Tip Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0027")[0]},tabid));
     else if(tabid==18)this.tabService.addTab(new Tab(SayimYonetimComponent, "Sayım Yönetimi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0028")[0]},tabid));
     else if(tabid==19)this.tabService.addTab(new Tab(TalepKontrolListesiComponent, "Talep Kontrol Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0030")[0]},tabid));
+    else if(tabid==20)this.tabService.addTab(new Tab(SiparisTeslimAlComponent, "Sipariş Teslim Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0031")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }
