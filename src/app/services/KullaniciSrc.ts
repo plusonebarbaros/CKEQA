@@ -377,7 +377,8 @@ export class KulSirketYetki{
 }
 export class ConDepoYetki{ 
   DepoKodu:string="";     
-  DepoAdi:string="";     
+  DepoAdi:string=""; 
+  TransferDepo:string="";       
 }
 export class DepoYetkiModel{ 
   Id:number=0; 
@@ -621,7 +622,7 @@ export class KullaniciModel {
   CalistigiSirket:string="";
   CalistigiSubeKod:string="";
   CalistigiSube:string="";
-
+  SipSaatKisit:boolean=false;
  }
 
  export  class OnayHesapModel {

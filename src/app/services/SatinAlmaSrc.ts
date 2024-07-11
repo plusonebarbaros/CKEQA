@@ -953,6 +953,8 @@ export class TalepMaster {
   FirmaKodu:string="";
   FirmaAdi:string="";
   Aktif:boolean=false;
+  DepoKodu:string="";
+  DepoAdi:string="";
 }  
 
 export class TalepDetail {  

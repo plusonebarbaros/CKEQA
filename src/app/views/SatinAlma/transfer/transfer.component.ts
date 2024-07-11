@@ -54,10 +54,12 @@ export class TransferComponent implements OnInit {
   depolist: ConDepoYetki[]=[]; 
   kalemkeyword:string=""; 
   MagazaKod:string=""; 
+  TeslimMagazaKod:string=""; 
   TalepAciklama:string=""; 
   TalepTarih:any; 
   loguser:KullaniciModel;  
   onayaciklama:string="";
+  DurumId:number=0;
   
   protected _onDestroy = new Subject<void>();
 
@@ -94,7 +96,6 @@ export class TransferComponent implements OnInit {
 
     this.TalepListele();    
     this.formDepo.valueChanges.pipe(takeUntil(this._onDestroy)).subscribe(() => {this.filterDepoList();});  
-
   }
   
   protected filterDepoList() {
@@ -135,7 +136,7 @@ export class TransferComponent implements OnInit {
         this.alertify.warning(data.Message);
         return;
       }
-      this.depolist=(data.List as ConDepoYetki[]).filter((x)=> x.DepoKodu!=this.loguser.CalistigiSubeKod);  
+      this.depolist=(data.List as ConDepoYetki[]).filter((x)=> x.TransferDepo=="H");  
       this.filterDepo.next(this.depolist.slice());
    })  
   }
@@ -154,7 +155,7 @@ export class TransferComponent implements OnInit {
 
 
   BasTarihChg(e:any){
-    this.filter.Baslangic=moment(e._d).format("yyyy-MM-DD"); 
+    this.TalepTarih=moment(e._d).format("yyyy-MM-DD"); 
   }
 
   BitTarihChg(e:any){
@@ -177,7 +178,7 @@ talepDetay(talep:any){
 
   async TalepListele()  {
     this.blockUI.start(EkranMesaj.Listele);
-      (await this.siparissrc.GetDepoTransfer(0,"A",this.filter.Baslangic,this.filter.Bitis,false)).subscribe(
+      (await this.siparissrc.GetDepoTransfer(0,this.DurumId,this.filter.Baslangic,this.filter.Bitis,false)).subscribe(
         data=>{
           this.blockUI.stop(); 
           if(!data.Success){
@@ -226,35 +227,45 @@ silgosterChanged(e:any){
   let silinecekler  = this.grid.instance.getSelectedRowsData();
   this.selectedItemKeys = e.selectedRowKeys;
   this.tekraronaygoster=false;
-  this.transfergoster=false;
-  this.teslimgoster=false;
-  this.retgoster=false;
   this.evrekyuklegoster=false;
   this.silgoster=false;
 
   if (silinecekler!=null && silinecekler.length==1){
     this.silgoster=true;
     this.evrekyuklegoster=true;
-    this.secilikalem = silinecekler[0] as DepoTransferModel;
+    //this.secilikalem = silinecekler[0] as DepoTransferModel;
     this.secilidata = silinecekler; 
 
-    if(this.secilikalem.DurumId===0 && this.secilikalem.KarsiDepoOnayDurumId===0 && this.secilikalem.KarsiDepoKodu==this.loguser.CalistigiSubeKod){
-      this.transfergoster=true;
-      this.retgoster=true;
-    }
-    if(this.secilikalem.DurumId===0 && this.secilikalem.KarsiDepoOnayDurumId===1 && this.secilikalem.TalepDepoKodu==this.loguser.CalistigiSubeKod){
-      this.teslimgoster=true;      
-    }
+    
   }
   else if (silinecekler!=null && silinecekler.length>1){
     this.silgoster=true;
-    this.secilikalem =new DepoTransferModel();
     this.secilidata = silinecekler; 
   }
   else {
-    this.secilikalem =new DepoTransferModel();
     this.secilidata=[];
    }
+}
+
+satirSec(e:any){  
+  this.transfergoster=false;
+  this.retgoster=false;
+  this.teslimgoster=false;
+
+  if (e!=null){  
+    this.secilikalem = e.data; 
+
+    if(this.secilikalem.DurumId===1 && this.secilikalem.KarsiDepoOnayDurumId===0 && this.secilikalem.KarsiDepoKodu==this.loguser.CalistigiSubeKod){
+      this.transfergoster=true;
+      this.retgoster=true;
+    }
+    if(this.secilikalem.DurumId===1 && this.secilikalem.KarsiDepoOnayDurumId===1 && this.secilikalem.TalepDepoKodu==this.loguser.CalistigiSubeKod){
+      this.teslimgoster=true;      
+    }
+  }
+  else { 
+    this.secilikalem =new DepoTransferModel();
+  }
 }
 
   
@@ -308,6 +319,18 @@ listeyeekle(){
     return;
   }
 
+  if(this.TeslimMagazaKod=="" || this.TeslimMagazaKod==null){
+    this.alertify.warning("Teslim Edilecek Mağaza Seçimi Zorunludur!");
+    devam=false;
+    return;
+  }
+
+  if(this.MagazaKod==this.TeslimMagazaKod){
+    this.alertify.warning("Talep ve Teslim Mağaza Seçimleri Aynı Olamaz!");
+    devam=false;
+    return;
+  } 
+  
   this.kalemlist.forEach(item=> { item.Miktar = parseFloat( (item.Miktar??0).toString().replace(",","."))});
 
   if(this.kalemlist.filter(item=> item.Miktar>0 ).length<=0){
@@ -316,13 +339,14 @@ listeyeekle(){
     return;
   }  
 
-  var list = this.kalemlist.filter(item=> item.Miktar>0);
-  // list.forEach(item=> {   
-  //  if(item.Miktar>item.Bakiye)
-  //  this.alertify.warning("Talep Edilen Miktar Depo Bakiyesinden Fazla Olamaz! => " + item.ItemName );
-  //   devam=false;
-  //   return;
-  // });     
+  let list = this.kalemlist.filter(item=> item.Miktar>0);
+  list.forEach(t=> {   
+      if(t.Miktar>t.Bakiye){
+        this.alertify.warning("Talep Edilen Miktar Depo Bakiyesinden Fazla Olamaz! => " + t.ItemName + " Bakiye:"+t.Bakiye + " Talep Miktar:"+t.Miktar );
+        devam=false;
+        return;
+      }
+    });
 
   if(devam){
     list.forEach(item=> {  
@@ -331,7 +355,7 @@ listeyeekle(){
       td.Miktar=item.Miktar; 
       td.StokKodu=item.ItemCode;
       td.StokAdi=item.ItemName;
-      td.TalepDepoKodu=this.loguser.CalistigiSubeKod; 
+      td.TalepDepoKodu=this.TeslimMagazaKod; 
       td.KarsiDepoKodu=this.MagazaKod; 
       td.Aciklama=item.Aciklama;
       td.SatirGuid = this.genelsrv.GuidGenerator();
@@ -417,9 +441,10 @@ onCellPreparedKalem (e:any) {
 }
 
 kalemEklemod(content:any){  
-    this.kalemlist=[];
-    this.kalemkeyword=""; 
     this.TalepAciklama="";
+    this.MagazaKod="";
+    this.TeslimMagazaKod="";
+    this.aramaTemizle();
     this.TalepTarih = moment(new Date).format("yyyy-MM-DD"); 
     this.modalService.open(content, {  size: 'lg',windowClass: 'modalcss95', backdrop: 'static' }); 
 }  
@@ -453,7 +478,7 @@ async kalemAraDef(){
   else{
     this.alertify.warning(sonuc.Message);
   }   
-}
+} 
 
 aramaTemizle(){
   this.kalemkeyword="";
@@ -462,6 +487,12 @@ aramaTemizle(){
 
 defGrup(event: any) {
   this.MagazaKod = "";
+  this.aramaTemizle();
+  event.stopPropagation();
+}
+
+defGrupTeslim(event: any) {
+  this.TeslimMagazaKod = "";
   event.stopPropagation();
 }
 

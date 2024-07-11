@@ -46,7 +46,7 @@
           <dx-data-grid class="devgrid76" #gridTalepKontrolList
           [dataSource]="taleplist"  
           [showBorders]="true"
-          [showColumnLines]="false"
+          [showColumnLines]="true"
           [showRowLines]="true" 
           [rowAlternationEnabled]="true"
           [focusedRowEnabled]="true"
@@ -80,7 +80,13 @@
           [selectAllMode]="allMode"
           [showCheckBoxesMode]="checkBoxesMode"
           mode="multiple"
-          ></dxo-selection> 
+          ></dxo-selection>
+          <dxo-state-storing 
+            [enabled]="true" 
+              type="localStorage" 
+              storageKey="gridTalepKontrolList">
+          </dxo-state-storing>  
+          <dxo-filter-panel [visible]="true"></dxo-filter-panel>
 
           <dxi-column dataField="Durum" caption="Onay Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
           <div *dxTemplate="let cell of 'cellDurum'"> 

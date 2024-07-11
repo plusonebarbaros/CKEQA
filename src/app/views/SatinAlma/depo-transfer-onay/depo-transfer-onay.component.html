@@ -1,0 +1,166 @@
+<mat-drawer-container class="mat-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+        <div class="modal-header" style="text-align: center;">
+             <h5 class="modal-title" id="myModalLabel2">Filtre</h5>
+        </div>
+        <div class="body"> 
+             <div style="clear:both;margin-bottom: 15px!important"></div>  
+   
+             <mat-form-field appearance="outline" [style.width.%]="100">
+              <mat-label>Durum</mat-label>
+              <mat-select name="DurumId" [(ngModel)]="DurumId">
+              <mat-option [value]="0">Bekliyor</mat-option>
+              <mat-option [value]="1">Tamamlandı</mat-option> 
+              <mat-option [value]="2">Tümü</mat-option> 
+              </mat-select>
+          </mat-form-field>
+            
+            <mat-form-field appearance="outline" [style.width.%]="100" [hidden]="DurumId==0">
+                <mat-label>Başlangış Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp" placeholder="Başlangış Tarih"  [(ngModel)]="filter.Baslangic" (ngModelChange)="BasTarihChg($event)">
+                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" [style.width.%]="100" [hidden]="DurumId==0">
+                <mat-label>Bitiş Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"  [(ngModel)]="filter.Bitis" (ngModelChange)="BitTarihChg($event)">
+                <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker #dp1></mat-datepicker>
+              </mat-form-field>
+              
+            <div style="clear:both;margin-bottom: 5px!important"></div> 
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default" (click)="drawer.toggle()" value="Kapat" />
+            <input type="button" class="btn btn-info" (click)="TalepListele()" value="Listele" />
+        </div>
+    </mat-drawer>
+   
+    <mat-drawer-content> 
+
+<div class="content">
+    <nav class="menu-navigation-icons">
+        <a href="#" (click)="drawer.toggle()" class="menu-silver" ><i class="fas fa-filter"></i><span>Filtre</span></a> 
+        <a href="#" class="menu-silver" (click)="TalepListele()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a href="#" class="menu-green" (click)="transferBaslat()" *ngIf="this.transfergoster && this.DurumId==0 && yetki.Ekle" ><i class="fas fa-plus-circle"></i><span>Transfer</span></a>
+        <a href="#" class="menu-red" (click)="retTalepMod(rettalepmodal)" *ngIf="this.retgoster && yetki.Ekle"><i class="fas fa-minus-circle"></i><span>Ret</span></a>        
+        
+        <a *ngIf="this.silgoster && yetki.Sil" href="#" class="menu-red" (click)="kayitsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a>
+        <a href="#" (click)="belgeYukleModal(belgeyukle)" *ngIf="this.evrekyuklegoster" class="menu-red" style="width: 95px!important;"><i class="fas fa-file-upload"></i><span>Talep Belge</span></a>
+
+        <a href="#" (click)="this.gridDepoTransferOnay.instance.showColumnChooser()" style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
+        <a href="#" (click)="this.gridDepoTransferOnay.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+
+    </nav>
+    <div style="clear:both"></div>
+    
+    <dx-data-grid class="devgrid74"  #gridDepoTransferOnay
+    [dataSource]="taleplist"   
+    [showBorders]="true" 
+    [remoteOperations]="true"
+    [showColumnLines]="false"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true"
+    [columnAutoWidth]="true"
+    [allowColumnResizing]="true"
+    keyExpr="Id" 
+    columnResizingMode = "widget"  
+    (onEditingStart)="overrideOnValueChanged($event)"
+    (onRowUpdated)="CellDegisti($event)" 
+    (onSelectionChanged)="silgosterChanged($event)"
+    > 
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+    <dxo-column-chooser [enabled]="false" mode="select"></dxo-column-chooser>
+    <dxo-scrolling mode="virtual" showScrollbar="'always'" useNative="false" scrollByThumb="true" ></dxo-scrolling> 
+    <dxo-paging [pageSize]="30"> </dxo-paging>
+    <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
+    <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>    
+    <dxo-selection
+    [selectAllMode]="allMode"
+    [showCheckBoxesMode]="checkBoxesMode"
+    mode="multiple"
+    ></dxo-selection> 
+
+    <!-- <dxi-column dataField="Id" caption="Id" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column> -->
+    <dxi-column [style.width.%]="10" caption="Tarih" dataField="TalepTarih" dataType="date" format="dd.MM.yyyy" [allowEditing]="false"></dxi-column> 
+
+
+     <dxi-column dataField="StokKodu" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
+     <dxi-column dataField="StokAdi" caption="Stok Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+     <dxi-column dataField="KarsiDepoAdi" caption="Çıkış Depo" [style.width%]="10" [allowEditing]="false" alignment="center"></dxi-column>
+     <dxi-column dataField="TalepDepoAdi" caption="Teslim Depo" [style.width%]="10" [allowEditing]="false" alignment="center"></dxi-column>
+
+     <dxi-column dataField="Durum" caption="Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+     <div *dxTemplate="let cell of 'cellDurum'"> 
+       <span *ngIf="cell.data.DurumId===0" class="badge pill-medium bg-info">{{cell.data.Durum}}</span>
+       <span *ngIf="cell.data.DurumId===1" class="badge pill-medium bg-info">{{cell.data.Durum}}</span>    
+       <span *ngIf="cell.data.DurumId===2" class="badge pill-medium bg-success">{{cell.data.Durum}}</span>    
+       <span *ngIf="cell.data.DurumId===3" class="badge pill-medium bg-danger">{{cell.data.Durum}}</span>    
+       <span *ngIf="cell.data.DurumId===4" class="badge pill-medium bg-warning">{{cell.data.Durum}}</span>    
+     </div>  
+
+    <dxi-column dataField="Miktar" [style.width.%]="10"  caption="Miktar" alignment="right" dataType="number" format="#,##0.00" [allowEditing]="false"> </dxi-column>      
+    
+    <dxi-column dataField="AnaDepoStokNakliId" caption="Sap Stok Nakli No" [style.width%]="10" [allowEditing]="false" alignment="center" ></dxi-column> 
+    <dxi-column dataField="Aciklama" caption="Ürün/Hizmet Açıklama" [width]="200" [allowEditing]="false"></dxi-column>       
+     
+    <dxi-column [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" [allowEditing]="false"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Kayıt Tarih" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm" [allowEditing]="false"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Guncelleyen" dataField="Guncelleyen" [allowEditing]="false"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Güncelleme Tarih" dataField="GuncelTarih" dataType="date" format="dd.MM.yyyy HH:mm" [allowEditing]="false"></dxi-column>
+
+    </dx-data-grid>  
+</div>
+
+</mat-drawer-content> 
+</mat-drawer-container> 
+
+  <ng-template #onaytakipmod let-modal>
+    <div class="modal-header">
+    <h4 class="modal-title" >Onay Takip</h4> 
+    <button type="button" class="btn btn-danger" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    <app-onay-durum-kontrol [onayid]="onayid"></app-onay-durum-kontrol>
+    </div> 
+  </ng-template>  
+
+  <ng-template #belgeyukle let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" >Belgeler</h4> 
+      <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <app-belge-goruntule [semkey]="this.secilikalem.SatirGuid" [kayitid]="this.secilikalem.Id" [ekranid]="1" [secilidata]="this.secilikalem" [defbelgetipid]="1"></app-belge-goruntule>  
+  </ng-template>
+
+  <ng-template #rettalepmodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" >Ret İşlem</h4> 
+    </div>
+    <div class="modal-body">
+        <div style="clear:both" style="margin-bottom:5px!important"></div> 
+         
+        <label style="color: red;font-weight: bold;">Reddedilen Talepler Tekrar Aktif Edilemez ve Süreç Kapatılır</label> 
+      
+        <div style="clear:both;margin-bottom:15px!important"></div> 
+
+        <mat-form-field appearance="outline" [style.width.%]="100" >
+            <mat-label>Ret Açıklama</mat-label> 
+            <textarea matInput placeholder="Açıklama" [(ngModel)]="onayaciklama" rows="4" autocomplete="off" maxlength="254"></textarea>
+        </mat-form-field>   
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="finodemekpt" class="btn btn-danger" (click)="modal.dismiss('Cross click')">Kapat</button>
+        <button type="button" class="btn btn-success" (click)="retBaslat()">İşlem Başlat</button>
+    </div>
+  </ng-template>

@@ -98,11 +98,6 @@
                         <dxi-column dataField="Fiyat1" [style.width.%]="10" caption="Fiyat"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
                         <dxi-column dataField="Fiyat2" [style.width.%]="10" caption="Toplam Tutar"  [allowEditing]="false" alignment="right" dataType="number" format="#,##0.00"></dxi-column> 
                         
-                        <dxi-column dataField="Bilgi4" caption="Onay Açıklama" cellTemplate="cellBilgi4" [width]="225"></dxi-column>
-                        <div *dxTemplate="let cell of 'cellBilgi4'">
-                            <div [innerHTML]="cell.text"></div>
-                        </div>                        
-                
                         <dxi-column dataField="DepoAdi" [width]="150" caption="Teslimat Şube"  [allowEditing]="false"> </dxi-column>               
                         <dxi-column [style.width.%]="10" caption="Firma" dataField="FirmaAdi" [allowSearch]="true"></dxi-column>                              
                         <dxi-column  dataField="Bilgi9"  [width]="200" caption="Kalem Açıklama" [allowEditing]="false"></dxi-column>                 
@@ -222,12 +217,7 @@
         dataField="Bilgi7"  [width]="90" alignment="center"
         caption="Birim"    [allowEditing]="false">
         </dxi-column> 
-        
-        <dxi-column dataField="Bilgi4" caption="Onay Açıklama" cellTemplate="cellBilgi4" [width]="225"></dxi-column>
-        <div *dxTemplate="let cell of 'cellBilgi4'">
-            <div [innerHTML]="cell.text"></div>
-        </div>
-              
+                      
         <dxi-column  
         dataField="Bilgi9"  [width]="200"
         caption="Kalem Açıklama" [allowEditing]="false">
@@ -392,12 +382,7 @@
       <dxi-column  
       dataField="Miktar"   [width]="155" [allowEditing]="miktaryetki.Ekle" alignment="center" dataType="number" format="#,##0.00"
       caption="Miktar">
-      </dxi-column>          
-      
-      <dxi-column dataField="Bilgi4" caption="Onay Açıklama" cellTemplate="cellBilgi4" [width]="225"></dxi-column>
-      <div *dxTemplate="let cell of 'cellBilgi4'">
-          <div [innerHTML]="cell.text"></div>
-      </div>
+      </dxi-column>  
             
       <dxi-column  
       dataField="Bilgi9"  [width]="200"

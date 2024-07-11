@@ -192,7 +192,7 @@ export class TalepDetayComponent implements OnInit {
         this.alertify.warning(data.Message);
         return;
       }
-      this.depolist=data.List;  
+      this.depolist=(data.List as ConDepoYetki[]).filter((x)=> x.TransferDepo=="H");  
    })  
   }
 

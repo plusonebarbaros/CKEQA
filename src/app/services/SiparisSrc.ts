@@ -272,7 +272,7 @@ async GetOzelSiparisDetay(Id:number)
     return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
    } 
 
-   async GetDepoTransfer(Id:number,durum:string="",baslangic:Date,bitis:Date,Kontrol:boolean)
+   async GetDepoTransfer(Id:number,durum:number,baslangic:Date,bitis:Date,Kontrol:boolean)
   { 
        let url=this.semUrl+"/SatinAlma/GetDepoTransfer?Id="+Id+"&Durum="+durum+"&Token="+ this.kullsrc.token+"&Kontrol="+ Kontrol+"&Baslangic="+moment(baslangic).format("yyyy-MM-DD")+"&Bitis="+moment(bitis).format("yyyy-MM-DD"); 
         return await this.http.get<Result<DepoTransferModel[]>>(url).pipe( map((res:any)=> res));
@@ -369,11 +369,42 @@ async GetOzelSiparisDetay(Id:number)
     return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
    } 
 
-   async GetOzelSiparisFirst(Filtre1:string="",Filtre2:string="")
+  async GetOzelSiparisFirst(Filtre1:string="",Filtre2:string="")
   { 
        let url=this.semUrl+"/SatinAlma/GetOzelSiparisFirst?Filtre1="+Filtre1+"&Filtre2="+Filtre2+"&Token="+ this.kullsrc.token; 
         return await this.http.get<Result<OzelSiparisMaster[]>>(url).pipe( map((res:any)=> res));
   }
+
+  async GetAnaDepoTransfer(durum:number,baslangic:Date,bitis:Date)
+  { 
+       let url=this.semUrl+"/SatinAlma/GetAnaDepoTransfer?Durum="+durum+"&Token="+ this.kullsrc.token+"&Baslangic="+moment(baslangic).format("yyyy-MM-DD")+"&Bitis="+moment(bitis).format("yyyy-MM-DD"); 
+        return await this.http.get<Result<DepoTransferModel[]>>(url).pipe( map((res:any)=> res));
+  }
+
+  async  AnaDepoTransfer(Satir:DepoTransferModel[],OnayDurumId:number,Aciklama:string):Promise<ReturnValues>  {
+    const headers = new HttpHeaders(
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+     }
+    ); 
+  
+      let options = { headers: headers };
+  
+      const body =  JSON.stringify({ 
+        "Satir":  Satir,
+        "OnayDurumId":  OnayDurumId,
+        "Aciklama":  Aciklama,
+        "Token":this.kullsrc.token
+      });
+   
+      var result = await this.http.post<any>(this.semUrl+"/SatinAlma/AnaDepoTransfer", body,options).toPromise();
+  
+    var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+   } 
+
 
 }
 
@@ -385,6 +416,7 @@ export  class DepoTransferModel {
   StokAdi: string="";    
   Miktar: number=0;
   OnayId: number=0;
+  AnaDepoKodu: string="";  
   TalepDepoKodu: string="";  
   TalepDepoAdi: string="";  
   KarsiDepoKodu: string="";  
@@ -429,6 +461,8 @@ export  class DepoTransferModel {
   KarsiDepoOnayDurumId:number=0;
   TeslimDepoOnayDurumId:number=0;
   SeriLot:string="";
+  AnaDepoStokNakliId:number=0;
+  TransferTip:number=0;
 } 
 
 

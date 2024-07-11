@@ -133,6 +133,11 @@ export class SiparisTeslimAlComponent implements OnInit {
         this.alertify.warning(x.StokAdi + " Malzemesi İçin Teslim Miktarı Aşılıyor, Kontrol Ediniz!");
         return;
       }
+      if((x.BelgeNo=="" || x.BelgeNo==null || x.BelgeNo==undefined) && devam){
+        devam=false;
+        this.alertify.warning(x.StokAdi + " Malzemesi İçin Belge No Girilmelidir!");
+        return;
+      }
     });
      
     if(devam){

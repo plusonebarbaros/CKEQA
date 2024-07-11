@@ -46,15 +46,15 @@
     <dx-data-grid class="devgrid74"  #gridOzelSiparis
     [dataSource]="taleplist"
     [showBorders]="true"
-    [showColumnLines]="false"
+    [showColumnLines]="true"
     [showRowLines]="true" 
     [rowAlternationEnabled]="true"
     [focusedRowEnabled]="true"
     [columnAutoWidth]="true"
     [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
     keyExpr="Id" 
     columnResizingMode = "widget" 
-    [allowColumnReordering]="true"
     (onCellDblClick)="cariDblClick($event)" 
     (onSelectionChanged)="silgosterChanged($event)" 
     > 
@@ -82,6 +82,13 @@
     [showCheckBoxesMode]="checkBoxesMode"
     mode="multiple"
     ></dxo-selection>
+    <dxo-state-storing 
+      [enabled]="true" 
+        type="localStorage" 
+        storageKey="gridOzelSiparis">
+    </dxo-state-storing>  
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+
     
     <dxi-column dataField="Id" caption="Id" cellTemplate="cellTemplate" [style.width.%]="4" alignment="center"></dxi-column>
     <div *dxTemplate="let cell of 'cellTemplate'">

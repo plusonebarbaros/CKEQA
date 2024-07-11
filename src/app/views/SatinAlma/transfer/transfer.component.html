@@ -7,18 +7,27 @@
              <div style="clear:both;margin-bottom: 15px!important"></div>  
    
              <mat-form-field appearance="outline" [style.width.%]="100">
-                <mat-label>Başlangıç</mat-label> 
-                <input matInput [matDatepicker]="dp" placeholder="Başlangıç Tarih"  [(ngModel)]="filter.Baslangic" (ngModelChange)="BasTarihChg($event)">
+              <mat-label>Teslim Durum</mat-label>
+              <mat-select name="GosterimId" [(ngModel)]="DurumId">
+              <mat-option [value]="0">Bekliyor</mat-option>
+              <mat-option [value]="1">Tamamlandı</mat-option> 
+              <mat-option [value]="2">Tümü</mat-option> 
+              </mat-select>
+          </mat-form-field>
+            
+            <mat-form-field appearance="outline" [style.width.%]="100" [hidden]="DurumId==0">
+                <mat-label>Başlangış Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp" placeholder="Başlangış Tarih"  [(ngModel)]="filter.Baslangic" (ngModelChange)="BasTarihChg($event)">
                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
                 <mat-datepicker #dp></mat-datepicker>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" [style.width.%]="100">
-                <mat-label>Bitiş</mat-label> 
+              <mat-form-field appearance="outline" [style.width.%]="100" [hidden]="DurumId==0">
+                <mat-label>Bitiş Tarih</mat-label> 
                 <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"  [(ngModel)]="filter.Bitis" (ngModelChange)="BitTarihChg($event)">
-                 <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
                 <mat-datepicker #dp1></mat-datepicker>
-              </mat-form-field>    
+              </mat-form-field>
               
             <div style="clear:both;margin-bottom: 5px!important"></div> 
         </div>
@@ -52,17 +61,19 @@
     [dataSource]="taleplist"   
     [showBorders]="true" 
     [remoteOperations]="true"
-    [showColumnLines]="false"
+    [showColumnLines]="true"
     [showRowLines]="true" 
     [rowAlternationEnabled]="true"
     [focusedRowEnabled]="true"
     [columnAutoWidth]="true"
     [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
     keyExpr="Id" 
     columnResizingMode = "widget"  
     (onEditingStart)="overrideOnValueChanged($event)"
     (onRowUpdated)="CellDegisti($event)" 
     (onSelectionChanged)="silgosterChanged($event)"
+    (onRowClick)="satirSec($event)" 
     > 
     <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
     <dxo-filter-row [visible]="true"></dxo-filter-row>
@@ -74,21 +85,30 @@
     <dxo-paging [pageSize]="30"> </dxo-paging>
     <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
     <dxo-selection mode="single"></dxo-selection>   
-    <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>    
- 
+    <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>  
+    <dxo-state-storing 
+        [enabled]="true" 
+        type="localStorage" 
+        storageKey="gridDepoTransfer">
+    </dxo-state-storing>  
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel> 
+    
+    <dxi-column dataField="Id" caption="Id" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>
+    <dxi-column [style.width.%]="10" caption="Tarih" dataField="TalepTarih" dataType="date" format="dd.MM.yyyy" [allowEditing]="false"></dxi-column> 
+
+
      <dxi-column dataField="StokKodu" caption="Stok Kodu" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
      <dxi-column dataField="StokAdi" caption="Stok Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
-     <dxi-column dataField="TalepDepoAdi" caption="Teslim Şube" [style.width%]="10" [allowEditing]="false" alignment="center"></dxi-column>
      <dxi-column dataField="KarsiDepoAdi" caption="Talep Şube" [style.width%]="10" [allowEditing]="false" alignment="center"></dxi-column>
-
-
+     <dxi-column dataField="TalepDepoAdi" caption="Teslim Şube" [style.width%]="10" [allowEditing]="false" alignment="center"></dxi-column>
 
      <dxi-column dataField="Durum" caption="Durum" cellTemplate="cellDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
      <div *dxTemplate="let cell of 'cellDurum'"> 
-       <span *ngIf="cell.data.DurumId===0" style="cursor: pointer;" class="badge pill-medium bg-info" (click)="onaytakip(onaytakipmod,cell.data)">{{cell.data.Durum}}</span>
-       <span *ngIf="cell.data.DurumId===1" style="cursor: pointer;" class="badge pill-medium bg-success" (click)="onaytakip(onaytakipmod,cell.data)">{{cell.data.Durum}}</span>    
-       <span *ngIf="cell.data.DurumId===2" style="cursor: pointer;" class="badge pill-medium bg-danger" (click)="onaytakip(onaytakipmod,cell.data)">{{cell.data.Durum}}</span>    
-       <span *ngIf="cell.data.DurumId===3" style="cursor: pointer;" class="badge pill-medium bg-warning" (click)="onaytakip(onaytakipmod,cell.data)">{{cell.data.Durum}}</span>    
+       <span *ngIf="cell.data.DurumId===0" class="badge pill-medium bg-info">{{cell.data.Durum}}</span>
+       <span *ngIf="cell.data.DurumId===1" class="badge pill-medium bg-info">{{cell.data.Durum}}</span>    
+       <span *ngIf="cell.data.DurumId===2" class="badge pill-medium bg-success">{{cell.data.Durum}}</span>    
+       <span *ngIf="cell.data.DurumId===3" class="badge pill-medium bg-danger">{{cell.data.Durum}}</span>    
+       <span *ngIf="cell.data.DurumId===4" class="badge pill-medium bg-warning">{{cell.data.Durum}}</span>    
      </div> 
 
      <dxi-column dataField="KarsiDepoOnayDurum" caption="Transfer Durum" cellTemplate="cellKarsiDepoOnayDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
@@ -159,10 +179,28 @@
     <div class="modal-body">
       <div class="row">
         <div class="input-group">
-  
+
+          <mat-form-field appearance="outline" [style.width.%]="20">
+            <mat-label>Talep Edilecek Mağaza</mat-label>
+              <mat-select  #singleSelect [(ngModel)]="MagazaKod" (ngModelChange)="kalemAraDef()">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="formDepo"  
+                   placeholderLabel="Ara..."
+                   noEntriesFoundLabel="Kayıt Bulunamadı...">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let gr of filterDepo | async" [value]="gr.DepoKodu" >
+                  {{gr.DepoAdi}}
+                </mat-option>
+              </mat-select>
+              <button mat-button matSuffix *ngIf="MagazaKod!=''" mat-icon-button (click)="defGrup($event)">
+                 <mat-icon>close</mat-icon>
+             </button>
+        </mat-form-field> 
+
             <mat-form-field appearance="outline" [style.width.%]="20">
-                <mat-label>Talep Edilecek Mağaza</mat-label>
-                  <mat-select  #singleSelect [(ngModel)]="MagazaKod" (ngModelChange)="kalemAraDef()">
+                <mat-label>Teslim Edilecek Mağaza</mat-label>
+                  <mat-select  #singleSelect [(ngModel)]="TeslimMagazaKod">
                     <mat-option>
                       <ngx-mat-select-search [formControl]="formDepo"  
                        placeholderLabel="Ara..."
@@ -173,7 +211,7 @@
                       {{gr.DepoAdi}}
                     </mat-option>
                   </mat-select>
-                  <button mat-button matSuffix *ngIf="MagazaKod!=''" mat-icon-button (click)="defGrup($event)">
+                  <button mat-button matSuffix *ngIf="TeslimMagazaKod!=''" mat-icon-button (click)="defGrupTeslim($event)">
                      <mat-icon>close</mat-icon>
                  </button>
             </mat-form-field>  

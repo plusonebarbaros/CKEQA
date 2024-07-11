@@ -1,1 +1,54 @@
-<p>sistem-parametre works!</p>
+
+<div class="content">
+<nav class="menu-navigation-icons">
+  <a href="#" [hidden]="yetki.Ekle" class="menu-green" (click)="kaydet()"><i class="fas fa-save"></i><span>{{sistem.Id >0 ? 'Güncelle':'Kaydet'}}</span></a> 
+
+</nav> 
+  
+<mat-tab-group mat-align-tabs="start" [selectedIndex]="0" (selectedTabChange)="tabsec($event)" animationDuration="0ms">
+    <mat-tab label="Genel">
+        <div class="card"> 
+            <div class="card-body">
+            <div class="row" style="margin-bottom: 10px!important"></div>
+            
+             <mat-form-field appearance="outline" [style.width.%]="20">
+                <mat-label>Özel Sip.Müşteri Kodu</mat-label>
+                <input matInput placeholder="Özel Sip.Müşteri Kodu" [(ngModel)]="sistem.OzelSipMusteriKodu" >
+              </mat-form-field>
+
+              <input class="input-saat" type="time" [(ngModel)]="sistem.SonSipSaat" step="300"/>
+
+              <div class="row" style="margin-left: 5px!important"> 
+           
+                <section class="switchfont" style="float:left">
+                    <mat-slide-toggle [(ngModel)]="sistem.OzelSiparisOnaySureciAktif" [checked]="sistem.OzelSiparisOnaySureciAktif">
+                    Özel Sipariş Onay Aktif
+                    </mat-slide-toggle>
+                </section>
+                <section class="switchfont" style="float:left">
+                  <mat-slide-toggle [(ngModel)]="sistem.TalepOnaySurecAktif" [checked]="sistem.TalepOnaySurecAktif">
+                  Satın Alma Talep Onay Aktif
+                  </mat-slide-toggle>
+              </section> 
+
+              <section class="switchfont" style="float:left">
+                <mat-slide-toggle [(ngModel)]="sistem.TransferOnaySurecAktif" [checked]="sistem.TransferOnaySurecAktif">
+                Depo Transfer Onay Aktif
+                </mat-slide-toggle>
+            </section> 
+
+            <section class="switchfont" style="float:left">
+                <mat-slide-toggle [(ngModel)]="sistem.FireOnaySurecAktif" [checked]="sistem.FireOnaySurecAktif">
+                Fire Çıkış Onay Aktif
+                </mat-slide-toggle>
+            </section> 
+    
+              </div>
+
+
+             </div> 
+        </div> 
+    </mat-tab>
+</mat-tab-group>
+  
+</div> 

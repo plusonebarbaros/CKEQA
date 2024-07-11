@@ -48,12 +48,13 @@
     [dataSource]="talepdetay"   
     [showBorders]="true" 
     [remoteOperations]="true"
-    [showColumnLines]="false"
+    [showColumnLines]="true"
     [showRowLines]="true" 
     [rowAlternationEnabled]="true"
     [focusedRowEnabled]="true"
     [columnAutoWidth]="true"
     [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
     keyExpr="Id" 
     columnResizingMode = "widget"  
     (onEditingStart)="overrideOnValueChanged($event)"
@@ -70,8 +71,15 @@
     <dxo-paging [pageSize]="30"> </dxo-paging>
     <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
     <dxo-selection [selectAllMode]="allMode" [showCheckBoxesMode]="checkBoxesMode" mode="multiple"></dxo-selection>
-     <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
-    
+    <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+    <dxo-state-storing 
+      [enabled]="true" 
+        type="localStorage" 
+        storageKey="gridTalepDetay">
+    </dxo-state-storing>  
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+
+
      <dxi-column caption="#" cellTemplate="cellTarihce" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
      <div *dxTemplate="let cell of 'cellTarihce'"> 
        <i class="fas fa-info-circle" (click)="tarihceDetay(belgetarihcemod,cell.data)" title="Talep Tarihçe Detayını Görebilirsiniz" style="cursor:pointer"></i>

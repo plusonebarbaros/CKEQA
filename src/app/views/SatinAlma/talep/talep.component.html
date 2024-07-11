@@ -46,15 +46,15 @@
     <dx-data-grid class="devgrid74"  #gridTalepMaster
     [dataSource]="taleplist"
     [showBorders]="true"
-    [showColumnLines]="false"
+    [showColumnLines]="true"
     [showRowLines]="true" 
     [rowAlternationEnabled]="true"
     [focusedRowEnabled]="true"
     [columnAutoWidth]="true"
     [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
     keyExpr="Id" 
     columnResizingMode = "widget" 
-    [allowColumnReordering]="true"
     (onCellDblClick)="cariDblClick($event)" 
     (onSelectionChanged)="silgosterChanged($event)" 
     > 
@@ -82,6 +82,12 @@
     [showCheckBoxesMode]="checkBoxesMode"
     mode="multiple"
     ></dxo-selection>
+    <dxo-state-storing 
+      [enabled]="true" 
+        type="localStorage" 
+        storageKey="gridTalepMaster">
+    </dxo-state-storing>  
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
     
     <dxi-column dataField="Id" caption="Id" cellTemplate="cellTemplate" [style.width.%]="4" alignment="center"></dxi-column>
     <div *dxTemplate="let cell of 'cellTemplate'">
@@ -112,6 +118,7 @@
         <span *ngIf="cell.data.DurumId===4" class="badge pill-medium bg-warning">İptal</span>    
     </div> 
 
+    <dxi-column [style.width.%]="10" caption="Talep Şube" dataField="DepoAdi" [allowSearch]="true" [width]="200" alignment="center"></dxi-column>    
     <dxi-column [style.width.%]="10" caption="Firma" dataField="FirmaAdi" [allowSearch]="true" [width]="200"></dxi-column>    
     <dxi-column [style.width.%]="20" caption="Açıklama" dataField="Aciklama" [allowSearch]="true" [width]="200"></dxi-column>
 

@@ -23,10 +23,15 @@
                   </mat-slide-toggle>
               </section>
               <section class="switchfont" style="float:left">
+                <mat-slide-toggle [(ngModel)]="seciliuser.SipSaatKisit" [checked]="seciliuser.SipSaatKisit">
+                Sipariş Saat Kısıtı
+                  </mat-slide-toggle>
+              </section> 
+              <section class="switchfont" style="float:left">
                 <mat-slide-toggle [(ngModel)]="seciliuser.Aktif" [checked]="seciliuser.Aktif">
                 Aktif
-                </mat-slide-toggle>
-            </section> 
+                  </mat-slide-toggle>
+              </section> 
   
             </div>
             <div style="margin-bottom: 20px!important;"></div>

@@ -249,8 +249,55 @@ async GetFireTipTanim(Id:number)
    return await this.http.get<Result<ConnFireTipTanimModel>>(url).pipe( map((res:any)=> res));
 } 
 
+async SistemParametreEkle(post:ConnParametreModel,tip:IslemTipi):Promise<ReturnValues>  {
+  const headers = new HttpHeaders(
+    {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Headers': 'Content-Type',
+   }
+  ); 
+
+  let options = { headers: headers };
+  
+  const body =  JSON.stringify({ 
+    "Data":  post,  
+    "Token":this.kullsrc.token, 
+    "Tip":tip, 
+  });
+
+  var result = await this.http.post<any>(this.semUrl+"/Tanim/SistemParametreEkle", body, options).toPromise();
+
+  var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+  return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+}
+
+async GetSistemParametre(Id:number)
+{ 
+   let url=this.semUrl+"/Tanim/GetSistemParametre?Id="+Id+"&Token="+ this.kullsrc.token; 
+   return await this.http.get<Result<ConnParametreModel>>(url).pipe( map((res:any)=> res));
+} 
 
 
+}
+
+export class ConnParametreModel {    
+  Id:number=0;   
+  TalepOlcuBirimDef:number=0;   
+  OzelSiparisOnaySureciAktif:boolean=false;
+  TalepOnaySurecAktif:boolean=false;
+  TransferOnaySurecAktif:boolean=false;
+  FireOnaySurecAktif:boolean=false;
+  OzelSipMusteriKodu:string="";
+  SonSipSaat:string="";
+  
+  EkleyenId:number=0; 
+  Ekleyen:string="";
+  GuncelleyenId:number=0;
+  Guncelleyen:string="";
+  EkTarih:Date=new Date();
+  GuncelTarih:Date=new Date(); 
+  Aktif:boolean=false;
 }
 
 export class ConnFireTipTanimModel {    

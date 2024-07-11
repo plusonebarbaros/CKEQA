@@ -175,7 +175,7 @@ export class FireYonetimComponent implements OnInit {
         this.alertify.warning(data.Message);
         return;
       }
-      this.depolist=(data.List as ConDepoYetki[]);
+      this.depolist=(data.List as ConDepoYetki[]).filter((x)=> x.TransferDepo=="H");  
       this.filterDepo.next(this.depolist.slice());
    })  
   }

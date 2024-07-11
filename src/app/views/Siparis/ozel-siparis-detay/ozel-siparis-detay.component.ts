@@ -27,7 +27,7 @@ import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service
   ]
 })
 export class OzelSiparisDetayComponent implements OnInit {
-  @ViewChild('gridTalepDetay', { static: false }) gridTalepDetay!: DxDataGridComponent;
+  @ViewChild('gridOzelSipDetay', { static: false }) gridTalepDetay!: DxDataGridComponent;
   @BlockUI() blockUI!: NgBlockUI;
   @Input() data:any;  
   yetki:KullaniciYetki; 
@@ -289,7 +289,7 @@ export class OzelSiparisDetayComponent implements OnInit {
         this.alertify.warning(data.Message);
         return;
       }
-      this.depolist=data.List;  
+      this.depolist=(data.List as ConDepoYetki[]).filter((x)=> x.TransferDepo=="H");  
       this.filterSube.next(this.depolist.slice());
    })  
   }

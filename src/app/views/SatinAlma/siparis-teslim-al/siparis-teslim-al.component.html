@@ -38,7 +38,7 @@
         </div>
     </mat-drawer>
    
-    <mat-drawer-content> 
+    <mat-drawer-content>  
 
       <div class="content">
           <nav class="menu-navigation-icons">
@@ -56,7 +56,7 @@
           <dx-data-grid class="devgrid76" #gridSipTeslim
           [dataSource]="taleplist"  
           [showBorders]="true"
-          [showColumnLines]="false"
+          [showColumnLines]="true"
           [showRowLines]="true" 
           [rowAlternationEnabled]="true"
           [focusedRowEnabled]="true"
@@ -91,6 +91,12 @@
           [showCheckBoxesMode]="checkBoxesMode"
           mode="multiple"
           ></dxo-selection> 
+          <dxo-state-storing 
+            [enabled]="true" 
+              type="localStorage" 
+              storageKey="gridSipTeslim">
+          </dxo-state-storing>  
+          <dxo-filter-panel [visible]="true"></dxo-filter-panel>
 
           <dxi-column dataField="TeslimDurum" caption="Teslim Durum" cellTemplate="cellTeslimDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
           <div *dxTemplate="let cell of 'cellTeslimDurum'"> 
@@ -99,25 +105,11 @@
           </div>
  
           <dxi-column [width]="100" caption="Talep Id" dataField="TalepId" alignment="center"></dxi-column> 
+          <dxi-column [width]="135" caption="Sap Talep No" dataField="SapTalepNo" alignment="center"></dxi-column> 
+          <dxi-column [width]="140" caption="Sap Sipariş No" dataField="SapSiparisNo" alignment="center"></dxi-column> 
  
-          <dxi-column dataField="SapTalepNo" caption="Sap Talep No" cellTemplate="cellTemplateId" [width]="135" alignment="center" [allowEditing]="false"></dxi-column>
-          <div *dxTemplate="let cell of 'cellTemplateId'">
-              <div>{{cell.text}}</div>
-          </div> 
-<!-- 
-          <dxi-column 
-          dataField="StokKodu"
-          caption="Stok Kodu" 
-          [style.width.%]="15" [allowEditing]="false" >     
-          </dxi-column> -->          
-
-          <dxi-column dataField="FirmaAdi" caption="Firma Adı" [allowEditing]="false" [width]="225"></dxi-column>  
-
-          <dxi-column 
-          dataField="StokAdi"
-          caption="Stok Adı" 
-          [style.width.%]="15" [allowEditing]="false" >     
-          </dxi-column>
+          <dxi-column dataField="FirmaAdi" caption="Firma Adı" [allowEditing]="false" [width]="225"></dxi-column>
+          <dxi-column dataField="StokAdi" caption="Stok Adı" [style.width.%]="15" [allowEditing]="false" ></dxi-column>
 
           <dxi-column dataField="TalepIhtDurum" caption="İhtiyaç Durum" cellTemplate="cellTalepDurum" [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
           <div *dxTemplate="let cell of 'cellTalepDurum'"> 
