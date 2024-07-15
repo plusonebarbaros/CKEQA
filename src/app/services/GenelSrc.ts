@@ -473,8 +473,46 @@ async GetKullaniciBildirimDetay(id:number,LoginCheck:boolean)
        return await this.http.get<Result<ConnKulDepartmanModel>>(url).pipe( map((res:any)=> res));
     } 
 
+    async SozlesmeEkle(post:ConnKulDepartmanModel,tip:IslemTipi):Promise<ReturnValues>  {
+      const headers = new HttpHeaders(
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Headers': 'Content-Type',
+       }
+      ); 
+    
+      let options = { headers: headers };
+      
+      const body =  JSON.stringify({ 
+        "Data":  post,  
+        "Token":this.kullsrc.token, 
+        "Tip":tip, 
+      });
+    
+      var result = await this.http.post<any>(this.semUrl+"/Tanim/SozlesmeEkle", body, options).toPromise();
+    
+      var sonuc = JSON.parse(JSON.stringify(result))['Model'];
+      return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+    }
+    
+    async GetSozlesme(Id:number)
+    { 
+       let url=this.semUrl+"/Tanim/GetSozlesme?Id="+Id+"&Token="+ this.kullsrc.token; 
+       return await this.http.get<Result<ConnKulDepartmanModel>>(url).pipe( map((res:any)=> res));
+    } 
+
 
 } 
+
+export class ConnSozlesmeModel {    
+  Id:number=0;   
+  MusteriKodu:string="";
+  MusteriAdi:string="";
+  Tarih:any;
+  SozBasTarih:any;
+  SozBitisTarih:any; 
+}
 
 export class ConnKulDepartmanModel {    
   Id:number=0;   

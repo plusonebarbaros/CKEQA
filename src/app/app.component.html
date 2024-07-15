@@ -71,6 +71,10 @@
           <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
           <span>Rapor</span>
         </div> 
+        <div class="mainsem" (click)="menugoster('6')" *ngIf="mainMenuShow('Sözleşme')">
+          <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
+          <span>Sözleşme</span>
+        </div> 
         <!-- <div class="mainsem" style="height:80px !important;" (click)="addNewTab(1)" >
           <div style="display: block;"><i class="fas fa-exclamation-circle fafont"></i></div>
           <span>Sistem Destek</span>
@@ -78,11 +82,10 @@
     </aside> 
 
     <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='1'">
-      <ul class="mainright-ul">  
-      
+      <ul class="mainright-ul"> 
         <li [ngClass]="getCSSClasses(22)" (click)="addNewTab(22)" *ngIf="submainMenuShow('Sistem')">
           <a href="#"><i class="fas fa-cogs"></i> Sistem Parametreleri</a>
-      </li>
+         </li>
         <li class="mainrightsem submenutop baslikmenu" *ngIf="submainMenuShow('Kullanıcı Yönetimi')">
             <a href="#" class="mastermenu" (click)="menuEx[0].Exapnd = !menuEx[0].Exapnd" [attr.aria-expanded]="!menuEx[0].Exapnd" aria-controls="navbarContent">
               <i class="fas fa-users"></i> Kullanıcı Yönetimi</a>
@@ -146,6 +149,12 @@
         <li [ngClass]="getCSSClasses(15)" (click)="addNewTab(15)" *ngIf="childMenuShow('YT0021')"><a href="#"><i class="fas fa-newspaper"></i> Onay Geçmiş</a></li>  
         </ul>
     </aside>
+
+    <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='6'">
+      <ul class="mainright-ul"> 
+        <li [ngClass]="getCSSClasses(23)" (click)="addNewTab(23)" *ngIf="childMenuShow('YT0035')"><a href="#"><i class="fas fa-newspaper"></i> Sözleşme Listesi</a></li>  
+        </ul>
+    </aside>
     
 
     <div class="content-wrapper" >  
@@ -166,8 +175,7 @@
       </mat-tab-group>
   
     </div>  
-    <aside class="control-sidebar control-sidebar-dark">
-      
+    <aside class="control-sidebar control-sidebar-dark">      
     </aside> 
   
   </div>  

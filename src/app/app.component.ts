@@ -47,6 +47,7 @@ import { TalepKontrolListesiComponent } from './views/SatinAlma/talep-kontrol-li
 import { SiparisTeslimAlComponent } from './views/SatinAlma/siparis-teslim-al/siparis-teslim-al.component';
 import { DepoTransferOnayComponent } from './views/SatinAlma/depo-transfer-onay/depo-transfer-onay.component';
 import { SistemParametreComponent } from './views/Yonetim/sistem-parametre/sistem-parametre.component';
+import { SozlesmeListesiComponent } from './views/Test/sozlesme-listesi/sozlesme-listesi.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -209,6 +210,7 @@ export class AppComponent implements OnInit,AfterViewInit {
     else if(tabid==20)this.tabService.addTab(new Tab(SiparisTeslimAlComponent, "Sipariş Teslim Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0031")[0]},tabid));
     else if(tabid==21)this.tabService.addTab(new Tab(DepoTransferOnayComponent, "Depo Transfer Onay", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0034")[0]},tabid));
     else if(tabid==22)this.tabService.addTab(new Tab(SistemParametreComponent, "Sistem Parametreleri", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0009")[0]},tabid));
+    else if(tabid==23)this.tabService.addTab(new Tab(SozlesmeListesiComponent, "Sözleşme Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0035")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }

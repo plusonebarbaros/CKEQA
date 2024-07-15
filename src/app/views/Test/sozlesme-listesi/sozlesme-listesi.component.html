@@ -1,0 +1,105 @@
+<mat-drawer-container class="mat-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+        <div class="modal-header" style="text-align: center;">
+             <h5 class="modal-title" id="myModalLabel2">Filtre</h5>
+        </div>
+        <div class="body"> 
+             <div style="clear:both;margin-bottom: 15px!important"></div>  
+   
+             <mat-form-field appearance="outline" [style.width.%]="100">
+              <mat-label>Teslim Durum</mat-label>
+              <mat-select name="GosterimId" [(ngModel)]="DurumId">
+              <mat-option [value]="0">Bekliyor</mat-option>
+              <mat-option [value]="1">Tamamlandı</mat-option> 
+              <mat-option [value]="2">Tümü</mat-option> 
+              </mat-select>
+          </mat-form-field>
+            
+            <mat-form-field appearance="outline" [style.width.%]="100" [hidden]="DurumId==0">
+                <mat-label>Başlangış Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp" placeholder="Başlangış Tarih"  [(ngModel)]="filter.Baslangic" (ngModelChange)="BasTarihChg($event)">
+                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" [style.width.%]="100" [hidden]="DurumId==0">
+                <mat-label>Bitiş Tarih</mat-label> 
+                <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"  [(ngModel)]="filter.Bitis" (ngModelChange)="BitTarihChg($event)">
+                <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker #dp1></mat-datepicker>
+              </mat-form-field>
+              
+            <div style="clear:both;margin-bottom: 5px!important"></div> 
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default" (click)="drawer.toggle()" value="Kapat" />
+            <input type="button" class="btn btn-info" (click)="TalepListele()" value="Listele" />
+        </div>
+    </mat-drawer>
+   
+    <mat-drawer-content> 
+
+<div class="content">
+    <nav class="menu-navigation-icons">
+        <a href="#" (click)="drawer.toggle()" class="menu-silver" ><i class="fas fa-filter"></i><span>Filtre</span></a> 
+        <a href="#" class="menu-silver" (click)="TalepListele()"><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        
+        <a *ngIf="this.silgoster && yetki.Sil" href="#" class="menu-red" (click)="kayitsil()"><i class="fas fa-minus-circle"></i><span>Sil</span></a>
+
+        <a href="#" (click)="this.gridSozlesme.instance.showColumnChooser()" style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
+        <a href="#" (click)="this.gridSozlesme.instance.exportToExcel(false)" style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+
+    </nav>
+    <div style="clear:both"></div>
+    
+    <dx-data-grid class="devgrid74"  #gridSozlesme
+    [dataSource]="taleplist"   
+    [showBorders]="true" 
+    [remoteOperations]="true"
+    [showColumnLines]="true"
+    [showRowLines]="true" 
+    [rowAlternationEnabled]="true"
+    [focusedRowEnabled]="true"
+    [columnAutoWidth]="true"
+    [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
+    keyExpr="Id" 
+    columnResizingMode = "widget"  
+    (onEditingStart)="overrideOnValueChanged($event)"
+    (onRowUpdated)="CellDegisti($event)" 
+    (onSelectionChanged)="silgosterChanged($event)"
+    (onRowClick)="satirSec($event)" 
+    > 
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+    <dxo-column-chooser [enabled]="false" mode="select"></dxo-column-chooser>
+    <dxo-scrolling mode="virtual" showScrollbar="'always'" useNative="false" scrollByThumb="true" ></dxo-scrolling> 
+    <dxo-paging [pageSize]="30"> </dxo-paging>
+    <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
+    <dxo-selection mode="single"></dxo-selection>   
+    <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>  
+    <dxo-state-storing 
+        [enabled]="true" 
+        type="localStorage" 
+        storageKey="gridDepoTransfer">
+    </dxo-state-storing>  
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel> 
+    
+    <dxi-column dataField="Id" caption="Id" [style.width.%]="10" [allowEditing]="false" alignment="center"></dxi-column>
+    <dxi-column [style.width.%]="10" caption="Tarih" dataField="Tarih" dataType="date" format="dd.MM.yyyy" [allowEditing]="false"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Söz.Baş.Tarih" dataField="SozBasTarih" dataType="date" format="dd.MM.yyyy" [allowEditing]="false"></dxi-column> 
+    <dxi-column [style.width.%]="10" caption="Söz.Bit.Tarih" dataField="SozBitisTarih" dataType="date" format="dd.MM.yyyy" [allowEditing]="false"></dxi-column> 
+
+     <dxi-column dataField="MusteriKodu" caption="Müşteri Kodu" [style.width.%]="10" [allowEditing]="false" ></dxi-column>
+     <dxi-column dataField="MusteriAdi" caption="Müşteri Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+    
+   
+
+    </dx-data-grid>  
+</div>
+
+</mat-drawer-content> 
+</mat-drawer-container> 
