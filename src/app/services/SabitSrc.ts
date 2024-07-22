@@ -288,6 +288,7 @@ export class ConnParametreModel {
   TalepOnaySurecAktif:boolean=false;
   TransferOnaySurecAktif:boolean=false;
   FireOnaySurecAktif:boolean=false;
+  PazarGunuTalepOlustur:boolean=false;
   OzelSipMusteriKodu:string="";
   SonSipSaat:string="";
   

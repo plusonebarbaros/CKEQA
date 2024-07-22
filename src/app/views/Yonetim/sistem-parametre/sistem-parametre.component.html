@@ -29,20 +29,26 @@
                   <mat-slide-toggle [(ngModel)]="sistem.TalepOnaySurecAktif" [checked]="sistem.TalepOnaySurecAktif">
                   Satın Alma Talep Onay Aktif
                   </mat-slide-toggle>
+                </section> 
+
+                <section class="switchfont" style="float:left">
+                  <mat-slide-toggle [(ngModel)]="sistem.TransferOnaySurecAktif" [checked]="sistem.TransferOnaySurecAktif">
+                    Depo Transfer Onay Aktif
+                    </mat-slide-toggle>
+                </section> 
+
+                <section class="switchfont" style="float:left">
+                    <mat-slide-toggle [(ngModel)]="sistem.FireOnaySurecAktif" [checked]="sistem.FireOnaySurecAktif">
+                    Fire Çıkış Onay Aktif
+                    </mat-slide-toggle>
+                </section> 
+
+                <section class="switchfont" style="float:left">
+                  <mat-slide-toggle [(ngModel)]="sistem.PazarGunuTalepOlustur" [checked]="sistem.PazarGunuTalepOlustur">
+                  Pazar Günü Talep Oluşturulabilir
+                  </mat-slide-toggle>
               </section> 
-
-              <section class="switchfont" style="float:left">
-                <mat-slide-toggle [(ngModel)]="sistem.TransferOnaySurecAktif" [checked]="sistem.TransferOnaySurecAktif">
-                Depo Transfer Onay Aktif
-                </mat-slide-toggle>
-            </section> 
-
-            <section class="switchfont" style="float:left">
-                <mat-slide-toggle [(ngModel)]="sistem.FireOnaySurecAktif" [checked]="sistem.FireOnaySurecAktif">
-                Fire Çıkış Onay Aktif
-                </mat-slide-toggle>
-            </section> 
-    
+      
               </div>
 
 

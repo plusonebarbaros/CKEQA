@@ -662,15 +662,17 @@ export  class ReturnValues {
   Id: number=0;
   Success: boolean=false;  
   Message: string="";  
+  MessageDetail: string="";  
   Token: string="";  
   ValidKey: string="";  
 
-  constructor(_id:number,_succ:boolean,_msg:string,_token:string,_validkey:string) {
- this.Id =_id;
- this.Success=_succ;
- this.Message=_msg;
- this.Token=_token; 
- this.ValidKey=_validkey; 
+  constructor(_id:number,_succ:boolean,_msg:string,_token:string,_validkey:string,_messageDetail:string="") {
+    this.Id =_id;
+    this.Success=_succ;
+    this.Message=_msg;
+    this.Token=_token; 
+    this.ValidKey=_validkey; 
+    this.MessageDetail=_messageDetail;
    }
  }   
 

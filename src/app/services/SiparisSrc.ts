@@ -402,7 +402,7 @@ async GetOzelSiparisDetay(Id:number)
       var result = await this.http.post<any>(this.semUrl+"/SatinAlma/AnaDepoTransfer", body,options).toPromise();
   
     var sonuc = JSON.parse(JSON.stringify(result))['Model'];
-    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "");
+    return new ReturnValues( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["ValidKey"] ?? "",sonuc["MessageDetail"] ?? "");
    } 
 
 
