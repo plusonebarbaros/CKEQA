@@ -139,15 +139,14 @@ async talepOnayla(){
           this.blockUI.start(EkranMesaj.Kaydet);
           var sonuc = await this.onaysrc.OnaylaV2(onaylist,true,this.onayaciklama);
             if(sonuc.Success==true){
-              this.alertify.success("Seçili Kalemler Onaylandı!");
-              this.modalService.dismissAll();
-              this.BekleyenOnaylar();
+              this.alertify.success("Seçili Kalemler Onaylandı!"); 
             } 
-            else
-            {
-            this.alertify.warning(sonuc.Message);
+            else {
+              this.alertify.warning(sonuc.Message);
             }
+            this.modalService.dismissAll();
             this.blockUI.stop(); 
+            this.BekleyenOnaylar();
         }
       })
       .catch((err) => {
