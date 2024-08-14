@@ -34,8 +34,10 @@
         <div class="dxgrididfield" >{{cell.text}}</div>
     </div>    
 
-    <dxi-column  [style.width.%]="10" caption="Tanım" dataField="Tanim" ></dxi-column>   
-    <!-- <dxi-column  [style.width.%]="10" caption="Hesap Kodu" dataField="HesapKodu" ></dxi-column>    -->
+    <dxi-column  [style.width.%]="10" caption="Fire Tip" dataField="FireTip" ></dxi-column>   
+    <dxi-column  [style.width.%]="10" caption="Stok Grup" dataField="StokGrup" ></dxi-column>   
+    <dxi-column  [style.width.%]="10" caption="Hesap Kodu" dataField="HesapKodu" ></dxi-column>   
+    <dxi-column  [style.width.%]="10" caption="Hesap Adı" dataField="HesapAdi" ></dxi-column>   
     
     <dxi-column  [style.width.%]="10" caption="Ekleyen" dataField="Ekleyen" ></dxi-column> 
     <dxi-column  [style.width.%]="10" caption="Kayıt" dataField="EkTarih" dataType="date" format="dd.MM.yyyy HH:mm"></dxi-column> 
@@ -57,16 +59,48 @@
                 </mat-slide-toggle>
             </section>
             <div style="clear:both;margin-bottom:20px!important"></div> 
-             
-            <mat-form-field appearance="outline" [style.width.%]="100">
-                <mat-label>Tanım</mat-label>
-                <input matInput placeholder="Tanım" [(ngModel)]="secilidata.Tanim" type="text" autocomplete="off" maxlength="254">
-            </mat-form-field>    
+                
 
-            <!-- <mat-form-field appearance="outline" [style.width.%]="100">
+            <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Fire Tip</mat-label>
+                  <mat-select  #singleSelect [(ngModel)]="secilidata.FireTipId">
+                    <mat-option>
+                      <ngx-mat-select-search [formControl]="formFireTip"  
+                       placeholderLabel="Ara..."
+                       noEntriesFoundLabel="Kayıt Bulunamadı...">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let gr of filterFireTip | async" [value]="gr.Id" >
+                      {{gr.Tanim}}
+                    </mat-option>
+                  </mat-select>
+                  <button mat-button matSuffix *ngIf="secilidata.FireTipId>0" mat-icon-button (click)="defFireTip($event)">
+                     <mat-icon>close</mat-icon>
+                 </button>
+                </mat-form-field> 
+
+                <mat-form-field appearance="outline" [style.width.%]="100">
+                    <mat-label>Stok Grup</mat-label>
+                      <mat-select  #singleSelect [(ngModel)]="secilidata.StokGrupId">
+                        <mat-option>
+                          <ngx-mat-select-search [formControl]="formStokGrup"  
+                           placeholderLabel="Ara..."
+                           noEntriesFoundLabel="Kayıt Bulunamadı...">
+                          </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let gr of filterStokGrup | async" [value]="gr.ItmsGrpCod" >
+                          {{gr.ItmsGrpNam}}
+                        </mat-option>
+                      </mat-select>
+                      <button mat-button matSuffix *ngIf="secilidata.StokGrupId>0" mat-icon-button (click)="defGrup($event)">
+                         <mat-icon>close</mat-icon>
+                     </button>
+                    </mat-form-field> 
+
+                <mat-form-field appearance="outline" [style.width.%]="100">
                 <mat-label>Hesap Kodu</mat-label>
                 <input matInput placeholder="Hesap Kodu" [(ngModel)]="secilidata.HesapKodu" type="text" autocomplete="off" maxlength="50">
-            </mat-form-field>     -->
+            </mat-form-field>    
            
         </div>
         <div class="modal-footer">

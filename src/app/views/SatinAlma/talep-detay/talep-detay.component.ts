@@ -63,7 +63,7 @@ export class TalepDetayComponent implements OnInit {
   public formStokGrup: FormControl = new FormControl();
   public filterStokGrup: ReplaySubject<StokGrupModel[]> = new ReplaySubject<StokGrupModel[]>(1);
 
-
+ 
   constructor(
     public datepipe: DatePipe,
     private genelsrv:GenelApi,

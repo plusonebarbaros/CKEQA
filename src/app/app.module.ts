@@ -89,6 +89,7 @@ import { SiparisTeslimAlComponent } from './views/SatinAlma/siparis-teslim-al/si
 import { DepoTransferOnayComponent } from './views/SatinAlma/depo-transfer-onay/depo-transfer-onay.component';
 import { SozlesmeListesiComponent } from './views/Test/sozlesme-listesi/sozlesme-listesi.component';
 import { SozlesmeDetayComponent } from './views/Test/sozlesme-detay/sozlesme-detay.component';
+import { FireTipMuhasebeTanimComponent } from './views/Yonetim/fire-tip-muhasebe-tanim/fire-tip-muhasebe-tanim.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -137,7 +138,8 @@ locale(navigator.language);
     SiparisTeslimAlComponent,
     DepoTransferOnayComponent,
     SozlesmeListesiComponent,
-    SozlesmeDetayComponent
+    SozlesmeDetayComponent,
+    FireTipMuhasebeTanimComponent
       ],
   imports: [
     BrowserModule,
