@@ -92,6 +92,7 @@ strKullanici:string="";
     
     
 
+    
   async ngOnInit(): Promise<void> {  
       
       this.kulltoken = sessionStorage?.getItem("Token")??"";
