@@ -683,6 +683,7 @@ export class FilterMod {
   }
   Baslangic:any;
   Bitis:any;
+  Yedek1:any;
 }
 
 export class GrafikData {

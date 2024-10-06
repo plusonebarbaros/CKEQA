@@ -20,6 +20,7 @@ export class TabService {
   }
 
   public addTab(tab: Tab,kontrol:boolean=false) {
+  
     if(kontrol==true){ 
        let tabacikmi = this.tabs.filter((item)=> item.title===tab.title)[0];
        if(tabacikmi!=null){ 

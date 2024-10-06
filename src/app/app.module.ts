@@ -89,7 +89,14 @@ import { SiparisTeslimAlComponent } from './views/SatinAlma/siparis-teslim-al/si
 import { DepoTransferOnayComponent } from './views/SatinAlma/depo-transfer-onay/depo-transfer-onay.component';
 import { SozlesmeListesiComponent } from './views/Test/sozlesme-listesi/sozlesme-listesi.component';
 import { SozlesmeDetayComponent } from './views/Test/sozlesme-detay/sozlesme-detay.component';
-import { FireTipMuhasebeTanimComponent } from './views/Yonetim/fire-tip-muhasebe-tanim/fire-tip-muhasebe-tanim.component';
+import { FireTipMuhasebeTanimComponent } from './views/Yonetim/fire-tip-muhasebe-tanim/fire-tip-muhasebe-tanim.component'; 
+import { DinamikGridPopupComponent } from './views/dinamik-grid-popup/dinamik-grid-popup/dinamik-grid-popup.component';
+import { KaliteIsemriComponent } from './views/Kalite/kalite-isemri/kalite-isemri.component';
+import { KaliteGirisStokComponent } from './views/Kalite/kalite-giris/kalite-giris-stok/kalite-giris-stok.component';
+import { KaliteGirisUretimComponent } from './views/Kalite/kalite-giris/kalite-giris-uretim/kalite-giris-uretim.component';
+import { KaliteGirisSatinalmaComponent } from './views/Kalite/kalite-giris/kalite-giris-satinalma/kalite-giris-satinalma.component';
+import { KaliteGirisSevkiyatComponent } from './views/Kalite/kalite-giris/kalite-giris-sevkiyat/kalite-giris-sevkiyat.component';
+import { KaliteGirisIadeComponent } from './views/Kalite/kalite-giris/kalite-giris-iade/kalite-giris-iade.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -139,7 +146,14 @@ locale(navigator.language);
     DepoTransferOnayComponent,
     SozlesmeListesiComponent,
     SozlesmeDetayComponent,
-    FireTipMuhasebeTanimComponent
+    FireTipMuhasebeTanimComponent, 
+    DinamikGridPopupComponent,
+    KaliteIsemriComponent,
+    KaliteGirisStokComponent,
+    KaliteGirisUretimComponent,
+    KaliteGirisSatinalmaComponent,
+    KaliteGirisSevkiyatComponent,
+    KaliteGirisIadeComponent
       ],
   imports: [
     BrowserModule,
@@ -190,7 +204,7 @@ locale(navigator.language);
   providers: [
     { provide: LOCALE_ID, useValue: "tr-TR" },
     { provide: MAT_DATE_LOCALE, useValue: 'tr-TR' },
-    { provide:'semUrl',useValue:'http://localhost:17379/api'},
+    { provide:'semUrl',useValue:'http://82.222.7.156:13921/api'},
     TabService,
     MatDatepickerModule,     
   ],

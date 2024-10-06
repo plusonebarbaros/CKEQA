@@ -9,14 +9,14 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />  
     <meta http-equiv="Pragma" content="no-cache" />  
     <meta http-equiv="Expires" content="0" />   
-    <title>Butterfly B2B</title> 
+    <title>CKE-QA</title> 
      
   </head>
   <body class="hold-transition sidebar-mini layout-fixed">   
     <div class="wrapper" *ngIf="userLogin"> 
       <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <div class="dts-head">
-          <label>Butterfly B2B</label>
+          <label>CKE-QA</label>
           <div style="margin-top: -16px;">
             <i class="nav-icon fas fa-circle text-success" style="margin-top: 5px;margin-right: 5px;font-size: 11px!important;"></i>
             <span class="text" style="font-size: 14px!important;">{{loguser.AktifSirket}} Şirketinde Çalışıyorsunuz </span>  
@@ -46,7 +46,7 @@
    
     <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4" style="overflow-y: auto!important;" *ngIf="userLogin">         
         <div class="mainsem-logo">
-          <img class="logocss" src="../assets/logo/FLY-LOGO.png" width="70" height="50">
+          <img class="logocss" src="../assets/logo/CKE-LOGO.jpg" width="70" height="50">
          </div>
        
         <div class="clearfix" style="margin-bottom: 15px;"></div>
@@ -55,7 +55,7 @@
           <div style="display: block;"><i class="fas fa-cogs fafont"></i></div>
           <span>Yönetim</span>
         </div>
-        <div class="mainsem" (click)="menugoster('2')"  *ngIf="mainMenuShow('Stok Yönetim')">
+        <!-- <div class="mainsem" (click)="menugoster('2')"  *ngIf="mainMenuShow('Stok Yönetim')">
           <div style="display: block;"><i class="fas fa-city fafont"></i></div>
           <span>Stok</span>
         </div>
@@ -67,6 +67,7 @@
           <div style="display: block;"><i class="fas fa-clock fafont"></i></div>
           <span>Onay</span>
         </div>    
+        
         <div class="mainsem" (click)="menugoster('4')" *ngIf="mainMenuShow('Rapor Yönetim')">
           <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
           <span>Rapor</span>
@@ -74,7 +75,13 @@
         <div class="mainsem" (click)="menugoster('6')" *ngIf="mainMenuShow('Sözleşme')">
           <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
           <span>Sözleşme</span>
+        </div>  -->
+
+        <div class="mainsem" (click)="menugoster('7')" *ngIf="mainMenuShow('Kalite Yonetim')">
+          <div style="display: block;"><i class="fas fa-chart-bar fafont"></i></div>
+          <span>Kalite</span>
         </div> 
+
         <!-- <div class="mainsem" style="height:80px !important;" (click)="addNewTab(1)" >
           <div style="display: block;"><i class="fas fa-exclamation-circle fafont"></i></div>
           <span>Sistem Destek</span>
@@ -124,6 +131,49 @@
         <li [ngClass]="getCSSClasses(18)" (click)="addNewTab(18)" *ngIf="childMenuShow('YT0028')"><a href="#"><i class="fas fa-newspaper"></i> Sayım Yönetimi</a></li>  
         </ul>
     </aside>
+
+ 
+
+
+    <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='7'">
+      <ul class="mainright-ul"> 
+ 
+        <li class="mainrightsem submenutop baslikmenu" *ngIf="submainMenuShow('Kullanıcı Yönetimi')">
+          <a href="#" class="mastermenu" (click)="menuEx[0].Exapnd = !menuEx[0].Exapnd" [attr.aria-expanded]="!menuEx[0].Exapnd" aria-controls="navbarContent">
+            <i class="fas fa-chart-bar fafont"></i> Kalite Tanımları</a>
+          <ul class="nav collapse submenusem" [ngbCollapse]="!menuEx[0].Exapnd">
+            <li (click)="addNewTab(26)" [ngClass]="getCSSClassesSub(26)" *ngIf="childMenuShow('YT0043')"><a href="#">● Ölçü birimleri</a></li> 
+            <li (click)="addNewTab(27)" [ngClass]="getCSSClassesSub(27)" *ngIf="childMenuShow('YT0044')"><a href="#">● Araç - Ekipman Tanımları</a></li>  
+            <li (click)="addNewTab(28)" [ngClass]="getCSSClassesSub(28)" *ngIf="childMenuShow('YT0045')"><a href="#">● Test Grupları</a></li>  
+            <li (click)="addNewTab(29)" [ngClass]="getCSSClassesSub(29)" *ngIf="childMenuShow('YT0046')"><a href="#">● Test Tanımları</a></li>  
+            <li (click)="addNewTab(30)" [ngClass]="getCSSClassesSub(30)" *ngIf="childMenuShow('YT0047')"><a href="#">● Araç - Test Eşleştirme</a></li>  
+            <li (click)="addNewTab(31)" [ngClass]="getCSSClassesSub(31)" *ngIf="childMenuShow('YT0048')"><a href="#">● Örneklem Tanımları</a></li>  
+            <li (click)="addNewTab(32)" [ngClass]="getCSSClassesSub(32)" *ngIf="childMenuShow('YT0049')"><a href="#">● Liste Tanımları</a></li>  
+          </ul> 
+      </li>  
+      <li class="mainrightsem submenutop baslikmenu" *ngIf="submainMenuShow('Kullanıcı Yönetimi')">
+        <a href="#" class="mastermenu1" (click)="menuEx[1].Exapnd = !menuEx[1].Exapnd" [attr.aria-expanded]="!menuEx[1].Exapnd" aria-controls="navbarContent">
+          <i class="fas fa-chart-bar fafont"></i> Kalite Girişleri</a>
+        <ul class="nav collapse submenusem" [ngbCollapse]="!menuEx[1].Exapnd">
+          <li [ngClass]="getCSSClasses(33)" (click)="addNewTab(33)" *ngIf="childMenuShow('YT0050')"><a href="#">● Kalite İşEmirleri</a></li>  
+          <li [ngClass]="getCSSClasses(25)" (click)="addNewTab(25)" *ngIf="childMenuShow('YT0042')"><a href="#">● Stok Kalite Girisleri</a></li>  
+          <li [ngClass]="getCSSClasses(26)" (click)="addNewTab(26)" *ngIf="childMenuShow('YT0043')"><a href="#">● Üretim Kalite Girisleri</a></li>  
+          <li [ngClass]="getCSSClasses(27)" (click)="addNewTab(27)" *ngIf="childMenuShow('YT0044')"><a href="#">● SatınAlma Kalite Girisleri</a></li>  
+          <li [ngClass]="getCSSClasses(28)" (click)="addNewTab(28)" *ngIf="childMenuShow('YT0045')"><a href="#">● Sevkiyat Kalite Girisleri</a></li>  
+          <li [ngClass]="getCSSClasses(29)" (click)="addNewTab(29)" *ngIf="childMenuShow('YT0046')"><a href="#">● İade Kalite Girisleri</a></li>  
+        </ul> 
+    </li>  
+  
+
+     
+    </ul>
+    </aside>    
+
+
+
+
+
+
 
     <aside class="main-sidebar-rigth" *ngIf="userLogin && secilimenu=='3'">
       <ul class="mainright-ul"> 

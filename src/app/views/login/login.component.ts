@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.inputusername?.nativeElement.focus();
+      console.log(this.semUrl);
     }, 100);
   }
 

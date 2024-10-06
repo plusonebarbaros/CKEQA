@@ -1,0 +1,147 @@
+<mat-drawer-container class="mat-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+        <div class="modal-header" style="text-align: center;">
+             <h5 class="modal-title" id="myModalLabel2">Filtre</h5>
+        </div>
+        <div class="body"> 
+             <div style="clear:both;margin-bottom: 15px!important"></div>  
+   
+             <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Başlangıç</mat-label> 
+                <input matInput [matDatepicker]="dp" placeholder="Başlangıç Tarih"   >
+                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" [style.width.%]="100">
+                <mat-label>Bitiş</mat-label> 
+                <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"   >
+                 <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker #dp1></mat-datepicker>
+              </mat-form-field>   
+
+
+          <mat-form-field appearance="outline" [style.width.%]="100">
+            <mat-label>Tipler</mat-label>
+              <mat-select  #multiSelect  [(ngModel)]="seciliTipler" [multiple]="true">
+                <mat-option>
+                  <ngx-mat-select-search  [formControl]="formIsEmri"  
+                   placeholderLabel="Ara..."
+                   noEntriesFoundLabel="Kayıt Bulunamadı...">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let data of filterTipList" [value]="data.Kod">
+                  {{data.Aciklama}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+              
+            <div style="clear:both;margin-bottom: 5px!important"></div> 
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default" (click)="drawer.toggle()" value="Kapat" />
+            <input type="button" class="btn btn-info" (click)="EmirListesiGetir()" value="Listele" />
+        </div>
+    </mat-drawer>
+    
+  <div class="content">
+      <nav class="menu-navigation-icons">
+          
+        <a href="#" (click)="drawer.toggle()" class="menu-silver" ><i class="fas fa-filter"></i><span>Filtre</span></a> 
+        <a href="#" (click)="EmirListesiGetir()" class="menu-silver"><i class="fas fa-sync-alt"></i><span>Yenile</span></a>
+        <a href="#"  style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+
+      </nav>
+      <div style="clear:both"></div>
+      <div class="panel panel-default">
+        <div class="panel-body">
+            <label class="panel-baslik">İşEmirleri Listesi</label>
+            <div class="clear-fix"></div> 
+            
+        <dx-data-grid class="devgrid50"  #gridSenaryoList 
+        id="gridSenaryoList"
+        [dataSource]="emirlist"
+        [showBorders]="true" 
+        [showColumnLines]="true"
+        [showRowLines]="true" 
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true"
+        [allowColumnReordering]="true"
+        keyExpr="DocEntry" 
+        columnResizingMode = "widget"  
+     
+        > 
+    <!-- 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing> -->
+        <dxo-filter-row [visible]="false"></dxo-filter-row>
+        <dxo-header-filter [visible]="false"></dxo-header-filter>
+        <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+        
+        <dxo-scrolling mode="virtual" showScrollbar="'always'" useNative="false" scrollByThumb="true" ></dxo-scrolling> 
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
+       
+        <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+        <dxo-state-storing 
+            [enabled]="true" 
+            type="localStorage" 
+            storageKey="gridKaliteIsEmri">
+        </dxo-state-storing>  
+    
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+    
+     
+    
+        <dxi-column dataField="DocEntry" caption="DocEntry" cellTemplate="cellTemplate" [width]="70" alignment="center" [allowEditing]="false"></dxi-column>
+        <div *dxTemplate="let cell of 'cellTemplate'">
+            <div class="dxgrididfield" (dblclick)="IsEmriDetay(cell.data.DocEntry)">{{cell.data.DocEntry }}</div>
+        </div>    
+
+        <dxi-column  caption="BelgeNo"  dataField="BelgeNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"></dxi-column>
+        <dxi-column  caption="TurAciklama" dataField="TurAciklama" [style.width%]="10" [allowEditing]="false"></dxi-column>
+        <dxi-column  caption="Tarih" dataField="Tarih" dataType="date" format="dd.MM.yyyy" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="StokKodu" dataField="StokKodu" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="Lot/Seri Tipi" dataField="LotSeriTipi" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="Lot/Seri No" dataField="LotSeriNo" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="IslemiYapan" dataField="IslemiYapan" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="TahBaslangic" dataField="TahBaslangic" dataType="date" format="dd.MM.yyyy" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="TahBitis" dataField="TahBitis" dataType="date" format="dd.MM.yyyy" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="TestSayisi" dataField="TestSayisi" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="TamTestSayisi" dataField="TamTestSayisi" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column  caption="Durum" dataField="Durum" [style.width.%]="10" [allowEditing]="false"  cellTemplate="cellTemplateDurum" ></dxi-column>
+        <div *dxTemplate="let cell of 'cellTemplateDurum'" > 
+          <span  class="badge pill-medium" 
+          [ngClass]="{
+            'badge-info': cell.data.Durum === 'Beklemede',
+            'badge-success': cell.data.Durum === 'Devam Ediyor',
+            'badge-danger': cell.data.Durum === 'Danger'
+          }" style="cursor:pointer">{{ cell.data.Durum }} </span>
+        </div>
+
+        <dxi-column  caption="TekrarNo"  dataField="TekrarNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"  [visible] = "false"></dxi-column>
+        
+        <dxi-column  caption="Tur" dataField="Tur" [style.width%]="10" [allowEditing]="false"   [visible]  = "false" ></dxi-column>
+        <dxi-column  caption="ObjeTipi" dataField="ObjeTipi" [style.width%]="10" [allowEditing]="false"   [visible] = "false" ></dxi-column>
+        <dxi-column  caption="SenaryoNo" dataField="SenaryoNo" [style.width%]="10" [allowEditing]="false"[visible] = "false"  ></dxi-column>
+
+        
+        
+       
+         
+        
+        </dx-data-grid> 
+    </div>
+    
+    <div class="clear-fix"></div> 
+    
+    
+     
+    </div>
+
+  </div>
+
+
+
+ 
+</mat-drawer-container> 

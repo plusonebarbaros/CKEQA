@@ -49,6 +49,8 @@ import { DepoTransferOnayComponent } from './views/SatinAlma/depo-transfer-onay/
 import { SistemParametreComponent } from './views/Yonetim/sistem-parametre/sistem-parametre.component';
 import { SozlesmeListesiComponent } from './views/Test/sozlesme-listesi/sozlesme-listesi.component';
 import { FireTipMuhasebeTanimComponent } from './views/Yonetim/fire-tip-muhasebe-tanim/fire-tip-muhasebe-tanim.component';
+import { KaliteIsemriComponent } from './views/Kalite/kalite-isemri/kalite-isemri.component';
+import { KaliteGirisStokComponent } from './views/Kalite/kalite-giris/kalite-giris-stok/kalite-giris-stok.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -213,6 +215,15 @@ export class AppComponent implements OnInit,AfterViewInit {
     else if(tabid==22)this.tabService.addTab(new Tab(SistemParametreComponent, "Sistem Parametreleri", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0009")[0]},tabid));
     else if(tabid==23)this.tabService.addTab(new Tab(SozlesmeListesiComponent, "Sözleşme Listesi", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0035")[0]},tabid));
     else if(tabid==24)this.tabService.addTab(new Tab(FireTipMuhasebeTanimComponent, "Fire Tip Muhasebe Tanım", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0037")[0]},tabid));
+    else if(tabid==25)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Kalite Stok Girisleri", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0042")[0]},tabid));
+    else if(tabid==26)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Ölçü birimleri", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0043")[0]},tabid));
+    else if(tabid==27)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Araç - Ekipman Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0044")[0]},tabid));
+    else if(tabid==28)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Test Grupları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0045")[0]},tabid));
+    else if(tabid==29)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Test Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0046")[0]},tabid));
+    else if(tabid==30)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Araç - Test Eşleştirme", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0047")[0]},tabid));
+    else if(tabid==31)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Örneklem Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0048")[0]},tabid));
+    else if(tabid==32)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Liste Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0049")[0]},tabid));
+    else if(tabid==33)this.tabService.addTab(new Tab(KaliteIsemriComponent, "Kalite İşEmirleri", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0050")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }

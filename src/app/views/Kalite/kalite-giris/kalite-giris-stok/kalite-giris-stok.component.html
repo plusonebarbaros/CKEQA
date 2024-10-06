@@ -1,0 +1,315 @@
+<div class="content">
+    <nav class="menu-navigation-icons">
+      <a href="#" class="menu-blue"><i class="fas fa-plus-circle" (click)="SenaryoGetir()"></i><span>Senaryo</span></a> 
+      <!-- <a href="#" class="menu-silver"  ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>  -->
+      <a href="#" (click)="SonuclariKaydet()" class="menu-green disabled"  ><i class="fas fa-save"></i><span> {{btnKaydetCaption}} </span></a>  
+      <a href="#" (click)="EmriKapat()"class="menu-red"  ><i class="fas fa-minus-circle"></i><span>Emri Kapat</span></a>
+    
+      <a href="#"  style="float: right!important;" class="menu-blue" ><i class="fas fa-filter"></i><span>Sütun Seç</span></a> 
+      <a href="#"  style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
+      <a href="#"  class="menu-magenta" style="float: right!important;"><i class="fas fa-file-pdf"></i><span>Pdf</span></a> 
+    
+      
+    </nav>
+    <div style="clear:both"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <label class="panel-baslik">Genel Bilgiler</label>
+            <div class="clear-fix"></div> 
+            
+            <div class="row-12">
+                 
+                <mat-form-field appearance="outline" [style.width.%]="30"  >
+                    <mat-label>Kalite ID</mat-label>
+                    <input matInput placeholder="Kalite ID"  [(ngModel)]="strKaliteID"  disabled="true">
+                </mat-form-field>
+
+
+                <mat-form-field appearance="outline" [style.width.%]="30" >
+                    <mat-label>Kullanici</mat-label>
+                    <input matInput placeholder="Kullanici"  [(ngModel)]="strKullanici"   disabled="true">
+                </mat-form-field>
+     
+
+                <mat-form-field appearance="outline" [style.width.%]="30" >
+                    <mat-label>Başlangıç Tarihi</mat-label>
+                    <input matInput placeholder="Başlangıç Tarihi"  [(ngModel)]="strBaslangic"   disabled="true">
+                </mat-form-field>
+
+            </div>
+
+        </div>
+    </div>
+     
+    
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <label class="panel-baslik">Kalite Girişleri</label>
+            <div class="clear-fix"></div> 
+            
+            <div class="row-12">
+                <mat-form-field appearance="outline" [style.width.%]="25" style="padding-right: 10px;">
+                    <mat-label>Stok Kodu</mat-label>
+                    <input matInput type="search" [(ngModel)]="secilistok.ItemCode" readonly> 
+        
+                    <button mat-button matSuffix mat-icon-button (click)="stokrehberModalAc(StoksecMod)">
+                      <mat-icon style="color: #007bff;font-weight: bold;">search</mat-icon>
+                    </button>
+        
+                    <button  mat-button matSuffix mat-icon-button (click)="stokrehberTemizle()" >
+                      <mat-icon style="color: red;font-weight: bold">cancel</mat-icon>
+                    </button>
+                 </mat-form-field>
+
+                 <mat-form-field appearance="outline" [style.width.%]="50" >
+                    <mat-label>Stok Adı</mat-label>
+                    <input matInput placeholder="Stok Adı"  [(ngModel)]="secilistok.ItemName"  readonly>
+                </mat-form-field>
+
+            </div>
+            
+            <div class="row-12">
+                <mat-form-field appearance="outline" [style.width.%]="25" style="padding-right: 10px;">
+                    <mat-label>Lot / Seri</mat-label>
+                    <input matInput type="search" [(ngModel)]="seciliseri.DistNumber"> 
+        
+                    <button mat-button matSuffix mat-icon-button (click)="serirehberModalAc(SerisecMod)">
+                      <mat-icon style="color: #007bff;font-weight: bold;">search</mat-icon>
+                    </button>
+                 </mat-form-field>
+
+                <mat-form-field appearance="outline" [style.width.%]="24.5" >
+                    <mat-label>Miktar</mat-label>
+                    <input matInput placeholder="Miktar"  autocomplete="off" [(ngModel)]="miktar" >
+                </mat-form-field>
+            </div>
+
+        </div>
+    </div>
+     
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <label class="panel-baslik">Kalite Bilgileri</label>
+            <div class="clear-fix"></div> 
+            
+            <div class="row-12">
+                <mat-form-field appearance="outline" [style.width.%]="50" >
+                    <mat-label>Test Senaryosu</mat-label>
+                    <input matInput placeholder="Test Senaryosu"  autocomplete="off" [(ngModel)]="senaryoAdi" readonly>
+                </mat-form-field>
+           
+                <mat-form-field appearance="outline" [style.width.%]="25" >
+                    <mat-label>Örneklem Sayısı</mat-label>
+                    <input matInput placeholder="Örneklem Sayısı"  autocomplete="off" [(ngModel)]="orneklem" readonly>
+                </mat-form-field>
+          
+                <!-- <mat-form-field appearance="outline" [style.width.%]="25" >
+                    <mat-label>Tekrar Sayısı</mat-label>
+                    <input matInput placeholder="Tekrar Sayısı"  autocomplete="off" [(ngModel)]="tekrarsayisi" readonly>
+                </mat-form-field> -->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <label class="panel-baslik">Senaryo Bilgileri & Girişleri</label>
+            <div class="clear-fix"></div> 
+            
+        <dx-data-grid class="devgrid30"  #gridSenaryoList 
+        id="gridSenaryoList"
+        [dataSource]="senaryoList"   
+        [showBorders]="true" 
+        [showColumnLines]="true"
+        [showRowLines]="true" 
+        [columnAutoWidth]="true"
+        [allowColumnResizing]="true"
+        [allowColumnReordering]="true"
+        keyExpr="ID" 
+        columnResizingMode = "widget"  
+        (onEditorPreparing)="onEditorPreparing($event)"
+        (onCellPrepared)="onCellPrepared($event)"
+        > 
+<!-- 
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing> -->
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+        
+        <dxo-scrolling mode="virtual" showScrollbar="'always'" useNative="false" scrollByThumb="true" ></dxo-scrolling> 
+        <dxo-paging [pageSize]="30"> </dxo-paging>
+        <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
+       
+        <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+        <dxo-state-storing 
+            [enabled]="true" 
+            type="localStorage" 
+            storageKey="gridSenaryoList">
+        </dxo-state-storing>  
+
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+
+
+        <dxi-column dataField="ID"  caption="#"  [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="SonucDocEntry"  caption="SonucDocEntry"  [style.width.%]="10" alignment="center"  [visible] = "true"></dxi-column>
+        <dxi-column dataField="SenaryoSatirId"  caption="SatirNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="TekrarNo"  caption="TekrarNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="DocEntry"  caption="DocEntry"  [style.width.%]="2" alignment="center"  [visible] = "false"></dxi-column>
+        <dxi-column dataField="AracKodu" caption="Araç Kodu" [style.width.%]="10" [allowEditing]="false"  [visible] = "false"></dxi-column>
+        <dxi-column dataField="AracAdi" caption="Araç Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column dataField="TestAdi" caption="Test Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column dataField="DegerTipi" caption="Değer Tipi" [style.width%]="10" [allowEditing]="false"  [visible] = "false"></dxi-column>
+        <dxi-column dataField="DegerTipiAciklamasi" caption="Değer Tipi Aciklamasi" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column dataField="Ondalik" caption="Ondalik" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column dataField="Operator" caption="Operator" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column dataField="Deger1" caption="Min.Değer" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column dataField="Deger2" caption="Max. Değer" [style.width%]="10" [allowEditing]="false" ></dxi-column>
+        <dxi-column dataField="Deger" [style.width.%]="10"  [allowEditing]="true"  caption="Değer" alignment="right" dataType="number" format="#,##0.00" >  </dxi-column> 
+        
+
+        <dxi-column dataField="Liste"  caption="Liste"  [style.width%]="10"   cellTemplate="listeTemplate" [allowEditing]="false"> </dxi-column>
+        <div *dxTemplate="let data of 'listeTemplate'" >
+            <div class ="row"  *ngIf="data.data.DegerTipi === 'LST'"  >
+                <div class ="col-9">
+                    {{data.data.Liste}}
+                </div>
+                <div class ="col-3">
+                    <a href="javascript:;"  (click)="PopupAc('modalcss150',data)"  class="dx-link-delete dx-icon-search dx-link-icon" title="Search" aria-label="Search"></a>
+                </div>
+            </div>
+        </div>
+
+        <dxi-column dataField="Metin" caption="Metin" [allowEditing]="true"  [style.width%]="30"  ></dxi-column>
+        <dxi-column dataField="Zorunlu" caption="Zorunlu mu?" [style.width%]="10"  [allowEditing]="false"  ></dxi-column>
+        <dxi-column dataField="TestYontemi" caption="TestYontemi" [style.width%]="2"  [allowEditing]="false" cellTemplate="fileTemplate" ></dxi-column>
+        <div *dxTemplate="let cell of 'fileTemplate'">
+            <span class="fa fa-search" click="openFile(cell.value)"></span> 
+        </div> 
+        
+         
+        
+        </dx-data-grid> 
+    </div>
+
+    <div class="clear-fix"></div> 
+
+    
+     
+    </div>
+    
+
+    <ng-template #StoksecMod let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" >Stok Seçim</h4> 
+        </div>
+        <div class="modal-body"> 
+            <div class="row">
+                <div class="input-group">
+                  <input type="text" class="form-control" autocomplete="off" placeholder="Aramak İstediğiniz StokAdını Kısaca Yazın..." [(ngModel)]="kalemkeyword" (keyup)="stokkalemAra($event)">
+                  <span class="input-group-btn">
+                    <button class="btn btn-info btn-mini" title="Arama Temizle" (click)="stokAramaModaltemizle()">
+                        <span class="fas fa-sync-alt"></span>
+                    </button>
+                </span>
+              </div>
+              </div>
+              <div style="clear:both"></div>
+              <hr/>
+              <dx-data-grid class="devgrid30" #gridAvansKullaniciList
+              [dataSource]="stokrehberlist"
+              [showBorders]="true"
+              [showRowLines]="true" 
+              [showColumnLines]="false"
+              [showRowLines]="true" 
+              [rowAlternationEnabled]="true"
+              [focusedRowEnabled]="true"
+              [columnAutoWidth]="true"
+              [allowColumnResizing]="true"
+              keyExpr="DocEntry" 
+              columnResizingMode = "widget" 
+              [allowColumnReordering]="true"  
+              (onSelectionChanged)="onSelectionChangedStokModal($event)"
+              (onRowDblClick)="onRowDblClickModal()"
+              > 
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-filter-row [visible]="false"></dxo-filter-row>
+              <dxo-header-filter [visible]="false"></dxo-header-filter>
+              <dxo-paging [enabled]="false"></dxo-paging>
+                        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+              <dxo-header-filter [allowSearch]="false"></dxo-header-filter>
+              <dxo-selection mode="single"></dxo-selection>   
+               
+      
+              <dxi-column dataField="ItemCode" caption="Kalem Numarasi" [style.width.%]="10"></dxi-column>
+            
+              <dxi-column dataField="ItemName" caption="Tanim" [style.width.%]="10"></dxi-column>
+            
+              <dxi-column dataField="ItmsGrpNam" caption="Kalem Grubu " [style.width.%]="10"></dxi-column>
+              
+              </dx-data-grid>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="finhspkapat" class="btn btn-danger" (click)="modal.dismiss('Cross click')"  #closeBtn>Vazgeç</button>
+          <button type="button" class="btn btn-success" (click)="onRowDblClickModal()">Seçim Yap</button>
+        </div>
+      </ng-template>  
+
+      <ng-template #SerisecMod let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" >Lot / Seri Seçim</h4> 
+        </div>
+        <div class="modal-body"> 
+            <div class="row">
+                <div class="input-group">
+                  <input type="text" class="form-control" autocomplete="off" placeholder="Aramak İstediğiniz StokAdını Kısaca Yazın..." [(ngModel)]="kalemkeyword" (keyup)="serikalemAra($event)"  >
+                  <span class="input-group-btn">
+                    <button class="btn btn-info btn-mini" title="Arama Temizle" (click)="stokAramaModaltemizle()">
+                        <span class="fas fa-sync-alt"></span>
+                    </button>
+                </span>
+              </div>
+              </div>
+              <div style="clear:both"></div>
+              <hr/>
+              <dx-data-grid class="devgrid30" #gridSeriList
+              [dataSource]="serirehberlist"
+              [showBorders]="true"
+              [showRowLines]="true" 
+              [showColumnLines]="false"
+              [showRowLines]="true" 
+              [rowAlternationEnabled]="true"
+              [focusedRowEnabled]="true"
+              [columnAutoWidth]="true"
+              [allowColumnResizing]="true"
+              keyExpr="AbsEntry" 
+              columnResizingMode = "widget" 
+              [allowColumnReordering]="true"  
+              (onSelectionChanged)="onSelectionChangedSeriModal($event)"
+              (onInitialized)="seriRehberDoldur()"
+              (onRowDblClick)="onRowDblClickSeriModal()"
+              > 
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-filter-row [visible]="false"></dxo-filter-row>
+              <dxo-header-filter [visible]="false"></dxo-header-filter>
+              <dxo-paging [enabled]="false"></dxo-paging>
+                        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+              <dxo-header-filter [allowSearch]="false"></dxo-header-filter>
+              <dxo-selection mode="single"></dxo-selection>   
+               
+      
+              <dxi-column dataField="DistNumber" caption="DistNumber" [style.width.%]="10"></dxi-column>
+            
+              <dxi-column dataField="LotNumber" caption="LotNumber" [style.width.%]="10"></dxi-column>
+            
+              <dxi-column dataField="MnfSerial" caption="MnfSerial " [style.width.%]="10"></dxi-column>
+              
+              </dx-data-grid>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="finhspkapat" class="btn btn-danger" (click)="modal.dismiss('Cross click')"  #closeBtn>Vazgeç</button>
+          <button type="button" class="btn btn-success" (click)="onRowDblClickSeriModal()">Seçim Yap</button>
+        </div>
+      </ng-template>  
