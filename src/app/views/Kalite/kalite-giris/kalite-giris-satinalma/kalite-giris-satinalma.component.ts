@@ -200,14 +200,14 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
       sonuc.Deger2 = row.Deger2 || 0;
       sonuc.Deger = row.Deger || 0;
       sonuc.Metin = row.Metin || "";
-      sonuc.Liste = row.liste || "";
+      sonuc.Liste = row.Liste || "";
       sonuc.ListeKodu = row.ListeKodu || "";
       sonuc.Zorunlu = row.Zorunlu == "Y"? true :false;
       sonuc.TestYontemi = row.TestYontemi || ""; 
  
       this.senaryoList.push(sonuc);
   }) 
- 
+  
     this.cdr.detectChanges();
     this.btnKaydetCaption = "GÜNCELLE"
   }
@@ -219,8 +219,6 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
     this.gridSenaryoList.instance.repaint(); 
     
     this.alldata = this.gridSenaryoList.instance.getDataSource().items();
-    
-
  
     this.alldata.forEach((row: any) => {
         let sonuc = new SonucListeSTK();
