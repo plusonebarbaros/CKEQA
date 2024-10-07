@@ -70,8 +70,7 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
     
         const body =  JSON.stringify({      
           "sonuclar":  sonuclar 
-        });
-    
+        }); 
       var result = await this.http.post<any>(this.semUrl+"/Kalite/SetKaliteSonucKaydet", body, options).toPromise();
      
      
@@ -272,7 +271,7 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
       Token:string="";   
       Baslangic:Date;
       Bitis:Date;
-      Tip :string="";
+      Tip :any="";
     }
     export class EmirList{
       Token:string="";   
@@ -294,6 +293,7 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
       StokAdi :string="";  
       LotSeriTipi :string="";  
       LotSeriNo :string="";  
+      MuhatapAdi :string="";  
       TahBaslangic:Date;
       TahBitis:Date;
     }

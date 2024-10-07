@@ -155,12 +155,7 @@
         <a href="#" class="mastermenu1" (click)="menuEx[1].Exapnd = !menuEx[1].Exapnd" [attr.aria-expanded]="!menuEx[1].Exapnd" aria-controls="navbarContent">
           <i class="fas fa-chart-bar fafont"></i> Kalite Girişleri</a>
         <ul class="nav collapse submenusem" [ngbCollapse]="!menuEx[1].Exapnd">
-          <li [ngClass]="getCSSClasses(33)" (click)="addNewTab(33)" *ngIf="childMenuShow('YT0050')"><a href="#">● Kalite İşEmirleri</a></li>  
-          <li [ngClass]="getCSSClasses(25)" (click)="addNewTab(25)" *ngIf="childMenuShow('YT0042')"><a href="#">● Stok Kalite Girisleri</a></li>  
-          <li [ngClass]="getCSSClasses(26)" (click)="addNewTab(26)" *ngIf="childMenuShow('YT0043')"><a href="#">● Üretim Kalite Girisleri</a></li>  
-          <li [ngClass]="getCSSClasses(27)" (click)="addNewTab(27)" *ngIf="childMenuShow('YT0044')"><a href="#">● SatınAlma Kalite Girisleri</a></li>  
-          <li [ngClass]="getCSSClasses(28)" (click)="addNewTab(28)" *ngIf="childMenuShow('YT0045')"><a href="#">● Sevkiyat Kalite Girisleri</a></li>  
-          <li [ngClass]="getCSSClasses(29)" (click)="addNewTab(29)" *ngIf="childMenuShow('YT0046')"><a href="#">● İade Kalite Girisleri</a></li>  
+          <li [ngClass]="getCSSClasses(33)" (click)="addNewTab(33)" *ngIf="childMenuShow('YT0050')"><a href="#">● Kalite İşEmirleri</a></li>   
         </ul> 
     </li>  
   

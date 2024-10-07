@@ -8,14 +8,14 @@
    
              <mat-form-field appearance="outline" [style.width.%]="100">
                 <mat-label>Başlangıç</mat-label> 
-                <input matInput [matDatepicker]="dp" placeholder="Başlangıç Tarih"   >
+                <input matInput [matDatepicker]="dp" placeholder="Başlangıç Tarih"   [(ngModel)]="startdate" >
                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
                 <mat-datepicker #dp></mat-datepicker>
               </mat-form-field>
 
               <mat-form-field appearance="outline" [style.width.%]="100">
                 <mat-label>Bitiş</mat-label> 
-                <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"   >
+                <input matInput [matDatepicker]="dp1" placeholder="Bitiş Tarih"  [(ngModel)]="enddate">
                  <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
                 <mat-datepicker #dp1></mat-datepicker>
               </mat-form-field>   
@@ -66,15 +66,17 @@
         [showRowLines]="true" 
         [columnAutoWidth]="true"
         [allowColumnResizing]="true"
+        [columnChooser]="{ enabled: true }"
         [allowColumnReordering]="true"
+
         keyExpr="DocEntry" 
         columnResizingMode = "widget"  
      
         > 
     <!-- 
         <dxo-column-fixing [enabled]="true"></dxo-column-fixing> -->
-        <dxo-filter-row [visible]="false"></dxo-filter-row>
-        <dxo-header-filter [visible]="false"></dxo-header-filter>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
         <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
         <dxo-load-panel [enabled]="true"></dxo-load-panel> 
         
@@ -95,7 +97,7 @@
     
         <dxi-column dataField="DocEntry" caption="DocEntry" cellTemplate="cellTemplate" [width]="70" alignment="center" [allowEditing]="false"></dxi-column>
         <div *dxTemplate="let cell of 'cellTemplate'">
-            <div class="dxgrididfield" (dblclick)="IsEmriDetay(cell.data.DocEntry)">{{cell.data.DocEntry }}</div>
+            <div class="dxgrididfield" (dblclick)="IsEmriDetay(cell.data)">{{cell.data.DocEntry }}</div>
         </div>    
 
         <dxi-column  caption="BelgeNo"  dataField="BelgeNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"></dxi-column>
@@ -115,7 +117,7 @@
           [ngClass]="{
             'badge-info': cell.data.Durum === 'Beklemede',
             'badge-success': cell.data.Durum === 'Devam Ediyor',
-            'badge-danger': cell.data.Durum === 'Danger'
+            'badge-danger': cell.data.Durum === 'Tamamlandı'
           }" style="cursor:pointer">{{ cell.data.Durum }} </span>
         </div>
 
@@ -124,6 +126,7 @@
         <dxi-column  caption="Tur" dataField="Tur" [style.width%]="10" [allowEditing]="false"   [visible]  = "false" ></dxi-column>
         <dxi-column  caption="ObjeTipi" dataField="ObjeTipi" [style.width%]="10" [allowEditing]="false"   [visible] = "false" ></dxi-column>
         <dxi-column  caption="SenaryoNo" dataField="SenaryoNo" [style.width%]="10" [allowEditing]="false"[visible] = "false"  ></dxi-column>
+        <dxi-column  caption="MuhatapAdi" dataField="MuhatapAdi" [style.width%]="10" [allowEditing]="false"[visible] = "false"  ></dxi-column>
 
         
         

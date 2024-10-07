@@ -14,6 +14,7 @@ import { NotifyService } from 'src/app/services/notify';
 import { KaliteGirisStokComponent } from '../kalite-giris/kalite-giris-stok/kalite-giris-stok.component';
 import { TabService } from 'src/app/services/tab.service';
 import { Tab } from 'src/app/services/tabs-mod';
+import { KaliteGirisSatinalmaComponent } from '../kalite-giris/kalite-giris-satinalma/kalite-giris-satinalma.component';
 
 @Component({
   selector: 'app-kalite-isemri',
@@ -29,15 +30,16 @@ export class KaliteIsemriComponent implements OnInit {
   @ViewChild('gridKaliteIsEmri', { static: false }) gridKaliteIsEmri!: DxDataGridComponent;
   @BlockUI() blockUI!: NgBlockUI;
   @Input() data:any;   
-  
-
+   
   emirArama : EmirArama; 
   emirlist:EmirList[]=[];  
   filterTipList : filterTip[]=[];
-  seciliTipler:string="";
-  yetki:KullaniciYetki;
+  seciliTipler: string[] = [];
+  yetkiStok:KullaniciYetki;
+  yetkiSatinAlma:KullaniciYetki;
   filter!:FilterMod; 
- 
+  startdate:any;
+  enddate:any;
   public formIsEmri : FormControl = new FormControl();
   
   constructor(
@@ -53,15 +55,23 @@ export class KaliteIsemriComponent implements OnInit {
     ) 
     {       
       this.emirArama = new EmirArama();  
-      this.seciliTipler = '';
+      // this.seciliTipler = '';
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth(); 
 
-      this.yetki=this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0042")[0];
+      this.startdate = new Date(year, month, 1);
+      this.enddate = new Date(year, month + 1, 0);
+
+      this.yetkiStok=this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0042")[0];
+      this.yetkiSatinAlma=this.kullanicisrc.userperm.filter((x)=>x.YetkiKodu=="YT0051")[0];
       this.filterTipList.push({ Kod: 'URT', Aciklama: 'Üretim' });
       this.filterTipList.push({ Kod: 'STA', Aciklama: 'SatinAlma' });
       this.filterTipList.push({ Kod: 'SEV', Aciklama: 'Sevkiyat' });
       this.filterTipList.push({ Kod: 'STK', Aciklama: 'Stok' });
       this.filterTipList.push({ Kod: 'IAD', Aciklama: 'İade' }); 
-     
+      this.seciliTipler = this.filterTipList.map(tip => tip.Kod);
+
    }   
 
   ngOnInit(): void {
@@ -101,8 +111,18 @@ export class KaliteIsemriComponent implements OnInit {
 
 
 
-  IsEmriDetay(EmirNo:any){  
-    this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Kalite Stok Girisleri - " + EmirNo , { EmirNo :EmirNo ,  data:this.emirlist,  parent: "AppComponent",yetki:true},25));
+  IsEmriDetay(Data:any){  
+    console.log(Data);
+
+    if (Data.Tur=="STK"){
+      this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Kalite Stok Girisleri - " + Data.DocEntry + " ( " + Data.Durum + " ) " , { EmirNo :Data.DocEntry ,  data:this.emirlist,  parent: "AppComponent",yetki:this.yetkiStok},25));
+    }
+    else if (Data.Tur=="STA"){
+      this.tabService.addTab(new Tab(KaliteGirisSatinalmaComponent, "SatınAlma - " + Data.DocEntry  + " ( " + Data.Durum + " ) ", { EmirNo :Data.DocEntry ,  data:this.emirlist,  parent: "AppComponent",yetki:this.yetkiSatinAlma},34));
+    } 
+    else if (Data.Tur=="URT"){
+      this.tabService.addTab(new Tab(KaliteGirisSatinalmaComponent, "SatınAlma - " + Data.DocEntry  + " ( " + Data.Durum + " ) ", { EmirNo :Data.DocEntry ,  data:this.emirlist,  parent: "AppComponent",yetki:this.yetkiSatinAlma},34));
+    }
   }
 
 
@@ -113,3 +133,4 @@ export class filterTip{
   Kod:string="";   
   Aciklama:string=""; 
 }
+ 

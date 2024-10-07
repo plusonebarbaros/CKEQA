@@ -224,6 +224,7 @@ export class AppComponent implements OnInit,AfterViewInit {
     else if(tabid==31)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Örneklem Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0048")[0]},tabid));
     else if(tabid==32)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Liste Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0049")[0]},tabid));
     else if(tabid==33)this.tabService.addTab(new Tab(KaliteIsemriComponent, "Kalite İşEmirleri", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0050")[0]},tabid));
+    else if(tabid==34)this.tabService.addTab(new Tab(KaliteIsemriComponent, "Kalite SatınAlma", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0051")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }

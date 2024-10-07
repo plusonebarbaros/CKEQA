@@ -17,33 +17,24 @@
             
             <div class="row-12">
                  
-                <mat-form-field appearance="outline" [style.width.%]="30"  >
+                <mat-form-field appearance="outline" [style.width.%]="25"  >
                     <mat-label>Kalite ID</mat-label>
                     <input matInput placeholder="Kalite ID"  [(ngModel)]="strKaliteID"  disabled="true">
                 </mat-form-field>
 
 
-                <mat-form-field appearance="outline" [style.width.%]="30" >
+                <mat-form-field appearance="outline" [style.width.%]="25" >
                     <mat-label>Kullanici</mat-label>
                     <input matInput placeholder="Kullanici"  [(ngModel)]="strKullanici"   disabled="true">
                 </mat-form-field>
      
 
-                <mat-form-field appearance="outline" [style.width.%]="30" >
+                <mat-form-field appearance="outline" [style.width.%]="25" >
                     <mat-label>Başlangıç Tarihi</mat-label>
                     <input matInput placeholder="Başlangıç Tarihi"  [(ngModel)]="strBaslangic"   disabled="true">
                 </mat-form-field>
 
             </div>
-
-        </div>
-    </div>
-     
-    
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <label class="panel-baslik">Kalite Girişleri</label>
-            <div class="clear-fix"></div> 
             
             <div class="row-12">
                 <mat-form-field appearance="outline" [style.width.%]="25" style="padding-right: 10px;">
@@ -59,10 +50,16 @@
                     </button>
                  </mat-form-field>
 
-                 <mat-form-field appearance="outline" [style.width.%]="50" >
+                 <mat-form-field appearance="outline" [style.width.%]="25" >
                     <mat-label>Stok Adı</mat-label>
                     <input matInput placeholder="Stok Adı"  [(ngModel)]="secilistok.ItemName"  readonly>
                 </mat-form-field>
+
+                <mat-form-field appearance="outline" [style.width.%]="25" >
+                    <mat-label>Test Senaryosu</mat-label>
+                    <input matInput placeholder="Test Senaryosu"  autocomplete="off" [(ngModel)]="senaryoAdi" readonly>
+                </mat-form-field>
+
 
             </div>
             
@@ -85,38 +82,13 @@
         </div>
     </div>
      
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <label class="panel-baslik">Kalite Bilgileri</label>
-            <div class="clear-fix"></div> 
-            
-            <div class="row-12">
-                <mat-form-field appearance="outline" [style.width.%]="50" >
-                    <mat-label>Test Senaryosu</mat-label>
-                    <input matInput placeholder="Test Senaryosu"  autocomplete="off" [(ngModel)]="senaryoAdi" readonly>
-                </mat-form-field>
-           
-                <mat-form-field appearance="outline" [style.width.%]="25" >
-                    <mat-label>Örneklem Sayısı</mat-label>
-                    <input matInput placeholder="Örneklem Sayısı"  autocomplete="off" [(ngModel)]="orneklem" readonly>
-                </mat-form-field>
-          
-                <!-- <mat-form-field appearance="outline" [style.width.%]="25" >
-                    <mat-label>Tekrar Sayısı</mat-label>
-                    <input matInput placeholder="Tekrar Sayısı"  autocomplete="off" [(ngModel)]="tekrarsayisi" readonly>
-                </mat-form-field> -->
-            </div>
-        </div>
-    </div>
-
-
+  
     <div class="panel panel-default">
         <div class="panel-body">
             <label class="panel-baslik">Senaryo Bilgileri & Girişleri</label>
             <div class="clear-fix"></div> 
             
-        <dx-data-grid class="devgrid30"  #gridSenaryoList 
+        <dx-data-grid class="devgrid50"  #gridSenaryoList 
         id="gridSenaryoList"
         [dataSource]="senaryoList"   
         [showBorders]="true" 
@@ -124,8 +96,10 @@
         [showRowLines]="true" 
         [columnAutoWidth]="true"
         [allowColumnResizing]="true"
+        [columnChooser]="{ enabled: true }"
         [allowColumnReordering]="true"
         keyExpr="ID" 
+        [filterRow]="{ visible: true }"
         columnResizingMode = "widget"  
         (onEditorPreparing)="onEditorPreparing($event)"
         (onCellPrepared)="onCellPrepared($event)"
@@ -151,10 +125,10 @@
         <dxo-filter-panel [visible]="true"></dxo-filter-panel>
 
 
-        <dxi-column dataField="ID"  caption="#"  [style.width.%]="10" alignment="center" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="ID"  caption="#"  [style.width.%]="10" alignment="center" [readOnly]="false"></dxi-column>
         <dxi-column dataField="SonucDocEntry"  caption="SonucDocEntry"  [style.width.%]="10" alignment="center"  [visible] = "true"></dxi-column>
-        <dxi-column dataField="SenaryoSatirId"  caption="SatirNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"></dxi-column>
-        <dxi-column dataField="TekrarNo"  caption="TekrarNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="SenaryoSatirId"  caption="SatirNo"  [style.width.%]="2" alignment="center" [readOnly]="true"></dxi-column>
+        <dxi-column dataField="TekrarNo"  caption="TekrarNo"  [style.width.%]="2" alignment="center" [readOnly]="true"></dxi-column>
         <dxi-column dataField="DocEntry"  caption="DocEntry"  [style.width.%]="2" alignment="center"  [visible] = "false"></dxi-column>
         <dxi-column dataField="AracKodu" caption="Araç Kodu" [style.width.%]="10" [allowEditing]="false"  [visible] = "false"></dxi-column>
         <dxi-column dataField="AracAdi" caption="Araç Adı" [style.width%]="10" [allowEditing]="false" ></dxi-column>
@@ -165,7 +139,7 @@
         <dxi-column dataField="Operator" caption="Operator" [style.width%]="10" [allowEditing]="false" ></dxi-column>
         <dxi-column dataField="Deger1" caption="Min.Değer" [style.width%]="10" [allowEditing]="false" ></dxi-column>
         <dxi-column dataField="Deger2" caption="Max. Değer" [style.width%]="10" [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="Deger" [style.width.%]="10"  [allowEditing]="true"  caption="Değer" alignment="right" dataType="number" format="#,##0.00" >  </dxi-column> 
+        <dxi-column dataField="Deger" [style.width.%]="10"  [allowEditing]="true"  caption="Değer" alignment="right" dataType="number" format="#,##0.000000" >  </dxi-column> 
         
 
         <dxi-column dataField="Liste"  caption="Liste"  [style.width%]="10"   cellTemplate="listeTemplate" [allowEditing]="false"> </dxi-column>

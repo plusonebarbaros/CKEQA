@@ -63,9 +63,9 @@ export class KaliteGirisStokComponent implements OnInit {
   KullaniciAdi:string="";
   alldata:any;
 
-strKaliteID :number=0;
-strBaslangic:Date;
-strKullanici:string="";
+  strKaliteID :number=0;
+  strBaslangic:any;
+  strKullanici:string="";
   EmirDurum:string="";
   KaliteID :number=0;
   _gridColumns:Array<dxDataGridColumn | string>
@@ -133,10 +133,11 @@ strKullanici:string="";
   }
   
   async KaliteSonuclariniVer(){
+    this.sonucListeSTK = [];
   
     var sonuc  =  await this.kalitesrc.GetKaliteSonucListe(this.KaliteID); 
    
-    this.strBaslangic = new Date();
+    this.strBaslangic = moment(new Date).format("DD-MM-yyyy");   
     
     if ( sonuc.List.length < 1) 
     {
@@ -159,7 +160,7 @@ strKullanici:string="";
 
     this.sonucListeSTK =  sonuc.List;
     this.strKullanici =this.sonucListeSTK[0].Kullanici;
-    this.strBaslangic =this.sonucListeSTK[0].BaslamaTarihi;
+    this.strBaslangic =moment(this.sonucListeSTK[0].BaslamaTarihi).format("DD-MM-yyyy");   
     this.strKaliteID =this.sonucListeSTK[0].KaliteID;
 
     
@@ -204,6 +205,8 @@ strKullanici:string="";
    
     this.blockUI.start(EkranMesaj.Listele);
     this.sonucListeSTK = []; 
+    this.senaryoList=[];
+
     this.gridSenaryoList.instance.repaint(); 
     
     this.alldata = this.gridSenaryoList.instance.getDataSource().items();
@@ -257,6 +260,8 @@ strKullanici:string="";
       return;
     }
     this.alertify.success("Kalite süreci başlatılmıştır");
+    await this.KaliteSonuclariniVer();       
+
     this.btnKaydetCaption = "GÜNCELLE" 
     this.blockUI.stop();    
 
@@ -518,6 +523,9 @@ strKullanici:string="";
       if (e.column.dataField === 'Metin' || e.column.dataField === 'Liste') {
         e.cellElement.style.backgroundColor = '#f0f0f0';
       }
+    }
+    if (!(e.column.dataField === 'Metin' || e.column.dataField === 'Deger' || e.column.dataField === 'Liste')) {
+      e.cellElement.style.backgroundColor = '#f0f0f0';
     }
   }
 }
