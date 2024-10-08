@@ -20,6 +20,7 @@ import { CofirmsrcService } from 'src/app/utils/confirm-dialog/cofirmsrc.service
 import { DinamikGridPopupComponent } from 'src/app/views/dinamik-grid-popup/dinamik-grid-popup/dinamik-grid-popup.component';
 import { GridDataModel } from 'src/app/views/dinamik-grid-popup/dinamik-grid-popup/mpopup-model';
 import { ChangeDetectorRef } from '@angular/core';
+import { TabService } from 'src/app/services/tab.service';
 
 @Component({
   selector: 'app-kalite-giris-satinalma',
@@ -79,7 +80,9 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
     private alertify:NotifyService,
     private kalitesrc:KaliteSrcService,
     private modalService: NgbModal,
-    private cdr: ChangeDetectorRef 
+    private cdr: ChangeDetectorRef ,
+    private tabService: TabService
+
     ) {       
       this.seciliuser=new KullaniciModel; 
       this.senaryoArama = new SenaryoArama();
@@ -109,6 +112,13 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
       this.btnKaydetDisable = this.EmirDurum == "TAM";
     
   }
+
+  ngOnDestroy() {
+    // Aboneliği iptal et 
+    this.tabService.setKaliteTabActive(true);
+  }
+
+
 
   async SenaryoGetir(){
     if (this.miktar ==0 )

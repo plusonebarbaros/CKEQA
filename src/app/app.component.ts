@@ -180,6 +180,7 @@ export class AppComponent implements OnInit,AfterViewInit {
 
   tabChanged(event:any) {    
     sessionStorage.setItem("AktifTab",event+"");
+    this.tabService.setKaliteTabActive(event === 33);
     $(window).resize(); 
   }  
 

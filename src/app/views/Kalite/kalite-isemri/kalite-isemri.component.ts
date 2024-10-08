@@ -41,7 +41,7 @@ export class KaliteIsemriComponent implements OnInit {
   startdate:any;
   enddate:any;
   public formIsEmri : FormControl = new FormControl();
-  
+  tabIndex: number = 33;
   constructor(
     
     private genelsrv:GenelApi,
@@ -78,7 +78,14 @@ export class KaliteIsemriComponent implements OnInit {
     let bitis=new Date;  
     let baslangic=new Date(bitis.getUTCFullYear(),bitis.getUTCMonth(),1); 
     this.filter = new FilterMod(baslangic,bitis);  
-  
+
+    this.tabService.KaliteIsEmriTab$.subscribe(isActive => {
+      if (isActive) {
+        this.EmirListesiGetir();
+      }
+
+    });
+
   }
 
   BasTarihChg(e:any){
@@ -108,8 +115,8 @@ export class KaliteIsemriComponent implements OnInit {
     this.blockUI.stop();    
 
   }
-
-
+ 
+  
 
   IsEmriDetay(Data:any){  
     console.log(Data);

@@ -8,7 +8,8 @@ import { Tab } from './tabs-mod';
 export class TabService {
 
   public tabs: Tab[] = [];
-
+  private tabKaliteIsEmri = new BehaviorSubject<boolean>(false);
+  KaliteIsEmriTab$ = this.tabKaliteIsEmri.asObservable();
   public tabSub = new BehaviorSubject<Tab[]>(this.tabs);
 
   public removeTab(index: number) {
@@ -50,5 +51,9 @@ export class TabService {
     tab.active = true; 
     this.tabSub.next(this.tabs);
   }
-  
+
+  setKaliteTabActive(isActive: boolean) {
+    this.tabKaliteIsEmri.next(isActive);
+  }
+
 }
