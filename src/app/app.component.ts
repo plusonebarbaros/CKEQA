@@ -51,6 +51,7 @@ import { SozlesmeListesiComponent } from './views/Test/sozlesme-listesi/sozlesme
 import { FireTipMuhasebeTanimComponent } from './views/Yonetim/fire-tip-muhasebe-tanim/fire-tip-muhasebe-tanim.component';
 import { KaliteIsemriComponent } from './views/Kalite/kalite-isemri/kalite-isemri.component';
 import { KaliteGirisStokComponent } from './views/Kalite/kalite-giris/kalite-giris-stok/kalite-giris-stok.component';
+import { KaliteReceteEngelComponent } from './views/Kalite/kalite-recete-engel/kalite-recete-engel.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -225,6 +226,7 @@ export class AppComponent implements OnInit,AfterViewInit {
     else if(tabid==32)this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Liste Tanımları", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0049")[0]},tabid));
     else if(tabid==33)this.tabService.addTab(new Tab(KaliteIsemriComponent, "Kalite İşEmirleri", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0050")[0]},tabid));
     else if(tabid==34)this.tabService.addTab(new Tab(KaliteIsemriComponent, "Kalite SatınAlma", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0051")[0]},tabid));
+    else if(tabid==35)this.tabService.addTab(new Tab(KaliteReceteEngelComponent, "Recete Engel", { parent: "AppComponent",yetki:this.perm?.filter(p=>p.YetkiKodu=="YT0052")[0]},tabid));
 
     sessionStorage.setItem("AktifTab",tabid+"");
   }

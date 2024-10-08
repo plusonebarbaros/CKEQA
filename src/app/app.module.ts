@@ -97,6 +97,7 @@ import { KaliteGirisUretimComponent } from './views/Kalite/kalite-giris/kalite-g
 import { KaliteGirisSatinalmaComponent } from './views/Kalite/kalite-giris/kalite-giris-satinalma/kalite-giris-satinalma.component';
 import { KaliteGirisSevkiyatComponent } from './views/Kalite/kalite-giris/kalite-giris-sevkiyat/kalite-giris-sevkiyat.component';
 import { KaliteGirisIadeComponent } from './views/Kalite/kalite-giris/kalite-giris-iade/kalite-giris-iade.component';
+import { KaliteReceteEngelComponent } from './views/Kalite/kalite-recete-engel/kalite-recete-engel.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -153,7 +154,8 @@ locale(navigator.language);
     KaliteGirisUretimComponent,
     KaliteGirisSatinalmaComponent,
     KaliteGirisSevkiyatComponent,
-    KaliteGirisIadeComponent
+    KaliteGirisIadeComponent,
+    KaliteReceteEngelComponent
       ],
   imports: [
     BrowserModule,

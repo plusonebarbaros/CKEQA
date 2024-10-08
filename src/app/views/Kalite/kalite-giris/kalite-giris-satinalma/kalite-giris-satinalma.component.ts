@@ -256,8 +256,7 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
         sonuc.TestYontemi = row.TestYontemi || "";  
 
         this.sonucListeSTK.push(sonuc);
-    }) 
-    console.log(this.sonucListeSTK);
+    })  
     var sonuc  =  await this.kalitesrc.SetKaliteSonucKaydet(this.sonucListeSTK); 
     
     if (!sonuc.Success) 

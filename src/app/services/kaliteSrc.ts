@@ -29,6 +29,20 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
           return await this.http.get<Result<SeriRehberModel[]>>(url).pipe( map((res:any)=> res));
     }
 
+
+    async GetReceteStokRehberAramaList(arama:string)
+    { 
+         let url=this.semUrl+"/Recete/GetReceteStokRehber?Arama="+arama+"&Token="+ this.token;
+          return await this.http.get<Result<StokRehberModel[]>>(url).pipe( map((res:any)=> res));
+    }
+
+    async GetReceteSeriRehberAramaList(arama:string, stokkodu :string)
+    { 
+         let url=this.semUrl+"/Recete/GetReceteStokLotRehber?Arama="+arama+"&StokKodu="+stokkodu+"&Token="+ this.token;
+          return await this.http.get<Result<SeriRehberModel[]>>(url).pipe( map((res:any)=> res));
+    }
+
+
     async GetKaliteSenaryoList(filter:SenaryoArama):Promise<ReturnValuesList<Senaryo>> 
     { 
       const headers = new HttpHeaders(
@@ -78,6 +92,7 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
       return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
        
     }
+    
     async SetKaliteSonucKapat(EmirNo:any):Promise<ReturnValuesList<SonucListeSTK>> 
     { 
       const headers = new HttpHeaders(
@@ -174,6 +189,58 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
         });
     
       var result = await this.http.post<any>(this.semUrl+"/Kalite/GetKaliteListe", body, options).toPromise();
+     
+     
+      var sonuc = JSON.parse(JSON.stringify(result)); 
+      return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
+       
+    }
+
+    async GetReceteListesi(filter:ReceteListArama):Promise<ReturnValuesList<ReceteList>> 
+    { 
+      const headers = new HttpHeaders(
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Headers': 'Content-Type',
+       }
+      );
+    
+        let options = { headers: headers };
+    
+        const body =  JSON.stringify({      
+          "ItemCode":  filter.ItemCode,     
+          "Token":this.token,
+          "Lot":filter.Lot
+        }); 
+      var result = await this.http.post<any>(this.semUrl+"/Recete/GetReceteListesi", body, options).toPromise();
+     
+     
+      var sonuc = JSON.parse(JSON.stringify(result)); 
+      return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
+       
+    }
+
+    async SetReceteListesi(data:any):Promise<ReturnValuesList<ReturnValues>> 
+    { 
+      const headers = new HttpHeaders(
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Headers': 'Content-Type',
+       }
+      );
+    
+        let options = { headers: headers };
+    
+        const body =  JSON.stringify({      
+          "Token": this.token,
+          "data":data
+        });
+      
+      console.log("data",data);
+      console.log("body",body);
+      var result = await this.http.post<any>(this.semUrl+"/Recete/SetReceteListesi", body, options).toPromise();
      
      
       var sonuc = JSON.parse(JSON.stringify(result)); 
@@ -330,4 +397,28 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
       Zorunlu:string="";
       TestYontemi:string="";
       
+    }
+
+
+    export class ReceteListArama{
+      Token:string="";   
+      ItemCode :string="";
+      Lot :string="";
+    }
+
+    export class ReceteList{
+      ID:number=0;
+      Secim:boolean;
+      StokAdi:string="";   
+      ReceteUrunKodu:string="";   
+      ReceteUrunAdi :string="";
+    }
+
+    export class ReceteListPost{
+      Token:string="";   
+      StokKodu :string="";
+      Lot :string="";
+      ReceteKodu :string="";
+      Kullanici :string="";
+      Secim:boolean;
     }
