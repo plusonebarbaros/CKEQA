@@ -2,8 +2,8 @@
     <nav class="menu-navigation-icons">
       <!-- <a href="#" class="menu-blue"><i class="fas fa-plus-circle" (click)="SenaryoGetir()"></i><span>Senaryo</span></a>  -->
       <!-- <a href="#" class="menu-silver"  ><i class="fas fa-sync-alt"></i><span>Yenile</span></a>  -->
-      <a href="#" (click)="SonuclariKaydet()" class="menu-green"  ><i class="fas fa-save"></i><span> {{btnKaydetCaption}} </span></a>  
-      <a href="#" (click)="EmriKapat()"class="menu-red"  ><i class="fas fa-minus-circle"></i><span>Emri Kapat</span></a>
+      <a href="#" *ngIf="this.buttonGoster" (click)="SonuclariKaydet()" class="menu-green"  ><i class="fas fa-save"></i><span> {{btnKaydetCaption}} </span></a>  
+      <a href="#" *ngIf="this.buttonGoster" (click)="OnayaGonder()"class="menu-red"  ><i class="fas fa-paper-plane"></i><span>Onaya Gönder</span></a>
     
       <!-- <a href="#"  style="float: right!important;" class="menu-blue" ><i class="fas fa-filter" ></i><span>Sütun Seç</span></a>  -->
       <a href="#"  style="float: right!important;" class="menu-green" ><i class="fas fa-file-excel"></i><span>Excel</span></a> 
@@ -98,82 +98,96 @@
             <label class="panel-baslik">Senaryo Bilgileri & Girişleri</label>
             <div class="clear-fix"></div> 
             
-        <dx-data-grid class="devgrid50"  #gridSenaryoList 
-        id="gridSenaryoList"
-        [dataSource]="senaryoList"   
-        [showBorders]="true" 
-        [showColumnLines]="true"
-        [showRowLines]="true" 
-        [columnAutoWidth]="true"
-        [allowColumnResizing]="true"
-        [columnChooser]="{ enabled: true }"
-        [allowColumnReordering]="true"
-        [filterRow]="{ visible: true }"
-        keyExpr="ID" 
-        columnResizingMode = "widget"  
-        (onEditorPreparing)="onEditorPreparing($event)"
-        (onCellPrepared)="onCellPrepared($event)"
-        > 
-<!-- 
-        <dxo-column-fixing [enabled]="true"></dxo-column-fixing> -->
-        <dxo-filter-row [visible]="true"></dxo-filter-row>
-        <dxo-header-filter [visible]="true"></dxo-header-filter>
-        <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
-        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
-        
-        <dxo-scrolling mode="virtual" showScrollbar="'always'" useNative="false" scrollByThumb="true" ></dxo-scrolling> 
-        <dxo-paging [pageSize]="30"> </dxo-paging>
-        <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
-       
-        <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
-        <dxo-state-storing 
-            [enabled]="true" 
-            type="localStorage" 
-            storageKey="gridSenaryoList">
-        </dxo-state-storing>  
-
-        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
-
-
-        <dxi-column dataField="ID"                  caption="#"  [style.width.%]="10" alignment="center" [readOnly]="false"></dxi-column>
-        <dxi-column dataField="SonucDocEntry"       caption="SonucDocEntry"         [style.width%]="10"     [visible] = "true"  alignment="center"  ></dxi-column>
-        <dxi-column dataField="SenaryoSatirId"      caption="SatirNo"               [style.width%]="2"      [readOnly]="true"   alignment="center"  ></dxi-column>
-        <dxi-column dataField="TekrarNo"            caption="TekrarNo"              [style.width%]="2"      [readOnly]="true"   alignment="center"  ></dxi-column>
-        <dxi-column dataField="DocEntry"            caption="DocEntry"              [style.width%]="2"      [visible] = "false" alignment="center"  ></dxi-column>
-        <dxi-column dataField="AracKodu"            caption="Araç Kodu"             [style.width%]="10"     [allowEditing]="false"  [visible] = "false"></dxi-column>
-        <dxi-column dataField="AracAdi"             caption="Araç Adı"              [style.width%]="10"     [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="TestAdi"             caption="Test Adı"              [style.width%]="10"     [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="DegerTipi"           caption="Değer Tipi"            [style.width%]="10"     [allowEditing]="false"  [visible] = "false"></dxi-column>
-        <dxi-column dataField="DegerTipiAciklamasi" caption="Değer Tipi Aciklamasi" [style.width%]="10"     [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="Ondalik"             caption="Ondalik"               [style.width%]="10"     [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="Operator"            caption="Operator"              [style.width%]="10"     [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="Deger1"              caption="Min.Değer"             [style.width%]="10"     [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="Deger2"              caption="Max. Değer"            [style.width%]="10"     [allowEditing]="false" ></dxi-column>
-        <dxi-column dataField="Deger"               caption="Değer"                 [style.width%]="10"     [allowEditing]="true" alignment="right" dataType="number" format="#,##0.000000" >  </dxi-column> 
-        
-
-        <dxi-column dataField="Liste"  caption="Liste"  [style.width%]="10"   cellTemplate="listeTemplate" [allowEditing]="false"> </dxi-column>
-        <div *dxTemplate="let data of 'listeTemplate'" >
-            <div class ="row"  *ngIf="data.data.DegerTipi === 'LST'"  >
-                <div class ="col-9">
-                    {{data.data.Liste}}
-                </div>
-                <div class ="col-3">
-                    <a href="javascript:;"  (click)="PopupAc('modalcss150',data)"  class="dx-link-delete dx-icon-search dx-link-icon" title="Search" aria-label="Search"></a>
-                </div>
-            </div>
-        </div>
-
-        <dxi-column dataField="Metin" caption="Metin" [allowEditing]="true"  [style.width%]="30"  ></dxi-column>
-        <dxi-column dataField="Zorunlu" caption="Zorunlu mu?" [style.width%]="10"  [allowEditing]="false"  ></dxi-column>
-        <dxi-column dataField="TestYontemi" caption="TestYontemi" [style.width%]="2"  [allowEditing]="false" cellTemplate="fileTemplate" ></dxi-column>
-        <div *dxTemplate="let cell of 'fileTemplate'">
-            <span class="fa fa-search" click="openFile(cell.value)"></span> 
-        </div> 
-        
-         
-        
-        </dx-data-grid> 
+           <mat-tab-group mat-align-tabs="start"  animationDuration="0ms">
+                <mat-tab label="Kalite Sonuçları"> 
+                    <div class="card">
+                        <dx-data-grid class="devgrid50"  #gridSenaryoList 
+                        id="gridSenaryoList"
+                        [dataSource]="senaryoList"   
+                        [showBorders]="true" 
+                        [showColumnLines]="true"
+                        [showRowLines]="true" 
+                        [columnAutoWidth]="true"
+                        [allowColumnResizing]="true"
+                        [columnChooser]="{ enabled: true }"
+                        [allowColumnReordering]="true"
+                        [filterRow]="{ visible: true }"
+                        keyExpr="ID" 
+                        columnResizingMode = "widget"  
+                        (onEditorPreparing)="onEditorPreparing($event)"
+                        (onCellPrepared)="onCellPrepared($event)"
+                        > 
+                <!-- 
+                        <dxo-column-fixing [enabled]="true"></dxo-column-fixing> -->
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                        <dxo-header-filter [allowSearch]="true"></dxo-header-filter>
+                        <dxo-load-panel [enabled]="true"></dxo-load-panel> 
+                        
+                        <dxo-scrolling mode="virtual" showScrollbar="'always'" useNative="false" scrollByThumb="true" ></dxo-scrolling> 
+                        <dxo-paging [pageSize]="30"> </dxo-paging>
+                        <dxo-pager [visible]="true" displayMode="'compact'" [showPageSizeSelector]="false" [showInfo]="true" [showNavigationButtons]="true"></dxo-pager> 
+                       
+                        <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+                        <dxo-state-storing 
+                            [enabled]="true" 
+                            type="localStorage" 
+                            storageKey="gridSenaryoList">
+                        </dxo-state-storing>  
+                
+                        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                
+                
+                        <dxi-column dataField="ID"                  caption="#"  [style.width.%]="10" alignment="center" [readOnly]="false"></dxi-column>
+                        <dxi-column dataField="SonucDocEntry"       caption="SonucDocEntry"         [style.width%]="10"     [visible] = "true"  alignment="center"  ></dxi-column>
+                        <dxi-column dataField="SenaryoSatirId"      caption="SatirNo"               [style.width%]="2"      [readOnly]="true"   alignment="center"  ></dxi-column>
+                        <dxi-column dataField="TekrarNo"            caption="TekrarNo"              [style.width%]="2"      [readOnly]="true"   alignment="center"  ></dxi-column>
+                        <dxi-column dataField="DocEntry"            caption="DocEntry"              [style.width%]="2"      [visible] = "false" alignment="center"  ></dxi-column>
+                        <dxi-column dataField="AracKodu"            caption="Araç Kodu"             [style.width%]="10"     [allowEditing]="false"  [visible] = "false"></dxi-column>
+                        <dxi-column dataField="AracAdi"             caption="Araç Adı"              [style.width%]="10"     [allowEditing]="false" ></dxi-column>
+                        <dxi-column dataField="TestAdi"             caption="Test Adı"              [style.width%]="10"     [allowEditing]="false" ></dxi-column>
+                        <dxi-column dataField="DegerTipi"           caption="Değer Tipi"            [style.width%]="10"     [allowEditing]="false"  [visible] = "false"></dxi-column>
+                        <dxi-column dataField="DegerTipiAciklamasi" caption="Değer Tipi Aciklamasi" [style.width%]="10"     [allowEditing]="false" ></dxi-column>
+                        <dxi-column dataField="Ondalik"             caption="Ondalik"               [style.width%]="10"     [allowEditing]="false" ></dxi-column>
+                        <dxi-column dataField="Operator"            caption="Operator"              [style.width%]="10"     [allowEditing]="false" ></dxi-column>
+                        <dxi-column dataField="Deger1"              caption="Min.Değer"             [style.width%]="10"     [allowEditing]="false" ></dxi-column>
+                        <dxi-column dataField="Deger2"              caption="Max. Değer"            [style.width%]="10"     [allowEditing]="false" ></dxi-column>
+                        <dxi-column dataField="Deger"               caption="Değer"                 [style.width%]="10"     [allowEditing]="true" alignment="right" dataType="number" format="#,##0.000000" >  </dxi-column> 
+                        
+                
+                        <dxi-column dataField="Liste"  caption="Liste"  [style.width%]="10"   cellTemplate="listeTemplate" [allowEditing]="false"> </dxi-column>
+                        <div *dxTemplate="let data of 'listeTemplate'" >
+                            <div class ="row"  *ngIf="data.data.DegerTipi === 'LST'"  >
+                                <div class ="col-9">
+                                    {{data.data.Liste}}
+                                </div>
+                                <div class ="col-3">
+                                    <a href="javascript:;"  (click)="PopupAc('modalcss150',data)"  class="dx-link-delete dx-icon-search dx-link-icon" title="Search" aria-label="Search"></a>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <dxi-column dataField="Metin" caption="Metin" [allowEditing]="true"  [style.width%]="30"  ></dxi-column>
+                        <dxi-column dataField="Zorunlu" caption="Zorunlu mu?" [style.width%]="10"  [allowEditing]="false"  ></dxi-column>
+                        <dxi-column dataField="TestYontemi" caption="TestYontemi" [style.width%]="2"  [allowEditing]="false" cellTemplate="fileTemplate" ></dxi-column>
+                        <div *dxTemplate="let cell of 'fileTemplate'">
+                            <span class="fa fa-search" click="openFile(cell.value)"></span> 
+                        </div> 
+                        
+                         
+                        
+                        </dx-data-grid> 
+                    </div>  
+                </mat-tab>
+            
+                <mat-tab label="Ekler">
+                    <div class="card">
+                
+                    </div>  
+                </mat-tab>  
+            
+            </mat-tab-group>  
+  
     </div>
 
     <div class="clear-fix"></div> 

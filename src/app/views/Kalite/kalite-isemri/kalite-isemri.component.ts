@@ -125,11 +125,8 @@ export class KaliteIsemriComponent implements OnInit {
       this.tabService.addTab(new Tab(KaliteGirisStokComponent, "Kalite Stok Girisleri - " + Data.DocEntry + " ( " + Data.Durum + " ) " , { EmirNo :Data.DocEntry ,  data:this.emirlist,  parent: "AppComponent",yetki:this.yetkiStok},25));
     }
     else if (Data.Tur=="STA"){
-      this.tabService.addTab(new Tab(KaliteGirisSatinalmaComponent, "SatınAlma - " + Data.DocEntry  + " ( " + Data.Durum + " ) ", { EmirNo :Data.DocEntry ,  data:this.emirlist,  parent: "AppComponent",yetki:this.yetkiSatinAlma},34));
-    } 
-    else if (Data.Tur=="URT"){
-      this.tabService.addTab(new Tab(KaliteGirisSatinalmaComponent, "SatınAlma - " + Data.DocEntry  + " ( " + Data.Durum + " ) ", { EmirNo :Data.DocEntry ,  data:this.emirlist,  parent: "AppComponent",yetki:this.yetkiSatinAlma},34));
-    }
+      this.tabService.addTab(new Tab(KaliteGirisSatinalmaComponent, "SatınAlma - " + Data.DocEntry  + " ( " + Data.Durum + " ) ", { EmirNo :Data.DocEntry , OnayDurum: Data.OnayDurum, data:this.emirlist,  parent: "AppComponent",yetki:this.yetkiSatinAlma},34));
+    }  
   }
 
 

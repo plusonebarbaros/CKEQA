@@ -120,7 +120,16 @@
             'badge-danger': cell.data.Durum === 'Tamamlandı'
           }" style="cursor:pointer">{{ cell.data.Durum }} </span>
         </div>
-
+        <dxi-column  caption="Onay Durumu" dataField="OnayDurum" [style.width%]="10" [allowEditing]="false" cellTemplate="cellTemplateOnayDurum"></dxi-column>
+        <div *dxTemplate="let cell of 'cellTemplateOnayDurum'" > 
+          <span  class="badge pill-medium" 
+          [ngClass]="{
+            'badge-info': cell.data.OnayDurum === 'Beklemede',
+            'badge-success': cell.data.OnayDurum === 'Onaylandı' || cell.data.OnayDurum === 'Şartlı Onaylandı',
+            'badge-danger': cell.data.OnayDurum === 'Reddedildi',
+            'badge-warning': cell.data.OnayDurum === 'Onaya Gönderildi'
+          }" style="cursor:pointer"> {{ cell.data.OnayDurum }} </span>
+        </div>
         <dxi-column  caption="TekrarNo"  dataField="TekrarNo"  [style.width.%]="2" alignment="center" [allowEditing]="false"  [visible] = "false"></dxi-column>
         
         <dxi-column  caption="Tur" dataField="Tur" [style.width%]="10" [allowEditing]="false"   [visible]  = "false" ></dxi-column>

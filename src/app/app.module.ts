@@ -92,12 +92,10 @@ import { SozlesmeDetayComponent } from './views/Test/sozlesme-detay/sozlesme-det
 import { FireTipMuhasebeTanimComponent } from './views/Yonetim/fire-tip-muhasebe-tanim/fire-tip-muhasebe-tanim.component'; 
 import { DinamikGridPopupComponent } from './views/dinamik-grid-popup/dinamik-grid-popup/dinamik-grid-popup.component';
 import { KaliteIsemriComponent } from './views/Kalite/kalite-isemri/kalite-isemri.component';
-import { KaliteGirisStokComponent } from './views/Kalite/kalite-giris/kalite-giris-stok/kalite-giris-stok.component';
-import { KaliteGirisUretimComponent } from './views/Kalite/kalite-giris/kalite-giris-uretim/kalite-giris-uretim.component';
-import { KaliteGirisSatinalmaComponent } from './views/Kalite/kalite-giris/kalite-giris-satinalma/kalite-giris-satinalma.component';
-import { KaliteGirisSevkiyatComponent } from './views/Kalite/kalite-giris/kalite-giris-sevkiyat/kalite-giris-sevkiyat.component';
-import { KaliteGirisIadeComponent } from './views/Kalite/kalite-giris/kalite-giris-iade/kalite-giris-iade.component';
+import { KaliteGirisStokComponent } from './views/Kalite/kalite-giris/kalite-giris-stok/kalite-giris-stok.component'; 
+import { KaliteGirisSatinalmaComponent } from './views/Kalite/kalite-giris/kalite-giris-satinalma/kalite-giris-satinalma.component'; 
 import { KaliteReceteEngelComponent } from './views/Kalite/kalite-recete-engel/kalite-recete-engel.component';
+import { KaliteOnayComponent } from './views/Kalite/kalite-onay/kalite-onay.component';
 
 registerLocaleData(tr);
 loadMessages(trMessages);
@@ -151,11 +149,9 @@ locale(navigator.language);
     DinamikGridPopupComponent,
     KaliteIsemriComponent,
     KaliteGirisStokComponent,
-    KaliteGirisUretimComponent,
     KaliteGirisSatinalmaComponent,
-    KaliteGirisSevkiyatComponent,
-    KaliteGirisIadeComponent,
-    KaliteReceteEngelComponent
+    KaliteReceteEngelComponent,
+    KaliteOnayComponent
       ],
   imports: [
     BrowserModule,

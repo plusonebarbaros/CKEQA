@@ -10,7 +10,7 @@ import moment from 'moment';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subject, ReplaySubject, takeUntil } from 'rxjs';
 import { StokGrupModel, GenelApi, EkranMesaj, IslemTipi, SehirModel, IlceModel } from 'src/app/services/GenelSrc';
-import { EmirList, KaliteSrcService, Liste, ListeArama, Senaryo, SenaryoArama, SeriRehberModel, SonucListeSTK, StokRehberModel } from 'src/app/services/kaliteSrc';
+import { DurumPost, EmirList, KaliteSrcService, Liste, ListeArama, Senaryo, SenaryoArama, SeriRehberModel, SonucListeSTK, StokRehberModel } from 'src/app/services/kaliteSrc';
 import { KullaniciYetki, ConDepoYetki, KullaniciModel, KullaniciSrcService } from 'src/app/services/KullaniciSrc';
 import { NotifyService } from 'src/app/services/notify';
 import { ConnOlcuBirim, SabitservService } from 'src/app/services/SabitSrc';
@@ -39,7 +39,7 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
   senaryoList:Senaryo[]=[];  
   liste : Liste[]=[];
   sonucListeSTK : SonucListeSTK[]=[];
-
+  buttonGoster:boolean= true;
   stokrehberlist:StokRehberModel[]=[];
   serirehberlist:SeriRehberModel[]=[];
   
@@ -64,7 +64,7 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
   alldata:any;
   strMuhatapAdi :string="";
   strBelgeNo :string="";
-
+  durumPost:DurumPost;
   strKaliteID :number=0;
   strBaslangic:any;
   strKullanici:string="";
@@ -91,7 +91,7 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
       this.seciliseri=new SeriRehberModel();
       this.seciliseriModal=new SeriRehberModel();
       this.listeArama = new ListeArama();
-      
+      this.durumPost = new DurumPost();
     }   
     
     
@@ -110,7 +110,9 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
       const parsedData = data ? JSON.parse(data) : null;
       this.KullaniciAdi = parsedData ? parsedData.KullaniciAdi : null;    
       this.btnKaydetDisable = this.EmirDurum == "TAM";
-    
+       
+      if(this.data.OnayDurum != "Beklemede")
+        this.buttonGoster = false;
   }
 
   ngOnDestroy() {
@@ -283,19 +285,21 @@ export class KaliteGirisSatinalmaComponent implements OnInit {
 
   }
 
-  async EmriKapat(){
+  async OnayaGonder(){
    
     this.blockUI.start(EkranMesaj.Listele);
+    this.durumPost.Durum = "ONG";
+    this.durumPost.EmirNo = this.data.EmirNo;
      
-    var sonuc  =  await this.kalitesrc.SetKaliteSonucKapat(this.data.EmirNo); 
-    
+    var sonuc  =  await this.kalitesrc.SetKaliteDurumDegistir(this.durumPost); 
     if (!sonuc.Success) 
     {
       this.alertify.warning(sonuc.Message);
       this.blockUI.stop();    
       return;
     }
-    this.alertify.success("Kalite süreci kapatılmıştır");
+    this.alertify.success("Kalite süreci Onaya Gönderilmiştir");
+    this.buttonGoster = false;
     this.btnKaydetCaption = "GÜNCELLE" 
     this.blockUI.stop();    
 

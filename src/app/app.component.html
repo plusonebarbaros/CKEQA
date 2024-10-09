@@ -153,9 +153,10 @@
       </li>  
       <li class="mainrightsem submenutop baslikmenu" *ngIf="submainMenuShow('Kullanıcı Yönetimi')">
         <a href="#" class="mastermenu1" (click)="menuEx[1].Exapnd = !menuEx[1].Exapnd" [attr.aria-expanded]="!menuEx[1].Exapnd" aria-controls="navbarContent">
-          <i class="fas fa-chart-bar fafont"></i> Kalite Girişleri</a>
+          <i class="fas fa-chart-bar fafont"></i> Kalite Giriş & Onay</a>
         <ul class="nav collapse submenusem" [ngbCollapse]="!menuEx[1].Exapnd">
           <li [ngClass]="getCSSClasses(33)" (click)="addNewTab(33)" *ngIf="childMenuShow('YT0050')"><a href="#">● Kalite İşEmirleri</a></li>   
+          <li [ngClass]="getCSSClasses(36)" (click)="addNewTab(36)" *ngIf="childMenuShow('YT0053')"><a href="#">● Kalite Onayları</a></li>   
           <li [ngClass]="getCSSClasses(35)" (click)="addNewTab(35)" *ngIf="childMenuShow('YT0052')"><a href="#">● Reçete-Lot Kısıtlama</a></li>   
         </ul> 
     </li>  

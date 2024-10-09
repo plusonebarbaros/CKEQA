@@ -118,6 +118,31 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
        
     }
 
+    async SetKaliteDurumDegistir(durum:any):Promise<ReturnValuesList<ReturnValues>> 
+    { 
+      const headers = new HttpHeaders(
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Headers': 'Content-Type',
+       }
+      );
+    
+        let options = { headers: headers };
+    
+        const body =  JSON.stringify({      
+          "EmirNo":  durum.EmirNo ,
+          "Durum":  durum.Durum ,
+          "Token": this.token
+        });
+    
+      var result = await this.http.post<any>(this.semUrl+"/Kalite/SetKaliteDurumDegistir", body, options).toPromise();
+      var sonuc = JSON.parse(JSON.stringify(result)); 
+      return new ReturnValuesList( sonuc["Id"], sonuc["Success"], sonuc["Message"] ?? "", sonuc["Token"] ?? "",sonuc["List"]);
+       
+    }
+
+
     async GetKaliteSonucListe(KaliteID:number):Promise<ReturnValuesList<SonucListeSTK>> 
     { 
       const headers = new HttpHeaders(
@@ -340,6 +365,12 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
       Bitis:Date;
       Tip :any="";
     }
+    export class DurumPost{
+      Token:string="";   
+      Durum:string="";
+      EmirNo:string="";
+    }
+
     export class EmirList{
       Token:string="";   
       Baslangic:Date;
@@ -361,6 +392,7 @@ import { SehirModel, IlceModel, Result, ReturnValuesList, ReturnValues, StokGrup
       LotSeriTipi :string="";  
       LotSeriNo :string="";  
       MuhatapAdi :string="";  
+      OnayDurum :string="";  
       TahBaslangic:Date;
       TahBitis:Date;
     }
